@@ -1326,8 +1326,8 @@ async function searchAround(force=false){
   renderPoi();
   const count=items.length,waiting=!done.wiki||!done.osm;
   if(isCache&&count)note(count+' Orte sofort aus dem Zwischenspeicher geladen. Suche im Hintergrund nach Aktualisierungen …');
-  else if(waiting)note(count?count+' Orte bereits gefunden – weitere werden im Hintergrund gesucht …':'Suche historische Orte in deiner Umgebung …');
-  else if(count)note(count+' interessante Orte gefunden'+(failures?' (ein Dienst zeitweise nicht erreichbar)':'')+'.');
+  else if(waiting)note(count?(count===1?'1 Ort bereits gefunden – weitere werden im Hintergrund gesucht …':count+' Orte bereits gefunden – weitere werden im Hintergrund gesucht …'):'Suche historische Orte in deiner Umgebung …');
+  else if(count)note(count+(count===1?' interessanten Ort gefunden':' interessante Orte gefunden')+(failures?' (ein Dienst zeitweise nicht erreichbar)':'')+'.');
   else note(failures===2?'Die Suchdienste sind gerade nicht erreichbar. GPS funktioniert weiterhin.':'Keine passenden Sehenswürdigkeiten gefunden. Versuche einen größeren Suchradius.');
   if(count&&!hasShownDiscovery){
    hasShownDiscovery=true;
