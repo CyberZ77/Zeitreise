@@ -4,7 +4,7 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
 <meta name="theme-color" content="#071d40"/>
-<title>ZEITREISE 0.5.1 · Skin- und Bedienungsfix</title>
+<title>ZEITREISE 0.5.2 · Raumschiffkonsole</title>
 <link rel="manifest" href="./manifest.webmanifest"/>
 <meta name="referrer" content="strict-origin-when-cross-origin"/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
@@ -191,7 +191,7 @@ header p{margin-bottom:10px}
 .skin-original i:nth-child(1){background:#255c99}.skin-original i:nth-child(2){background:#123f78}.skin-original i:nth-child(3){background:#ecc57b}
 .skin-lcars{background:#08070c}.skin-lcars i:nth-child(1){background:#e8a36c;border-radius:14px 3px 3px 3px;flex:2}
 .skin-lcars i:nth-child(2){background:#d99ad2}.skin-lcars i:nth-child(3){background:#c7aedc}
-/* LCARS: identische HTML-Struktur, identische Layout-Breakpoints, andere Farben und Formensprache. */
+/* Raumschiffkonsole: identische HTML-Struktur und Layout-Breakpoints, andere Farben und Formen. */
 html[data-skin="lcars"]{
  --navy:#090810;--blue:#16111b;--panel:#130f1c;--panel2:#24192a;
  --line:rgba(240,184,160,.34);--white:#ffecd7;--soft:#dac6e8;
@@ -278,7 +278,7 @@ html[data-skin="lcars"] a{color:#f0b783}
 <section class="config-card" aria-label="Alle Einstellungen"><details class="section config-fold" id="settings01"><summary class="config-summary"><span class="fold-number">01</span><span class="fold-label">Dein Entdeckermodus</span><span class="fold-current" id="modeCurrent"></span><span class="fold-arrow" aria-hidden="true">⌄</span></summary><div class="config-content"><div class="segment" role="group" aria-label="Entdeckermodus"><button type="button" data-mode="auto">Automatisch</button><button type="button" data-mode="hint">Nur Hinweise</button><button type="button" data-mode="manual">Manuell</button></div><p class="help" id="modeHelp">Du erhältst unaufdringliche Hinweise auf interessante Orte und entscheidest selbst, ob du mehr erfahren möchtest.</p><div class="row-select"><label for="radius">Suchradius</label><select id="radius"><option value="300">300 Meter</option><option value="600" selected>600 Meter</option><option value="1000">1 Kilometer</option></select></div></div></details>
 <details class="section config-fold" id="settings02"><summary class="config-summary"><span class="fold-number">02</span><span class="fold-label">Stimme & Sprachsteuerung</span><span class="fold-current" id="voiceCurrent"></span><span class="fold-arrow" aria-hidden="true">⌄</span></summary><div class="config-content"><div class="line-option"><label for="voice">Erzählstil</label><select id="voice"><option value="warm">Warm & ruhig</option><option value="vivid">Lebendig & spannend</option><option value="factual">Sachlich & präzise</option></select></div><div class="line-option"><span>Sprachsteuerung</span><label class="switch" aria-label="Sprachsteuerung einschalten"><input type="checkbox" id="speech" checked/><span class="slider"></span></label></div><p class="help">Professionelle KI-Stimme und echte Sprachbefehle folgen nach der Server-Anbindung. Diese Version spielt keine Standard-Computerstimme ab.</p></div></details>
 <details class="section config-fold" id="settings03"><summary class="config-summary"><span class="fold-number">03</span><span class="fold-label">Was interessiert dich?</span><span class="fold-current" id="interestCurrent"></span><span class="fold-arrow" aria-hidden="true">⌄</span></summary><div class="config-content"><div class="checks"><label><input type="checkbox" data-interest="geschichte" checked> Geschichte</label><label><input type="checkbox" data-interest="architektur" checked> Architektur</label><label><input type="checkbox" data-interest="legenden" checked> Legenden</label><label><input type="checkbox" data-interest="kuriositaeten" checked> Kuriositäten</label></div></div></details>
-<details class="section config-fold" id="settings04"><summary class="config-summary"><span class="fold-number">04</span><span class="fold-label">Erscheinungsbild</span><span class="fold-current" id="skinCurrent">Original</span><span class="fold-arrow" aria-hidden="true">⌄</span></summary><div class="config-content"><fieldset class="skin-picks"><legend>Skin auswählen</legend><label class="skin-option"><input type="radio" name="skin" value="original" checked><span class="skin-swatch skin-original" aria-hidden="true"><i></i><i></i><i></i></span><span class="skin-option-text"><strong>Original</strong><small>ZEITREISE · Blau und Gold</small></span></label><label class="skin-option"><input type="radio" name="skin" value="lcars"><span class="skin-swatch skin-lcars" aria-hidden="true"><i></i><i></i><i></i></span><span class="skin-option-text"><strong>LCARS</strong><small>Raumschiff-Design · Orange und Lavendel</small></span></label></fieldset><p class="help">Nur das Aussehen ändert sich. Karte, Anordnung und Funktionen bleiben erhalten.</p></div></details>
+<details class="section config-fold" id="settings04"><summary class="config-summary"><span class="fold-number">04</span><span class="fold-label">Erscheinungsbild</span><span class="fold-current" id="skinCurrent">Original</span><span class="fold-arrow" aria-hidden="true">⌄</span></summary><div class="config-content"><fieldset class="skin-picks"><legend>Skin auswählen</legend><label class="skin-option"><input type="radio" name="skin" value="original" checked><span class="skin-swatch skin-original" aria-hidden="true"><i></i><i></i><i></i></span><span class="skin-option-text"><strong>Original</strong><small>ZEITREISE · Blau und Gold</small></span></label><label class="skin-option"><input type="radio" name="skin" value="lcars"><span class="skin-swatch skin-lcars" aria-hidden="true"><i></i><i></i><i></i></span><span class="skin-option-text"><strong>Raumschiffkonsole</strong><small>Raumschiff-Design · Orange und Lavendel</small></span></label></fieldset><p class="help">Nur das Aussehen ändert sich. Karte, Anordnung und Funktionen bleiben erhalten.</p></div></details>
 </section>
 </div></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -298,7 +298,7 @@ function syncFoldSummaries(){
  $('#voiceCurrent').textContent=$('#voice').selectedOptions[0]?.textContent+' · '+($('#speech').checked?'Sprache an':'Sprache aus');
  const count=$$('[data-interest]').filter(x=>x.checked).length;
  $('#interestCurrent').textContent=count===0?'Keine Themen':count===1?'1 Thema':count+' Themen';
- $('#skinCurrent').textContent=state.skin==='lcars'?'LCARS':'Original';
+ $('#skinCurrent').textContent=state.skin==='lcars'?'Raumschiffkonsole':'Original';
 }
 function persist(){syncFoldSummaries();try{localStorage.setItem('zeitreise-v02',JSON.stringify({skin:state.skin,mode:state.mode,voice:$('#voice').value,speech:$('#speech').checked,radius:$('#radius').value,interests:Object.fromEntries($$('[data-interest]').map(e=>[e.dataset.interest,e.checked]))}))}catch{}}
 try{const old=JSON.parse(localStorage.getItem('zeitreise-v02')||localStorage.getItem('zeitreise-v01')||'null');if(old){state.skin=old.skin==='lcars'?'lcars':'original';state.mode=['auto','hint','manual'].includes(old.mode)?old.mode:'hint';$('#voice').value=old.voice||'warm';$('#speech').checked=old.speech!==false;$('#radius').value=old.radius||'600';$$('[data-interest]').forEach(el=>{if(old.interests&&el.dataset.interest in old.interests)el.checked=old.interests[el.dataset.interest]})}}catch{}
@@ -309,7 +309,7 @@ function applySkin(value,save=true){
  document.documentElement.dataset.skin=skin;
  const option=$('input[name="skin"][value="'+skin+'"]');
  if(option)option.checked=true;
- const current=$('#skinCurrent');if(current)current.textContent=skin==='lcars'?'LCARS':'Original';
+ const current=$('#skinCurrent');if(current)current.textContent=skin==='lcars'?'Raumschiffkonsole':'Original';
  if(save)persist();
 }
 $$('input[name="skin"]').forEach(option=>option.addEventListener('change',()=>{
