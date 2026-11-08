@@ -397,7 +397,7 @@ async function startWalkingRoute(p){
  const token=++state.routeRequest;
  routeCardText((state.demo?'Demo-Fußweg':'Fußweg')+' zu „'+p.name+'“ wird berechnet …');
  $('#routePanel').scrollIntoView({behavior:'smooth',block:'center'});
- const query={locations:[{lat:start.lat,lon:start.lon},{lat:p.lat,lon:p.lon}],costing:'pedestrian',units:'kilometers',language:'de-DE',directions_options:{units:'kilometers',language:'de-DE'}};
+ const query={locations:[{lat:start.lat,lon:start.lon},{lat:p.lat,lon:p.lon}],costing:'pedestrian',units:'km',language:'de-DE'};
  try{
   const url='https://valhalla1.openstreetmap.de/route?json='+encodeURIComponent(JSON.stringify(query));
   const res=await fetchTimed(url,16000);
