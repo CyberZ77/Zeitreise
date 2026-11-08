@@ -4,7 +4,7 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
 <meta name="theme-color" content="#071d40"/>
-<title>ZEITREISE 0.4.5 · Interne Navigation</title>
+<title>ZEITREISE 0.5 · Original & LCARS</title>
 <link rel="manifest" href="./manifest.webmanifest"/>
 <meta name="referrer" content="strict-origin-when-cross-origin"/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
@@ -176,7 +176,94 @@ header p{margin-bottom:10px}
 .shell{padding-bottom:calc(95px + env(safe-area-inset-bottom,0px))}
 .route-panel .route-retry{padding:9px 12px;border-radius:8px;border:1px solid #e5c77b99;background:#eac980;color:#0b2c4e;font-size:12px;font-weight:750}
 @media(max-width:600px){.exit-placeholder{font-size:11px;padding:8px 11px}.shell{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}}
-.route-panel .route-next{color:#c9e0f7;opacity:.87}.route-panel .route-next[hidden]{display:none}</style>
+.route-panel .route-next{color:#c9e0f7;opacity:.87}.route-panel .route-next[hidden]{display:none}
+/* SKIN-SCHICHT: Diese Regeln enthalten ausschließlich Optik, keinerlei Positionierung der Funktionen. */
+.skin-picks{border:0;margin:0;padding:0;min-width:0;display:grid;gap:9px}
+.skin-picks legend{font-size:12px;font-weight:650;color:var(--soft);margin-bottom:9px}
+.skin-option{display:flex;align-items:center;gap:10px;cursor:pointer;border:1px solid var(--line);border-radius:12px;padding:10px;background:#07264b;min-width:0}
+.skin-option:has(input:checked){border-color:var(--gold);background:#204c80}
+.skin-option input{flex:0 0 auto;accent-color:var(--gold);width:19px;height:19px}
+.skin-option-text{display:flex;flex-direction:column;gap:3px;min-width:0}
+.skin-option-text strong{font-size:13px;color:var(--white)}
+.skin-option-text small{font-size:11px;line-height:1.4;color:var(--soft)}
+.skin-swatch{flex:0 0 55px;min-width:55px;height:34px;display:flex;gap:3px;align-items:stretch;border-radius:7px;overflow:hidden;background:#081a36;padding:5px;border:1px solid #ffffff32}
+.skin-swatch i{border-radius:4px;flex:1;background:#d9b66e}
+.skin-original i:nth-child(1){background:#255c99}.skin-original i:nth-child(2){background:#123f78}.skin-original i:nth-child(3){background:#ecc57b}
+.skin-lcars{background:#08070c}.skin-lcars i:nth-child(1){background:#e8a36c;border-radius:14px 3px 3px 3px;flex:2}
+.skin-lcars i:nth-child(2){background:#d99ad2}.skin-lcars i:nth-child(3){background:#c7aedc}
+/* LCARS: identische HTML-Struktur, identische Layout-Breakpoints, andere Farben und Formensprache. */
+html[data-skin="lcars"]{
+ --navy:#090810;--blue:#16111b;--panel:#130f1c;--panel2:#24192a;
+ --line:rgba(240,184,160,.34);--white:#ffecd7;--soft:#dac6e8;
+ --gold:#edaa72;--green:#e0afdf;
+ color-scheme:dark;
+}
+html[data-skin="lcars"] body{color:var(--white);background:#08070d;
+ background-image:linear-gradient(90deg,transparent 0 14px,#eb9d67 14px 20px,transparent 20px 100%);}
+html[data-skin="lcars"] header{position:relative}
+html[data-skin="lcars"] header::before{
+ content:"";display:block;position:absolute;top:-12px;left:0;right:0;height:9px;
+ border-radius:18px 18px 4px 4px;
+ background:linear-gradient(90deg,#f2a46e 0 32%,#0a080f 32% 33%,#dba1ce 33% 69%,#0a080f 69% 70%,#c3b4e0 70% 100%)}
+html[data-skin="lcars"] h1{font-family:"Arial Narrow","Bahnschrift SemiCondensed","Roboto Condensed",Arial,sans-serif;letter-spacing:.19em;font-weight:850;color:#ffd5aa}
+html[data-skin="lcars"] header p{color:#d9b7dc;letter-spacing:.05em}
+html[data-skin="lcars"] .brand-mark{background:#e6a268;color:#100c14;box-shadow:none;border-radius:25px 25px 8px 8px}
+html[data-skin="lcars"] .map-card,html[data-skin="lcars"] .config-card{
+ background:#0d0b13;box-shadow:none;border:1px solid #9d789e;
+ border-left:9px solid #d5a6db;border-top:9px solid #eaa56e;border-radius:42px 13px 13px 13px}
+html[data-skin="lcars"] .map-head{background:#14101c}
+html[data-skin="lcars"] .card-label{color:#c8a5e1}
+html[data-skin="lcars"] .map-head h2{color:#ffcb9e}
+html[data-skin="lcars"] .map-placeholder{
+ background:radial-gradient(circle at 45% 55%,#282030 0,#09080e 78%);color:#ffe8ca}
+html[data-skin="lcars"] .map-placeholder-icon{color:#f1a46e}
+html[data-skin="lcars"] .map-placeholder span{color:#d9c0da}
+html[data-skin="lcars"] .map-placeholder .start,
+html[data-skin="lcars"] .route-panel .route-retry{
+ background:#e8a36e;color:#120c15;border:0;border-radius:21px 8px 8px 8px;box-shadow:none}
+html[data-skin="lcars"] .map-placeholder .gps-progress{
+ background:#241b2b;color:#f7d5ae;border-color:#b691ad;border-radius:8px}
+html[data-skin="lcars"] .map-overlay,html[data-skin="lcars"] .gps-fetch-status{
+ background:#21182c;border-color:#b993c8;color:#f3dfe9;border-radius:7px}
+html[data-skin="lcars"] .map-tools button,
+html[data-skin="lcars"] .route-panel .route-stop,
+html[data-skin="lcars"] .story-actions a,
+html[data-skin="lcars"] .story .close{
+ background:#b69cce;color:#110d18;border-color:#b69cce;border-radius:16px 5px 5px 5px;font-weight:800}
+html[data-skin="lcars"] .map-tools button:nth-child(even){background:#eea66c;border-color:#eea66c}
+html[data-skin="lcars"] .route-panel,html[data-skin="lcars"] .story{
+ background:#120e1b;border:1px solid #c89ed2;border-radius:13px}
+html[data-skin="lcars"] .route-panel strong,html[data-skin="lcars"] .story h3{color:#f4b277}
+html[data-skin="lcars"] .route-panel .route-summary,html[data-skin="lcars"] .route-panel .route-step{color:#f3e1ee}
+html[data-skin="lcars"] .poi{background:#1c1527;border-color:#775d83;color:#ffebda;border-radius:23px 7px 7px 7px}
+html[data-skin="lcars"] .poi.active,html[data-skin="lcars"] .poi:hover{border-color:#efab75;background:#39253b}
+html[data-skin="lcars"] .poi-pin{background:#d5a2d4;color:#120d16;border-radius:15px 4px 4px 4px}
+html[data-skin="lcars"] .poi-distance{color:#f7b47e}
+html[data-skin="lcars"] .poi small{color:#d5bedf}
+html[data-skin="lcars"] .config-fold{background:#15101e;border:1px solid #866b90;border-radius:22px 7px 7px 7px}
+html[data-skin="lcars"] .config-fold[open] .config-summary{background:#302238;border-bottom-color:#ba8fbc}
+html[data-skin="lcars"] .fold-number,html[data-skin="lcars"] .fold-arrow{color:#eaa56d}
+html[data-skin="lcars"] .fold-label,html[data-skin="lcars"] .skin-option-text strong{color:#fee8da}
+html[data-skin="lcars"] .fold-current{color:#d8b9e5}
+html[data-skin="lcars"] .segment{background:#0b0910;border-color:#a28bad;border-radius:7px}
+html[data-skin="lcars"] .segment button{color:#e5cced;border-radius:17px 5px 5px 5px}
+html[data-skin="lcars"] .segment button.selected{background:#e6a16b;color:#1b1020;box-shadow:none}
+html[data-skin="lcars"] .line-option select,html[data-skin="lcars"] .row-select select{
+ background:#1d1727;color:#ffead9;border-color:#b493c6;border-radius:8px}
+html[data-skin="lcars"] .checks input,html[data-skin="lcars"] .skin-option input{accent-color:#eaa56d}
+html[data-skin="lcars"] .switch input:checked+.slider{background:#e8a66a}
+html[data-skin="lcars"] .skin-option{background:#110d19;border-color:#81658e;border-radius:17px 5px 5px 5px}
+html[data-skin="lcars"] .skin-option:has(input:checked){background:#2d2037;border-color:#eaa56d}
+html[data-skin="lcars"] .skin-option-text small{color:#d9c3e7}
+html[data-skin="lcars"] .exit-placeholder{background:#21172b;border-color:#c7a1d2;color:#e8cbe8;border-radius:21px 6px 6px 6px}
+html[data-skin="lcars"] .photo-placeholder,html[data-skin="lcars"] .poi-photo{background:#1a1324;color:#dfc3e3;border-color:#876c92}
+html[data-skin="lcars"] a{color:#f0b783}
+@media(max-width:600px){
+ html[data-skin="lcars"] body{background-image:none}
+ html[data-skin="lcars"] .map-card,html[data-skin="lcars"] .config-card{border-left-width:7px;border-top-width:7px}
+}
+
+</style>
 </head>
 <body>
 <div id="rotateHint" role="status"><strong>↻ Bitte ins Hochformat drehen</strong><span>ZEITREISE ist auf Smartphones und Tablets für das Hochformat gestaltet. Am PC bleibt die normale Ansicht verfügbar.</span></div>
@@ -191,6 +278,7 @@ header p{margin-bottom:10px}
 <section class="config-card" aria-label="Alle Einstellungen"><details class="section config-fold" id="settings01"><summary class="config-summary"><span class="fold-number">01</span><span class="fold-label">Dein Entdeckermodus</span><span class="fold-current" id="modeCurrent"></span><span class="fold-arrow" aria-hidden="true">⌄</span></summary><div class="config-content"><div class="segment" role="group" aria-label="Entdeckermodus"><button type="button" data-mode="auto">Automatisch</button><button type="button" data-mode="hint">Nur Hinweise</button><button type="button" data-mode="manual">Manuell</button></div><p class="help" id="modeHelp">Du erhältst unaufdringliche Hinweise auf interessante Orte und entscheidest selbst, ob du mehr erfahren möchtest.</p><div class="row-select"><label for="radius">Suchradius</label><select id="radius"><option value="300">300 Meter</option><option value="600" selected>600 Meter</option><option value="1000">1 Kilometer</option></select></div></div></details>
 <details class="section config-fold" id="settings02"><summary class="config-summary"><span class="fold-number">02</span><span class="fold-label">Stimme & Sprachsteuerung</span><span class="fold-current" id="voiceCurrent"></span><span class="fold-arrow" aria-hidden="true">⌄</span></summary><div class="config-content"><div class="line-option"><label for="voice">Erzählstil</label><select id="voice"><option value="warm">Warm & ruhig</option><option value="vivid">Lebendig & spannend</option><option value="factual">Sachlich & präzise</option></select></div><div class="line-option"><span>Sprachsteuerung</span><label class="switch" aria-label="Sprachsteuerung einschalten"><input type="checkbox" id="speech" checked/><span class="slider"></span></label></div><p class="help">Professionelle KI-Stimme und echte Sprachbefehle folgen nach der Server-Anbindung. Diese Version spielt keine Standard-Computerstimme ab.</p></div></details>
 <details class="section config-fold" id="settings03"><summary class="config-summary"><span class="fold-number">03</span><span class="fold-label">Was interessiert dich?</span><span class="fold-current" id="interestCurrent"></span><span class="fold-arrow" aria-hidden="true">⌄</span></summary><div class="config-content"><div class="checks"><label><input type="checkbox" data-interest="geschichte" checked> Geschichte</label><label><input type="checkbox" data-interest="architektur" checked> Architektur</label><label><input type="checkbox" data-interest="legenden" checked> Legenden</label><label><input type="checkbox" data-interest="kuriositaeten" checked> Kuriositäten</label></div></div></details>
+<details class="section config-fold" id="settings04"><summary class="config-summary"><span class="fold-number">04</span><span class="fold-label">Erscheinungsbild</span><span class="fold-current" id="skinCurrent">Original</span><span class="fold-arrow" aria-hidden="true">⌄</span></summary><div class="config-content"><fieldset class="skin-picks"><legend>Skin auswählen</legend><label class="skin-option"><input type="radio" name="skin" value="original" checked><span class="skin-swatch skin-original" aria-hidden="true"><i></i><i></i><i></i></span><span class="skin-option-text"><strong>Original</strong><small>ZEITREISE · Blau und Gold</small></span></label><label class="skin-option"><input type="radio" name="skin" value="lcars"><span class="skin-swatch skin-lcars" aria-hidden="true"><i></i><i></i><i></i></span><span class="skin-option-text"><strong>LCARS</strong><small>Raumschiff-Design · Orange und Lavendel</small></span></label></fieldset><p class="help">Nur das Aussehen ändert sich. Karte, Anordnung und Funktionen bleiben erhalten.</p></div></details>
 </section>
 </div></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -200,7 +288,7 @@ const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll
 const R=Math.PI/180;
 function meters(a,b,c,d){const x=(c-a)*R,y=(d-b)*R;const f=Math.sin(x/2)**2+Math.cos(a*R)*Math.cos(c*R)*Math.sin(y/2)**2;return 12742000*Math.atan2(Math.sqrt(f),Math.sqrt(1-f))}
 function distanceText(m){return m<1000?Math.round(m)+' m':(m/1000).toFixed(1).replace('.',',')+' km'}
-const state={routeTarget:null,routeLine:null,routeInfo:null,routeShape:null,routeManeuvers:[],routeRequest:0,routeWatch:false,searching:false,mapStyle:'osm',tileLayer:null,mode:'hint',watchId:null,places:[],selected:null,position:null,lastSearch:null,searchToken:0,shownIds:new Set(),map:null,markers:null,userCircle:null,accuracyCircle:null};
+const state={skin:'original',routeTarget:null,routeLine:null,routeInfo:null,routeShape:null,routeManeuvers:[],routeRequest:0,routeWatch:false,searching:false,mapStyle:'osm',tileLayer:null,mode:'hint',watchId:null,places:[],selected:null,position:null,lastSearch:null,searchToken:0,shownIds:new Set(),map:null,markers:null,userCircle:null,accuracyCircle:null};
 const modeText={auto:'Wenn du einen neuen interessanten Ort erreichst, wird er automatisch als nächstes Ziel ausgewählt. Hörführungen mit echter KI-Stimme folgen nach der Audio-Anbindung.',hint:'Bei interessanten Orten erscheint ein unaufdringlicher Hinweis. Du entscheidest, ob du die Geschichte öffnen möchtest.',manual:'Die Karte und die Liste zeigen interessante Orte, aber nichts wird automatisch ausgewählt.'};
 function note(s){const t=$('#fetchStatus');if(t)t.textContent=s}
 function banner(place){const e=$('#discoveryNote');if(!place){e.classList.remove('show');e.replaceChildren();return}e.replaceChildren();let strong=document.createElement('strong');strong.textContent='Interessanter Ort in deiner Nähe: '+place.name;let small=document.createElement('span');small.textContent='Etwa '+distanceText(place.distance||0)+' entfernt.';let btn=document.createElement('button');btn.type='button';btn.textContent='Jetzt entdecken';btn.onclick=()=>{banner(null);showPlace(place)};e.append(strong,small,document.createElement('br'),btn);e.classList.add('show')}
@@ -210,9 +298,24 @@ function syncFoldSummaries(){
  $('#voiceCurrent').textContent=$('#voice').selectedOptions[0]?.textContent+' · '+($('#speech').checked?'Sprache an':'Sprache aus');
  const count=$$('[data-interest]').filter(x=>x.checked).length;
  $('#interestCurrent').textContent=count===0?'Keine Themen':count===1?'1 Thema':count+' Themen';
+ $('#skinCurrent').textContent=state.skin==='lcars'?'LCARS':'Original';
 }
-function persist(){syncFoldSummaries();try{localStorage.setItem('zeitreise-v02',JSON.stringify({mode:state.mode,voice:$('#voice').value,speech:$('#speech').checked,radius:$('#radius').value,interests:Object.fromEntries($$('[data-interest]').map(e=>[e.dataset.interest,e.checked]))}))}catch{}}
-try{const old=JSON.parse(localStorage.getItem('zeitreise-v02')||localStorage.getItem('zeitreise-v01')||'null');if(old){state.mode=['auto','hint','manual'].includes(old.mode)?old.mode:'hint';$('#voice').value=old.voice||'warm';$('#speech').checked=old.speech!==false;$('#radius').value=old.radius||'600';$$('[data-interest]').forEach(el=>{if(old.interests&&el.dataset.interest in old.interests)el.checked=old.interests[el.dataset.interest]})}}catch{}
+function persist(){syncFoldSummaries();try{localStorage.setItem('zeitreise-v02',JSON.stringify({skin:state.skin,mode:state.mode,voice:$('#voice').value,speech:$('#speech').checked,radius:$('#radius').value,interests:Object.fromEntries($$('[data-interest]').map(e=>[e.dataset.interest,e.checked]))}))}catch{}}
+try{const old=JSON.parse(localStorage.getItem('zeitreise-v02')||localStorage.getItem('zeitreise-v01')||'null');if(old){state.skin=old.skin==='lcars'?'lcars':'original';state.mode=['auto','hint','manual'].includes(old.mode)?old.mode:'hint';$('#voice').value=old.voice||'warm';$('#speech').checked=old.speech!==false;$('#radius').value=old.radius||'600';$$('[data-interest]').forEach(el=>{if(old.interests&&el.dataset.interest in old.interests)el.checked=old.interests[el.dataset.interest]})}}catch{}
+/* Skin-Steuerung: ändert ausschließlich das Erscheinungsbild, niemals GPS oder Navigationsdaten. */
+function applySkin(value,save=true){
+ const skin=value==='lcars'?'lcars':'original';
+ state.skin=skin;
+ document.documentElement.dataset.skin=skin;
+ const option=$('input[name="skin"][value="'+skin+'"]');
+ if(option)option.checked=true;
+ const current=$('#skinCurrent');if(current)current.textContent=skin==='lcars'?'LCARS':'Original';
+ if(save)persist();
+}
+$('input[name="skin"]').forEach(option=>option.addEventListener('change',()=>{
+ if(option.checked)applySkin(option.value);
+}));
+applySkin(state.skin,false);
 function setMode(m){state.mode=m;$$('[data-mode]').forEach(b=>{b.classList.toggle('selected',b.dataset.mode===m);b.setAttribute('aria-pressed',String(b.dataset.mode===m))});$('#modeHelp').textContent=modeText[m];banner(null);persist()}
 $$('[data-mode]').forEach(b=>b.addEventListener('click',()=>setMode(b.dataset.mode)));setMode(state.mode);
 $$('select,input').forEach(el=>el.addEventListener('change',persist));syncFoldSummaries();
