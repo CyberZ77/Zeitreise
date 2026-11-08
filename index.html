@@ -8,7 +8,7 @@
 <link rel="manifest" href="./manifest.webmanifest"/>
 <meta name="referrer" content="strict-origin-when-cross-origin"/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-<style>
+<style id="zeitreise-layout">
 :root{color-scheme:dark;--navy:#061a3b;--blue:#0a2a58;--panel:#113461;--panel2:#173d70;--line:rgba(197,218,255,.18);--white:#f7fbff;--soft:#bcd0ed;--gold:#e9bf72;--green:#7ee3bd}
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;color:var(--white);background:radial-gradient(ellipse at 50% -20%,#1f5391 0%,transparent 54%),linear-gradient(160deg,#071b3a,#092a56 62%,#061b3a);min-height:100vh}button,select,input{font:inherit}button{cursor:pointer}button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:2px}a{color:#ffdb9b}button:disabled{opacity:.5;cursor:not-allowed}.shell{max-width:1060px;margin:0 auto;padding:24px 20px 96px}.brand{display:flex;align-items:center;gap:12px;justify-content:center;margin-bottom:6px}.brand-mark{background:linear-gradient(145deg,#f4d69d,#b7843e);color:#09274b;width:46px;height:46px;display:grid;place-items:center;border-radius:14px;box-shadow:0 5px 22px #0004}.brand-mark svg{width:25px;height:25px}h1{margin:0;font-size:clamp(24px,4vw,32px);letter-spacing:.14em;font-weight:800}header p{text-align:center;margin:2px 0 23px;color:var(--soft);font-size:13px}.topline{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:18px}.status-pill{border:1px solid var(--line);background:#183f71;border-radius:999px;padding:9px 14px;display:inline-flex;gap:8px;align-items:center;font-size:13px;color:#e3f0ff}.pulse{background:var(--gold);height:8px;width:8px;border-radius:50%;box-shadow:0 0 0 3px #e9bf7220}.pill-button{border:1px solid #799ed04c;border-radius:999px;background:#174475;color:white;padding:9px 15px;font-weight:650;font-size:13px}.pill-button:hover{background:#27609b}.layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(330px,.87fr);gap:20px}.map-card,.config-card{background:linear-gradient(145deg,rgba(32,77,128,.68),rgba(10,41,86,.90));border:1px solid var(--line);border-radius:22px;box-shadow:0 14px 42px #0002;overflow:hidden}.card-label{font-size:11px;letter-spacing:.12em;font-weight:800;color:#c4d8f5;text-transform:uppercase}.map-head{padding:19px 20px 12px;display:flex;align-items:center;justify-content:space-between;gap:9px}.map-head h2{margin:5px 0 0;font-size:22px}.map-graphic{position:relative;overflow:hidden;min-height:320px;background:#123b68;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.map-graphic > svg{display:block;width:100%;height:320px}.map-overlay{position:absolute;top:14px;left:14px;background:#09284bdc;border:1px solid #ffffff25;padding:7px 11px;border-radius:10px;font-size:12px;backdrop-filter:blur(8px)}.map-bottom{padding:17px 19px}.poi-title{display:flex;align-items:center;justify-content:space-between;gap:12px}.poi-title strong{font-size:16px}.small-note{font-size:12px;color:var(--soft);line-height:1.5}.poi-list{display:grid;gap:7px;margin-top:11px;max-height:215px;overflow:auto}.poi{display:flex;gap:9px;text-align:left;align-items:center;background:#ffffff0b;color:white;border:1px solid var(--line);border-radius:12px;padding:11px 12px;width:100%;font-size:13px}.poi:hover,.poi.active{background:#1e4d81;border-color:#dec48b}.poi b{font-size:13px}.poi small{display:block;color:var(--soft);margin-top:2px}.poi-pin{display:grid;place-items:center;border-radius:9px;background:#c79d5c26;color:#f4c77a;width:34px;height:34px;flex-shrink:0;font-size:17px}.config-card{padding:20px}.section{padding:0 0 17px;border-bottom:1px solid var(--line);margin-bottom:17px}.section:last-of-type{border:0;margin-bottom:0}.section-title{margin:0 0 10px;font-size:15px;font-weight:750;display:flex;align-items:center;gap:9px}.section-title span{color:var(--gold)}.segment{display:grid;grid-template-columns:repeat(3,1fr);background:#061c3c;border:1px solid #ffffff26;padding:4px;gap:4px;border-radius:12px}.segment button{border:0;background:transparent;color:#c9def8;min-height:42px;padding:7px 5px;border-radius:9px;font-size:13px;font-weight:700}.segment button.selected{background:#e7bd76;color:#092449;box-shadow:0 4px 12px #0004}.help{font-size:12px;line-height:1.5;color:var(--soft);margin:10px 0 0}.line-option{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:10px}.line-option select{border:1px solid var(--line);background:#0c2c54;color:white;border-radius:9px;padding:9px 10px;min-width:165px;max-width:61%}.switch{position:relative;display:inline-block;width:49px;height:28px;flex-shrink:0}.switch input{opacity:0;width:0;height:0}.slider{position:absolute;inset:0;background:#547093;border-radius:99px;transition:.15s}.slider:before{content:"";position:absolute;width:20px;height:20px;left:4px;top:4px;background:white;border-radius:50%;transition:.15s}.switch input:checked+.slider{background:#dbb66f}.switch input:checked+.slider:before{transform:translateX(21px);background:#0b2b56}.checks{display:grid;grid-template-columns:1fr 1fr;gap:11px}.checks label{font-size:13px;color:#e9f3ff;display:flex;gap:8px;align-items:center;cursor:pointer}.checks input{accent-color:#e5be79;width:16px;height:16px}.start{width:100%;display:flex;gap:8px;justify-content:center;align-items:center;margin-top:13px;background:linear-gradient(120deg,#f0d497,#dfaf5e);color:#08284f;border:0;border-radius:14px;min-height:54px;font-weight:850;box-shadow:0 9px 20px #0003}.start:hover{filter:brightness(1.07)}.note{padding-top:11px;text-align:center;color:#c1d6f0;font-size:11px}.story{margin-top:15px;background:#082650;border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:none}.story.show{display:block}.story h3{margin:0 0 7px;color:#f4d39a}.story p{font-size:13px;line-height:1.65;color:#d5e6fa}.story .close{background:#173f72;border:1px solid var(--line);color:white;padding:7px 11px;border-radius:9px}.story a{font-size:12px}.footer{text-align:center;color:#a8bfdd;font-size:11px;margin-top:22px}.gps-detail{color:#c4d6ef;font-size:12px;margin-left:auto}.loading{opacity:.6}.map-pin-interactive{cursor:pointer}.map-pin-interactive:focus{outline:none;filter:drop-shadow(0 0 8px #ffd78f)}@media(max-width:760px){.shell{padding:16px 13px 96px}.brand{margin-bottom:3px}.brand-mark{width:40px;height:40px}.topline{margin-bottom:13px}.layout{grid-template-columns:minmax(0,1fr);gap:13px}.map-graphic{min-height:200px}.map-graphic > svg{height:220px}.map-head{padding:12px 15px 10px}.map-head h2{font-size:18px}.map-bottom{padding:12px 14px}.poi-list{max-height:134px}.config-card{padding:16px}.section{padding-bottom:13px;margin-bottom:14px}.section-title{font-size:14px;margin-bottom:8px}header p{margin-bottom:14px}.footer{margin-top:10px}}@media(max-width:390px){.segment button{font-size:12px}.checks{gap:9px}.checks label{font-size:12px}.gps-detail{width:100%;margin-left:0}.map-graphic > svg{height:185px}}
 
@@ -177,6 +177,8 @@ header p{margin-bottom:10px}
 .route-panel .route-retry{padding:9px 12px;border-radius:8px;border:1px solid #e5c77b99;background:#eac980;color:#0b2c4e;font-size:12px;font-weight:750}
 @media(max-width:600px){.exit-placeholder{font-size:11px;padding:8px 11px}.shell{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}}
 .route-panel .route-next{color:#c9e0f7;opacity:.87}.route-panel .route-next[hidden]{display:none}
+</style>
+<style id="zeitreise-skins">
 /* SKIN-SCHICHT: Diese Regeln enthalten ausschließlich Optik, keinerlei Positionierung der Funktionen. */
 .skin-picks{border:0;margin:0;padding:0;min-width:0;display:grid;gap:9px}
 .skin-picks legend{font-size:12px;font-weight:650;color:var(--soft);margin-bottom:9px}
@@ -290,6 +292,8 @@ function meters(a,b,c,d){const x=(c-a)*R,y=(d-b)*R;const f=Math.sin(x/2)**2+Math
 function distanceText(m){return m<1000?Math.round(m)+' m':(m/1000).toFixed(1).replace('.',',')+' km'}
 const state={skin:'original',routeTarget:null,routeLine:null,routeInfo:null,routeShape:null,routeManeuvers:[],routeRequest:0,routeWatch:false,searching:false,mapStyle:'osm',tileLayer:null,mode:'hint',watchId:null,places:[],selected:null,position:null,lastSearch:null,searchToken:0,shownIds:new Set(),map:null,markers:null,userCircle:null,accuracyCircle:null};
 const modeText={auto:'Wenn du einen neuen interessanten Ort erreichst, wird er automatisch als nächstes Ziel ausgewählt. Hörführungen mit echter KI-Stimme folgen nach der Audio-Anbindung.',hint:'Bei interessanten Orten erscheint ein unaufdringlicher Hinweis. Du entscheidest, ob du die Geschichte öffnen möchtest.',manual:'Die Karte und die Liste zeigen interessante Orte, aber nichts wird automatisch ausgewählt.'};
+/* Einstellungen und Speicherung – eigenständiges Modul innerhalb der HTML-Datei. */
+const Preferences=(()=>{
 function note(s){const t=$('#fetchStatus');if(t)t.textContent=s}
 function banner(place){const e=$('#discoveryNote');if(!place){e.classList.remove('show');e.replaceChildren();return}e.replaceChildren();let strong=document.createElement('strong');strong.textContent='Interessanter Ort in deiner Nähe: '+place.name;let small=document.createElement('span');small.textContent='Etwa '+distanceText(place.distance||0)+' entfernt.';let btn=document.createElement('button');btn.type='button';btn.textContent='Jetzt entdecken';btn.onclick=()=>{banner(null);showPlace(place)};e.append(strong,small,document.createElement('br'),btn);e.classList.add('show')}
 function syncFoldSummaries(){
@@ -302,6 +306,12 @@ function syncFoldSummaries(){
 }
 function persist(){syncFoldSummaries();try{localStorage.setItem('zeitreise-v02',JSON.stringify({skin:state.skin,mode:state.mode,voice:$('#voice').value,speech:$('#speech').checked,radius:$('#radius').value,interests:Object.fromEntries($$('[data-interest]').map(e=>[e.dataset.interest,e.checked]))}))}catch{}}
 try{const old=JSON.parse(localStorage.getItem('zeitreise-v02')||localStorage.getItem('zeitreise-v01')||'null');if(old){state.skin=old.skin==='lcars'?'lcars':'original';state.mode=['auto','hint','manual'].includes(old.mode)?old.mode:'hint';$('#voice').value=old.voice||'warm';$('#speech').checked=old.speech!==false;$('#radius').value=old.radius||'600';$$('[data-interest]').forEach(el=>{if(old.interests&&el.dataset.interest in old.interests)el.checked=old.interests[el.dataset.interest]})}}catch{}
+return {note,banner,syncFoldSummaries,persist};
+})();
+const {note,banner,syncFoldSummaries,persist}=Preferences;
+
+/* Skin-Auswahl und Themenwechsel – eigenständiges Modul innerhalb der HTML-Datei. */
+const Appearance=(()=>{
 /* Skin-Steuerung: ändert ausschließlich das Erscheinungsbild, niemals GPS oder Navigationsdaten. */
 function applySkin(value,save=true){
  const skin=value==='lcars'?'lcars':'original';
@@ -316,6 +326,12 @@ $$('input[name="skin"]').forEach(option=>option.addEventListener('change',()=>{
  if(option.checked)applySkin(option.value);
 }));
 applySkin(state.skin,false);
+return {applySkin};
+})();
+const {applySkin}=Appearance;
+
+/* Modus, Listen und Statusdarstellung – eigenständiges Modul innerhalb der HTML-Datei. */
+const DiscoveryView=(()=>{
 function setMode(m){state.mode=m;$$('[data-mode]').forEach(b=>{b.classList.toggle('selected',b.dataset.mode===m);b.setAttribute('aria-pressed',String(b.dataset.mode===m))});$('#modeHelp').textContent=modeText[m];banner(null);persist()}
 $$('[data-mode]').forEach(b=>b.addEventListener('click',()=>setMode(b.dataset.mode)));setMode(state.mode);
 $$('select,input').forEach(el=>el.addEventListener('change',persist));syncFoldSummaries();
@@ -324,6 +340,12 @@ function renderPoi(){const list=$('#poiList');list.replaceChildren();const items
  for(const p of items){const b=document.createElement('button');b.type='button';b.className='poi'+(state.selected?.id===p.id?' active':'');const pin=document.createElement('span');pin.className='poi-pin';pin.textContent='⌖';const wrap=document.createElement('span');wrap.className='poi-left';const title=document.createElement('b');title.textContent=p.name;const sub=document.createElement('small');sub.textContent=p.kind||'Sehenswürdigkeit';wrap.append(title,sub);b.append(pin,wrap);if(Number.isFinite(p.distance)){let dis=document.createElement('span');dis.className='poi-distance';dis.textContent=distanceText(p.distance);b.append(dis)}b.addEventListener('click',()=>showPlace(p));list.append(b)}
  updateMarkers();}
 function setStatus(msg,isLive=false){const el=$('#gpsStatus');el.hidden=!msg;el.textContent=msg;el.classList.toggle('live',isLive)}
+return {setMode,renderPoi,setStatus};
+})();
+const {setMode,renderPoi,setStatus}=DiscoveryView;
+
+/* Kartenansicht und Kartensteuerung – eigenständiges Modul innerhalb der HTML-Datei. */
+const MapView=(()=>{
 function changeBaseLayer(){if(!state.map||typeof L==='undefined')return;
  if(state.tileLayer)state.map.removeLayer(state.tileLayer);
  const topo=state.mapStyle==='topo';
@@ -356,7 +378,12 @@ $('#mapStyleBtn').addEventListener('click',()=>{
 });
 function updateMarkers(){if(!state.map||!state.markers)return;state.markers.clearLayers();for(const p of state.places){if(!Number.isFinite(p.lat)||!Number.isFinite(p.lon))continue;const marker=L.circleMarker([p.lat,p.lon],{radius:8,color:'#fff',weight:2,fillColor:'#d5a451',fillOpacity:.98});marker.bindTooltip(p.name,{direction:'top'});marker.on('click',()=>showPlace(p));marker.addTo(state.markers)}
  if(state.position){let {lat,lon,accuracy}=state.position;const coords=[lat,lon];if(state.userCircle){state.map.removeLayer(state.userCircle);state.map.removeLayer(state.accuracyCircle)}state.accuracyCircle=L.circle(coords,{radius:accuracy,color:'#317ff0',fillColor:'#3989fc',fillOpacity:.10,weight:1}).addTo(state.map);state.userCircle=L.circleMarker(coords,{radius:8,color:'#fff',weight:2,fillColor:'#247de2',fillOpacity:1}).bindTooltip('Du bist hier').addTo(state.map)}}
+return {changeBaseLayer,showMap,updateMarkers};
+})();
+const {changeBaseLayer,showMap,updateMarkers}=MapView;
 
+/* Wikimedia-Fotodaten und Cache – eigenständiges Modul innerhalb der HTML-Datei. */
+const PhotoRepository=(()=>{
 // Fotos werden erst beim Öffnen eines Ortes geladen; Wikimedia-Dateien verbleiben auf den Originalservern.
 const photoCache=new Map();
 function photoEndpoint(host,parameters){
@@ -456,6 +483,12 @@ async function findPlacePhoto(p){
   try{return await commonsSearchPhoto(p)}catch{return null}
  }
 }
+return {photoCache,findPlacePhoto};
+})();
+const {photoCache,findPlacePhoto}=PhotoRepository;
+
+/* Fotoanzeige und Lizenznachweise – eigenständiges Modul innerhalb der HTML-Datei. */
+const PhotoView=(()=>{
 function displayPlacePhoto(p){
  const figure=$('#story .poi-photo');
  if(!figure)return;
@@ -478,8 +511,12 @@ function displayPlacePhoto(p){
   const unavailable=document.createElement('div');unavailable.className='photo-placeholder';unavailable.textContent='Bilddienst momentan nicht erreichbar.';figure.append(unavailable);
  });
 }
+return {displayPlacePhoto};
+})();
+const {displayPlacePhoto}=PhotoView;
 
-
+/* Interne Fußwegnavigation – eigenständiges Modul innerhalb der HTML-Datei. */
+const RouteController=(()=>{
 // Fußgänger-Routing mit tatsächlichem GPS-Standort.
 function decodePolyline6(str){
  let index=0,lat=0,lon=0;const points=[];
@@ -599,23 +636,46 @@ async function startWalkingRoute(p){
   note('Fußwegdienst gerade nicht erreichbar. Bitte erneut versuchen.');
  }
 }
+return {decodePolyline6,updateRouteProgress,stopWalkingRoute,startWalkingRoute};
+})();
+const {decodePolyline6,updateRouteProgress,stopWalkingRoute,startWalkingRoute}=RouteController;
 
+/* Ortsdetails und Darstellung – eigenständiges Modul innerhalb der HTML-Datei. */
+const PlaceDetailView=(()=>{
 function revealStory(){const e=$('#story');e.classList.add('show')}
 function storyStructure(p){const card=$('#story');card.replaceChildren();let title=document.createElement('h3');title.textContent=p.name;const origin=document.createElement('div');origin.className='origin';origin.textContent=p.origin==='Wikipedia'?'Quelle: Wikipedia':p.origin==='OpenStreetMap'?'Standortdaten: OpenStreetMap':'Quelle: '+(p.origin||'Öffentlicher Eintrag');const paragraph=document.createElement('p');paragraph.textContent=p.blurb||'Zu diesem Ort liegen geografische Informationen vor. Eine fundierte historische Erzählung benötigt weitere Quellen.';const figure=document.createElement('figure');figure.className='poi-photo';figure.setAttribute('aria-label','Bild zu '+p.name);const wait=document.createElement('div');wait.className='photo-placeholder';wait.textContent='Passendes Foto wird gesucht …';figure.append(wait);const heading=document.createElement('div');heading.className='story-head';const dismiss=document.createElement('button');dismiss.type='button';dismiss.className='close';dismiss.textContent='Schließen ×';dismiss.addEventListener('click',()=>{card.classList.remove('show');state.selected=null;renderPoi()});heading.append(title,dismiss);const directions=document.createElement('div');directions.className='directions-action';const walk=document.createElement('button');walk.type='button';walk.className='walk-btn';walk.textContent=state.routeTarget?.id===p.id?'↗ Route auf Karte zeigen':'↗ Zu diesem Ort navigieren';walk.addEventListener('click',()=>startWalkingRoute(p));directions.append(walk);card.append(heading,directions,figure,origin,paragraph);const actions=document.createElement('div');actions.className='story-actions';if(p.source){let a=document.createElement('a');a.href=p.source;a.rel='noopener noreferrer';a.target='_blank';a.textContent='Quelle öffnen ↗';actions.append(a)}if(Number.isFinite(p.lat)&&Number.isFinite(p.lon)){let a=document.createElement('a');a.href='#karte';a.textContent='Auf unserer Karte ansehen';a.addEventListener('click',event=>{event.preventDefault();if(state.map){state.map.setView([p.lat,p.lon],17,{animate:true});document.querySelector('.map-card').scrollIntoView({behavior:'smooth',block:'start'});}});actions.append(a)}card.append(actions);let help=document.createElement('p');help.className='small-note';help.textContent='Die professionelle KI-Hörführung ist noch nicht angeschlossen. Die Texte sind zunächst öffentliche Quellenauszüge oder kurze Basisbeschreibungen.';card.append(help);revealStory();return paragraph}
 async function showPlace(p){state.selected=p;banner(null);renderPoi();let paragraph=storyStructure(p);displayPlacePhoto(p);if(state.map&&Number.isFinite(p.lat)&&Number.isFinite(p.lon)){state.map.panTo([p.lat,p.lon])}requestAnimationFrame(()=>{$('#story')?.scrollIntoView({behavior:'smooth',block:'start'})});
  if(p.origin==='Wikipedia'&&p.pageid&&!p.blurb){paragraph.className='loading-line';paragraph.textContent='Lade geschichtliche Hintergrundinformationen von Wikipedia …';try{const u=new URL('https://de.wikipedia.org/w/api.php');u.search=new URLSearchParams({action:'query',prop:'extracts',exintro:'1',explaintext:'1',pageids:String(p.pageid),format:'json',origin:'*'});const response=await fetchTimed(u.toString(),12000);if(!response.ok)throw Error('Wiki '+response.status);const data=await response.json();let page=data.query?.pages?.[p.pageid];if(state.selected!==p)return;p.blurb=(page?.extract||'').trim().slice(0,1800)||'Für diesen Eintrag ist kein kurzer Beschreibungstext verfügbar. Öffne die Quelle, um mehr zu erfahren.';paragraph.className='';paragraph.textContent=p.blurb}catch{if(state.selected===p){paragraph.className='';paragraph.textContent='Der Wikipedia-Text ist momentan nicht abrufbar. Über „Quelle öffnen“ kannst du den Artikel direkt lesen.'}}}}
+return {showPlace};
+})();
+const {showPlace}=PlaceDetailView;
+
+/* Wikipedia- und OpenStreetMap-Ortsdaten – eigenständiges Modul innerhalb der HTML-Datei. */
+const PlaceRepository=(()=>{
 function fetchTimed(url,ms=14000,opts={}){let ac=new AbortController();let timer=setTimeout(()=>ac.abort(),ms);return fetch(url,{...opts,signal:ac.signal}).finally(()=>clearTimeout(timer))}
 function norm(s){return(s||'').toLocaleLowerCase('de').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^\p{L}\p{N}]/gu,'').trim()}
 function nearWiki(lat,lon,radius){const u=new URL('https://de.wikipedia.org/w/api.php');u.search=new URLSearchParams({action:'query',list:'geosearch',gscoord:lat.toFixed(6)+'|'+lon.toFixed(6),gsradius:String(Math.min(10000,radius)),gslimit:'50',format:'json',origin:'*'});return fetchTimed(u.toString()).then(r=>{if(!r.ok)throw Error('Wikipedia '+r.status);return r.json()}).then(data=>(data.query?.geosearch||[]).map(x=>({id:'wiki-'+x.pageid,pageid:x.pageid,name:x.title,lat:x.lat,lon:x.lon,distance:Math.round(x.dist),kind:'Historischer oder kultureller Ort',origin:'Wikipedia',source:'https://de.wikipedia.org/?curid='+x.pageid}))) }
 function nearOsm(lat,lon,radius){const query=`[out:json][timeout:17];(nwr(around:${radius},${lat.toFixed(6)},${lon.toFixed(6)})[historic][name];nwr(around:${radius},${lat.toFixed(6)},${lon.toFixed(6)})[tourism=attraction][name];nwr(around:${radius},${lat.toFixed(6)},${lon.toFixed(6)})[heritage][name];nwr(around:${radius},${lat.toFixed(6)},${lon.toFixed(6)})[tourism=museum][name];);out center 100;`;
  const body=new URLSearchParams({data:query});return fetchTimed('https://overpass.private.coffee/api/interpreter',18000,{method:'POST',body}).then(r=>{if(!r.ok)throw Error('Overpass '+r.status);return r.json()}).then(data=>(data.elements||[]).map(x=>{const latP=x.lat??x.center?.lat,lonP=x.lon??x.center?.lon;const tags=x.tags||{},name=tags['name:de']||tags.name;return{id:'osm-'+x.type+'-'+x.id,name,lat:latP,lon:lonP,distance:Math.round(meters(lat,lon,latP,lonP)),kind:tags.historic?'Historisches Denkmal':tags.tourism==='museum'?'Museum':'Sehenswürdigkeit',origin:'OpenStreetMap',wikipedia:tags.wikipedia||'',wikidata:tags.wikidata||'',commonsFile:tags.wikimedia_commons||'',source:'https://www.openstreetmap.org/'+x.type+'/'+x.id,blurb:tags.description||tags['description:de']||''}}).filter(x=>x.name&&Number.isFinite(x.lat)&&Number.isFinite(x.lon)&&x.distance<=radius+70))}
 function mergePlaces(wiki,osm){let all=[...wiki];let seen=new Set(wiki.map(p=>norm(p.name)));for(const p of osm){let key=norm(p.name);if(seen.has(key))continue;let nearest=wiki.find(w=>meters(w.lat,w.lon,p.lat,p.lon)<35&&(norm(w.name).includes(key)||key.includes(norm(w.name))));if(nearest)continue;all.push(p);seen.add(key)}return all.sort((a,b)=>a.distance-b.distance).slice(0,55)}
+return {fetchTimed,norm,nearWiki,nearOsm,mergePlaces};
+})();
+const {fetchTimed,norm,nearWiki,nearOsm,mergePlaces}=PlaceRepository;
+
+/* Ortssuche und Entdeckungslogik – eigenständiges Modul innerhalb der HTML-Datei. */
+const DiscoveryEngine=(()=>{
 function discoveryLogic(){if(state.mode==='manual'||!state.position)return;const close=state.places.find(p=>p.distance<=(Math.max(80,Math.min(140,state.position.accuracy+60)))&&!state.shownIds.has(p.id));if(!close)return;state.shownIds.add(close.id);if(state.mode==='auto'){showPlace(close);note('Neuen Ort entdeckt: '+close.name+'. Automatische Audioführung folgt in einem späteren Schritt.')}else{banner(close);note('Neuer Ort in der Nähe: '+close.name)}}
 async function searchAround(force=false){const pos=state.position;if(!pos)return;const radius=Number($('#radius').value)||600;const prev=state.lastSearch;if(!force&&prev&&meters(pos.lat,pos.lon,prev.lat,prev.lon)<Math.min(100,radius*.25)&&Date.now()-prev.at<120000)return;
  state.lastSearch={lat:pos.lat,lon:pos.lon,at:Date.now()};const token=++state.searchToken;state.searching=true;renderPoi();note('Suche historische Orte im Umkreis von '+radius+' Metern …');const result=await Promise.allSettled([nearWiki(pos.lat,pos.lon,radius),nearOsm(pos.lat,pos.lon,radius)]);if(token!==state.searchToken)return;
  const wiki=result[0].status==='fulfilled'?result[0].value:[], osm=result[1].status==='fulfilled'?result[1].value:[];state.places=mergePlaces(wiki,osm);state.searching=false;renderPoi();const count=state.places.length;
  if(!count){note(result.every(x=>x.status==='rejected')?'Die Suchdienste sind derzeit nicht erreichbar. GPS funktioniert trotzdem. Tippe auf „Orte neu suchen“ oder erhöhe den Suchradius.':'Keine Einträge in diesem Radius gefunden. Probiere 1 Kilometer Suchradius oder „Orte neu suchen“.')}
  else{note(count+' interessante Orte gefunden'+(result.some(x=>x.status==='rejected')?' (ein Datenanbieter derzeit nicht erreichbar)':'')+'.');discoveryLogic()}}
+return {discoveryLogic,searchAround};
+})();
+const {discoveryLogic,searchAround}=DiscoveryEngine;
+
+/* GPS-Standort und Tracking-Steuerung – eigenständiges Modul innerhalb der HTML-Datei. */
+const GpsController=(()=>{
 function setPosition(pos){
  const {latitude:lat,longitude:lon,accuracy}=pos.coords;
  if(!Number.isFinite(lat)||!Number.isFinite(lon))return;
@@ -689,6 +749,10 @@ $('#stopGpsBtn').addEventListener('click',()=>{
 });
 renderPoi();setTrackingButton();
 // Es werden ausschließlich Orte am freigegebenen Standort angezeigt.
+return {setPosition,positionError,gpsCheck,setTrackingButton};
+})();
+const {setPosition,positionError,gpsCheck,setTrackingButton}=GpsController;
+
 
 })();
 </script>
