@@ -4,7 +4,7 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
 <meta name="theme-color" content="#071d40"/>
-<title>ZEITREISE 0.5.13 · Thorsten-Fehlerbehebung</title>
+<title>ZEITREISE 0.5.14 · Schnelle Ortssuche</title>
 <link rel="manifest" href="./manifest.webmanifest"/>
 <meta name="referrer" content="strict-origin-when-cross-origin"/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
@@ -820,7 +820,7 @@ function setMode(m){state.mode=m;$$('[data-mode]').forEach(b=>{b.classList.toggl
 $$('[data-mode]').forEach(b=>b.addEventListener('click',()=>setMode(b.dataset.mode)));setMode(state.mode);
 $$('select,input').forEach(el=>el.addEventListener('change',persist));syncFoldSummaries();
 $('#radius').addEventListener('change',()=>{if(state.position)searchAround(true)});
-function renderPoi(){const list=$('#poiList');list.replaceChildren();const items=state.places;$('#poiHead').textContent='In deiner Umgebung';$('#poiCount').textContent=state.position?items.length+' Orte':'GPS noch nicht gestartet';if(!items.length){const t=document.createElement('div');t.className='small-note';t.textContent=!state.position?'Bitte erteile zuerst die Standortfreigabe.':state.searching?'Orte werden gerade über Wikipedia und OpenStreetMap gesucht …':'Keine Sehenswürdigkeiten gefunden. Versuche einen größeren Suchradius oder eine neue Suche.';list.append(t);return}
+function renderPoi(){const list=$('#poiList');list.replaceChildren();const items=state.places;$('#poiHead').textContent='In deiner Umgebung';$('#poiCount').textContent=state.position?(items.length+' Orte'+(state.searching?' · lädt nach':'')):'GPS noch nicht gestartet';if(!items.length){const t=document.createElement('div');t.className='small-note';t.textContent=!state.position?'Bitte erteile zuerst die Standortfreigabe.':state.searching?'Orte werden gerade über Wikipedia und OpenStreetMap gesucht …':'Keine Sehenswürdigkeiten gefunden. Versuche einen größeren Suchradius oder eine neue Suche.';list.append(t);updateMarkers();return}
  for(const p of items){const b=document.createElement('button');b.type='button';b.className='poi'+(state.selected?.id===p.id?' active':'');const pin=document.createElement('span');pin.className='poi-pin';pin.textContent='⌖';const wrap=document.createElement('span');wrap.className='poi-left';const title=document.createElement('b');title.textContent=p.name;const sub=document.createElement('small');sub.textContent=p.kind||'Sehenswürdigkeit';wrap.append(title,sub);b.append(pin,wrap);if(Number.isFinite(p.distance)){let dis=document.createElement('span');dis.className='poi-distance';dis.textContent=distanceText(p.distance);b.append(dis)}b.addEventListener('click',()=>showPlace(p));list.append(b)}
  updateMarkers();}
 function setStatus(msg,isLive=false){const el=$('#gpsStatus');el.hidden=!msg;el.textContent=msg;el.classList.toggle('live',isLive)}
@@ -1130,8 +1130,8 @@ const {decodePolyline6,updateRouteProgress,stopWalkingRoute,startWalkingRoute}=R
 const PlaceDetailView=(()=>{
 function revealStory(){const e=$('#story');e.classList.add('show')}
 function storyStructure(p){const card=$('#story');card.replaceChildren();let title=document.createElement('h3');title.textContent=p.name;const origin=document.createElement('div');origin.className='origin';origin.textContent=p.origin==='Wikipedia'?'Quelle: Wikipedia':p.origin==='OpenStreetMap'?'Standortdaten: OpenStreetMap':'Quelle: '+(p.origin||'Öffentlicher Eintrag');const paragraph=document.createElement('p');paragraph.textContent=p.blurb||'Zu diesem Ort liegen geografische Informationen vor. Eine fundierte historische Erzählung benötigt weitere Quellen.';const figure=document.createElement('figure');figure.className='poi-photo';figure.setAttribute('aria-label','Bild zu '+p.name);const wait=document.createElement('div');wait.className='photo-placeholder';wait.textContent='Passendes Foto wird gesucht …';figure.append(wait);const heading=document.createElement('div');heading.className='story-head';const dismiss=document.createElement('button');dismiss.type='button';dismiss.className='close';dismiss.textContent='Schließen ×'; dismiss.addEventListener('click',()=>{LocalNarration.stop();card.classList.remove('show');state.selected=null;clearPlaceView();renderPoi()});heading.append(title,dismiss);const directions=document.createElement('div');directions.className='directions-action';const walk=document.createElement('button');walk.type='button';walk.className='walk-btn';walk.textContent=state.routeTarget?.id===p.id?'↗ Route auf Karte zeigen':'↗ Zu diesem Ort navigieren';walk.addEventListener('click',()=>startWalkingRoute(p));directions.append(walk);card.append(heading,directions,figure,origin,paragraph);const actions=document.createElement('div');actions.className='story-actions';if(p.source){let a=document.createElement('a');a.href=p.source;a.rel='noopener noreferrer';a.target='_blank';a.textContent='Quelle öffnen ↗';actions.append(a)}if(Number.isFinite(p.lat)&&Number.isFinite(p.lon)){let a=document.createElement('a');a.href='#karte';a.textContent='Auf unserer Karte ansehen';a.addEventListener('click',event=>{event.preventDefault();setPlaceView('map');if(state.map){state.map.setView([p.lat,p.lon],17,{animate:true});document.querySelector('.map-card').scrollIntoView({behavior:'smooth',block:'start'});}});actions.append(a)}card.append(LocalNarration.createPlaceControls(p),actions);revealStory();return paragraph}
-async function showPlace(p){LocalNarration.stop();state.selected=p;banner(null);renderPoi();let paragraph=storyStructure(p);inspectPlace(p);displayPlacePhoto(p);if(state.map&&Number.isFinite(p.lat)&&Number.isFinite(p.lon)){state.map.panTo([p.lat,p.lon])}requestAnimationFrame(()=>{$('.map-card')?.scrollIntoView({behavior:'smooth',block:'start'})});
- if(p.origin==='Wikipedia'&&p.pageid&&!p.blurb){paragraph.className='loading-line';paragraph.textContent='Lade geschichtliche Hintergrundinformationen von Wikipedia …';try{const u=new URL('https://de.wikipedia.org/w/api.php');u.search=new URLSearchParams({action:'query',prop:'extracts',exintro:'1',explaintext:'1',pageids:String(p.pageid),format:'json',origin:'*'});const response=await fetchTimed(u.toString(),12000);if(!response.ok)throw Error('Wiki '+response.status);const data=await response.json();let page=data.query?.pages?.[p.pageid];if(state.selected!==p)return;p.blurb=(page?.extract||'').trim().slice(0,1800)||'Für diesen Eintrag ist kein kurzer Beschreibungstext verfügbar. Öffne die Quelle, um mehr zu erfahren.';paragraph.className='';paragraph.textContent=p.blurb;LocalNarration.refreshPlaceControls(p)}catch{if(state.selected===p){paragraph.className='';paragraph.textContent='Der Wikipedia-Text ist momentan nicht abrufbar. Über „Quelle öffnen“ kannst du den Artikel direkt lesen.';LocalNarration.refreshPlaceControls(p)}}}}
+async function showPlace(p){LocalNarration.stop();if(!p.blurb){const cachedText=PlaceCache.readStory(p);if(cachedText)p.blurb=cachedText;}state.selected=p;banner(null);renderPoi();let paragraph=storyStructure(p);inspectPlace(p);displayPlacePhoto(p);if(state.map&&Number.isFinite(p.lat)&&Number.isFinite(p.lon)){state.map.panTo([p.lat,p.lon])}requestAnimationFrame(()=>{$('.map-card')?.scrollIntoView({behavior:'smooth',block:'start'})});
+ if(p.origin==='Wikipedia'&&p.pageid&&!p.blurb){paragraph.className='loading-line';paragraph.textContent='Lade geschichtliche Hintergrundinformationen von Wikipedia …';try{const u=new URL('https://de.wikipedia.org/w/api.php');u.search=new URLSearchParams({action:'query',prop:'extracts',exintro:'1',explaintext:'1',pageids:String(p.pageid),format:'json',origin:'*'});const response=await fetchTimed(u.toString(),12000);if(!response.ok)throw Error('Wiki '+response.status);const data=await response.json();let page=data.query?.pages?.[p.pageid];if(state.selected!==p)return;p.blurb=(page?.extract||'').trim().slice(0,1800)||'Für diesen Eintrag ist kein kurzer Beschreibungstext verfügbar. Öffne die Quelle, um mehr zu erfahren.';paragraph.className='';paragraph.textContent=p.blurb;PlaceCache.writeStory(p,p.blurb);LocalNarration.refreshPlaceControls(p)}catch{if(state.selected===p){paragraph.className='';paragraph.textContent='Der Wikipedia-Text ist momentan nicht abrufbar. Über „Quelle öffnen“ kannst du den Artikel direkt lesen.';LocalNarration.refreshPlaceControls(p)}}}}
 return {showPlace};
 })();
 const {showPlace}=PlaceDetailView;
@@ -1183,7 +1183,25 @@ async function classifyWikipediaStreets(places){
  return places;
 }
 
-function nearWiki(lat,lon,radius){const u=new URL('https://de.wikipedia.org/w/api.php');u.search=new URLSearchParams({action:'query',list:'geosearch',gscoord:lat.toFixed(6)+'|'+lon.toFixed(6),gsradius:String(Math.min(10000,radius)),gslimit:'50',format:'json',origin:'*'});return fetchTimed(u.toString()).then(r=>{if(!r.ok)throw Error('Wikipedia '+r.status);return r.json()}).then(data=>(data.query?.geosearch||[]).map(x=>({id:'wiki-'+x.pageid,pageid:x.pageid,name:x.title,lat:x.lat,lon:x.lon,distance:Math.round(x.dist),kind:'Historischer oder kultureller Ort',origin:'Wikipedia',source:'https://de.wikipedia.org/?curid='+x.pageid}))).then(classifyWikipediaStreets) }
+function nearWiki(lat,lon,radius,onHistoricStreets){
+ const u=new URL('https://de.wikipedia.org/w/api.php');
+ u.search=new URLSearchParams({action:'query',list:'geosearch',gscoord:lat.toFixed(6)+'|'+lon.toFixed(6),gsradius:String(Math.min(10000,radius)),gslimit:'50',format:'json',origin:'*'});
+ return fetchTimed(u.toString(),11000).then(r=>{if(!r.ok)throw Error('Wikipedia '+r.status);return r.json()}).then(data=>{
+  const all=(data.query?.geosearch||[]).map(x=>({
+   id:'wiki-'+x.pageid,pageid:x.pageid,name:x.title,lat:x.lat,lon:x.lon,
+   distance:Math.round(x.dist),kind:'Historischer oder kultureller Ort',
+   origin:'Wikipedia',source:'https://de.wikipedia.org/?curid='+x.pageid
+  }));
+  // Nicht-Straßen sofort liefern: die zusätzliche Kategorienprüfung darf nicht blockieren.
+  const streets=all.filter(p=>isStreetName(p.name));
+  if(streets.length&&typeof onHistoricStreets==='function'){
+   classifyWikipediaStreets(streets)
+    .then(checked=>onHistoricStreets(checked.filter(isHistoricallyRelevantPlace)))
+    .catch(()=>{});
+  }
+  return all.filter(p=>!isStreetName(p.name));
+ });
+}
 function nearOsm(lat,lon,radius){const query=`[out:json][timeout:17];(nwr(around:${radius},${lat.toFixed(6)},${lon.toFixed(6)})[historic][name];nwr(around:${radius},${lat.toFixed(6)},${lon.toFixed(6)})[tourism=attraction][name];nwr(around:${radius},${lat.toFixed(6)},${lon.toFixed(6)})[heritage][name];nwr(around:${radius},${lat.toFixed(6)},${lon.toFixed(6)})[tourism=museum][name];);out center 100;`;
  const body=new URLSearchParams({data:query});return fetchTimed('https://overpass.private.coffee/api/interpreter',18000,{method:'POST',body}).then(r=>{if(!r.ok)throw Error('Overpass '+r.status);return r.json()}).then(data=>(data.elements||[]).map(x=>{const latP=x.lat??x.center?.lat,lonP=x.lon??x.center?.lon;const tags=x.tags||{},name=tags['name:de']||tags.name;return{id:'osm-'+x.type+'-'+x.id,name,lat:latP,lon:lonP,distance:Math.round(meters(lat,lon,latP,lonP)),kind:tags.historic?'Historisches Denkmal':tags.tourism==='museum'?'Museum':'Sehenswürdigkeit',origin:'OpenStreetMap',historicallyImportantStreet:historicalStreetTags(tags),wikipedia:tags.wikipedia||'',wikidata:tags.wikidata||'',commonsFile:tags.wikimedia_commons||'',source:'https://www.openstreetmap.org/'+x.type+'/'+x.id,blurb:tags.description||tags['description:de']||'',
 website:tags.website||tags['contact:website']||tags.url||'',
@@ -1212,14 +1230,135 @@ return {fetchTimed,norm,nearWiki,nearOsm,mergePlaces};
 })();
 const {fetchTimed,norm,nearWiki,nearOsm,mergePlaces}=PlaceRepository;
 
+
+/* Version 0.5.14: lokaler, begrenzter Geodaten- und Text-Zwischenspeicher.
+   Speichert nur öffentliche Ortsdaten im Browser des Geräts.
+   Keine Abhängigkeit von Skin, GPS-UI oder Sprachmodell. */
+const PlaceCache=(()=>{
+ const PLACE_KEY='zeitreise-place-cache-v1',TEXT_KEY='zeitreise-story-cache-v1';
+ const MAX_AREAS=12,MAX_STORIES=50,AREA_TTL=12*60*60*1000,TEXT_TTL=14*24*60*60*1000;
+ function read(key){try{const data=JSON.parse(localStorage.getItem(key)||'[]');return Array.isArray(data)?data:[]}catch{return []}}
+ function save(key,data){try{localStorage.setItem(key,JSON.stringify(data));return true}catch{return false}}
+ function lookup(lat,lon,radius){
+  const now=Date.now();
+  let best=null,bestDistance=Infinity;
+  for(const item of read(PLACE_KEY)){
+   if(!item||item.radius!==radius||now-item.at>AREA_TTL||!Number.isFinite(item.lat)||!Number.isFinite(item.lon))continue;
+   const d=meters(lat,lon,item.lat,item.lon);
+   if(d<=Math.max(70,Math.min(150,radius*.20))&&d<bestDistance){best=item;bestDistance=d;}
+  }
+  return best;
+ }
+ function store(lat,lon,radius,providers){
+  if(![...Object.values(providers)].some(v=>Array.isArray(v)&&v.length))return;
+  let entries=read(PLACE_KEY).filter(x=>x&&Date.now()-x.at<AREA_TTL&&
+   !(x.radius===radius&&meters(lat,lon,x.lat,x.lon)<80));
+  const compact=Object.fromEntries(['wiki','osm','streets'].map(key=>[key,(providers[key]||[]).slice(0,90).map(p=>({...p,blurb:String(p.blurb||'').slice(0,1800)}))]));
+  entries.unshift({lat,lon,radius,at:Date.now(),providers:compact});
+  save(PLACE_KEY,entries.slice(0,MAX_AREAS));
+ }
+ function readStory(p){
+  const entry=read(TEXT_KEY).find(x=>x&&x.id===p.id&&Date.now()-x.at<TEXT_TTL);
+  return typeof entry?.text==='string'?entry.text:'';
+ }
+ function writeStory(p,text){
+  if(!p?.id||typeof text!=='string'||text.length<60||text.startsWith('Für diesen Eintrag'))return;
+  const entries=read(TEXT_KEY).filter(x=>x&&x.id!==p.id&&Date.now()-x.at<TEXT_TTL);
+  entries.unshift({id:p.id,at:Date.now(),text:text.slice(0,1800)});
+  save(TEXT_KEY,entries.slice(0,MAX_STORIES));
+ }
+ return {lookup,store,readStory,writeStory};
+})();
+
 /* Ortssuche und Entdeckungslogik – eigenständiges Modul innerhalb der HTML-Datei. */
 const DiscoveryEngine=(()=>{
 function discoveryLogic(){if(state.mode==='manual'||!state.position)return;const close=state.places.find(p=>p.distance<=(Math.max(80,Math.min(140,state.position.accuracy+60)))&&!state.shownIds.has(p.id));if(!close)return;state.shownIds.add(close.id);if(state.mode==='auto'){showPlace(close);note('Neuen Ort entdeckt: '+close.name+'. Automatische Audioführung folgt in einem späteren Schritt.')}else{banner(close);note('Neuer Ort in der Nähe: '+close.name)}}
-async function searchAround(force=false){const pos=state.position;if(!pos)return;const radius=Number($('#radius').value)||600;const prev=state.lastSearch;if(!force&&prev&&meters(pos.lat,pos.lon,prev.lat,prev.lon)<Math.min(100,radius*.25)&&Date.now()-prev.at<120000)return;
- state.lastSearch={lat:pos.lat,lon:pos.lon,at:Date.now()};const token=++state.searchToken;state.searching=true;renderPoi();note('Suche historische Orte im Umkreis von '+radius+' Metern …');const result=await Promise.allSettled([nearWiki(pos.lat,pos.lon,radius),nearOsm(pos.lat,pos.lon,radius)]);if(token!==state.searchToken)return;
- const wiki=result[0].status==='fulfilled'?result[0].value:[], osm=result[1].status==='fulfilled'?result[1].value:[];state.places=mergePlaces(wiki,osm);state.searching=false;renderPoi();const count=state.places.length;
- if(!count){note(result.every(x=>x.status==='rejected')?'Die Suchdienste sind derzeit nicht erreichbar. GPS funktioniert trotzdem. Tippe auf „Orte neu suchen“ oder erhöhe den Suchradius.':'Keine Einträge in diesem Radius gefunden. Probiere 1 Kilometer Suchradius oder „Orte neu suchen“.')}
- else{note(count+' interessante Orte gefunden'+(result.some(x=>x.status==='rejected')?' (ein Datenanbieter derzeit nicht erreichbar)':'')+'.');discoveryLogic()}}
+async function searchAround(force=false){
+ const pos=state.position;
+ if(!pos)return;
+ const radius=Number($('#radius').value)||600,lat=pos.lat,lon=pos.lon;
+ const prev=state.lastSearch;
+ if(!force&&prev&&meters(lat,lon,prev.lat,prev.lon)<Math.min(100,radius*.25)&&Date.now()-prev.at<120000)return;
+ state.lastSearch={lat,lon,at:Date.now()};
+ const token=++state.searchToken;
+ const cached=force?null:PlaceCache.lookup(lat,lon,radius);
+ // Provider-Ergebnisse sind unabhängig: der erste Dienst füllt sofort die Karte.
+ const parts={
+  wiki:Array.isArray(cached?.providers?.wiki)?cached.providers.wiki:[],
+  osm:Array.isArray(cached?.providers?.osm)?cached.providers.osm:[],
+  streets:Array.isArray(cached?.providers?.streets)?cached.providers.streets:[]
+ };
+ const done={wiki:false,osm:false};
+ let failures=0,hasShownDiscovery=false;
+ state.searching=true;
+ function publish(isCache=false){
+  if(token!==state.searchToken)return;
+  const live=state.position||{lat,lon};
+  let items=mergePlaces([...parts.wiki,...parts.streets],parts.osm)
+   .map(p=>{p.distance=Math.round(meters(live.lat,live.lon,p.lat,p.lon));return p})
+   .filter(p=>Number.isFinite(p.distance)&&p.distance<=radius+70)
+   .sort((a,b)=>a.distance-b.distance);
+  // Objektidentitäten stabil halten: offene Ortsdetails und Routen dürfen nicht
+  // durch asynchrones Nachladen anderer Quellen ungewollt verschwinden.
+  const existing=new Map(state.places.map(p=>[p.id,p]));
+  items=items.map(p=>{
+   const old=existing.get(p.id);
+   if(!old)return p;
+   const oldBlurb=old.blurb,oldChecked=old.siteChecked;
+   Object.assign(old,p);
+   if(oldBlurb&&!old.blurb)old.blurb=oldBlurb;
+   if(oldChecked)old.siteChecked=true;
+   return old;
+  });
+  for(const active of [state.selected,state.routeTarget]){
+   if(!active||items.includes(active))continue;
+   const index=items.findIndex(p=>norm(p.name)===norm(active.name)&&
+    meters(p.lat,p.lon,active.lat,active.lon)<40);
+   if(index>=0){
+    const fresh=items[index];
+    for(const k of ['website','openingHours','fee','charge','wheelchair','wikidata','commonsFile']){
+     if(!active[k]&&fresh[k])active[k]=fresh[k];
+    }
+    items[index]=active;
+   }
+  }
+  state.places=items;
+  renderPoi();
+  const count=items.length,waiting=!done.wiki||!done.osm;
+  if(isCache&&count)note(count+' Orte sofort aus dem Zwischenspeicher geladen. Suche im Hintergrund nach Aktualisierungen …');
+  else if(waiting)note(count?count+' Orte bereits gefunden – weitere werden im Hintergrund gesucht …':'Suche historische Orte in deiner Umgebung …');
+  else if(count)note(count+' interessante Orte gefunden'+(failures?' (ein Dienst zeitweise nicht erreichbar)':'')+'.');
+  else note(failures===2?'Die Suchdienste sind gerade nicht erreichbar. GPS funktioniert weiterhin.':'Keine passenden Sehenswürdigkeiten gefunden. Versuche einen größeren Suchradius.');
+  if(count&&!hasShownDiscovery){
+   hasShownDiscovery=true;
+   discoveryLogic();
+  }
+ }
+ if(cached)publish(true);
+ else{renderPoi();note('Suche historische Orte im Umkreis von '+radius+' Metern …');}
+ function finishProvider(provider,items,ok){
+  if(token!==state.searchToken)return;
+  done[provider]=true;
+  if(ok)parts[provider]=items;
+  else failures++;
+  publish();
+  if(ok)PlaceCache.store(lat,lon,radius,parts);
+ }
+ const wikiPromise=nearWiki(lat,lon,radius,streets=>{
+  if(token!==state.searchToken)return;
+  parts.streets=streets;
+  publish();
+  PlaceCache.store(lat,lon,radius,parts);
+ }).then(items=>finishProvider('wiki',items,true))
+  .catch(()=>finishProvider('wiki',[],false));
+ const osmPromise=nearOsm(lat,lon,radius)
+  .then(items=>finishProvider('osm',items,true))
+  .catch(()=>finishProvider('osm',[],false));
+ await Promise.allSettled([wikiPromise,osmPromise]);
+ if(token!==state.searchToken)return;
+ state.searching=false;
+ publish();
+}
 return {discoveryLogic,searchAround};
 })();
 const {discoveryLogic,searchAround}=DiscoveryEngine;
