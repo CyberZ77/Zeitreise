@@ -4,7 +4,7 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
 <meta name="theme-color" content="#071d40"/>
-<title>ZEITREISE 0.5.3 · Modulare Programmstruktur</title>
+<title>ZEITREISE 0.5.4 · Entdeckerkarte</title>
 <link rel="manifest" href="./manifest.webmanifest"/>
 <meta name="referrer" content="strict-origin-when-cross-origin"/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
@@ -265,6 +265,227 @@ html[data-skin="lcars"] a{color:#f0b783}
  html[data-skin="lcars"] .map-card,html[data-skin="lcars"] .config-card{border-left-width:7px;border-top-width:7px}
 }
 
+/* === SKIN 03: ENTDECKERKARTE / HISTORISCHE EXPEDITIONSKARTE ===
+   Eigenständiges Seekarten-Design; keine Änderungen an GPS oder Ortssuche. */
+.skin-explorer{background:linear-gradient(140deg,#f5e6c3,#cdb186);border-color:#9f7a46}
+.skin-explorer i:nth-child(1){background:#5a4230;flex:2;border-radius:2px}
+.skin-explorer i:nth-child(2){background:#316359;border-radius:2px}
+.skin-explorer i:nth-child(3){background:#bd8b3e;border-radius:2px}
+html[data-skin="explorer"]{
+ --navy:#332719;--blue:#315d54;--panel:#ead7ae;--panel2:#f7e8c9;
+ --line:rgba(103,75,37,.43);--white:#352a1c;--soft:#67553d;
+ --gold:#a57636;--green:#226350;color-scheme:light;
+}
+html[data-skin="explorer"] body{
+ color:var(--white);
+ background:radial-gradient(ellipse at 48% -10%,#5b7761,#2b4b46 65%,#152e2a);
+}
+html[data-skin="explorer"] body::before{
+ content:"";position:fixed;inset:0;pointer-events:none;opacity:.3;
+ background:repeating-linear-gradient(0deg,transparent 0 42px,#d9c79a1e 43px,transparent 44px),
+ repeating-linear-gradient(90deg,transparent 0 42px,#d9c79a1e 43px,transparent 44px),
+ repeating-linear-gradient(25deg,transparent 0 125px,#dbcda42b 126px,transparent 127px);
+}
+html[data-skin="explorer"] .shell{position:relative}
+html[data-skin="explorer"] header{padding:6px 0 8px}
+html[data-skin="explorer"] header::after{
+ content:"✥   ─────────   ✥";display:block;text-align:center;
+ font:13px Georgia,serif;letter-spacing:.18em;color:#d6b775;margin:8px 0 1px;
+}
+html[data-skin="explorer"] h1{
+ font:750 clamp(25px,4vw,34px) Georgia,"Times New Roman",serif;
+ color:#f5dcaa;letter-spacing:.13em;text-shadow:0 3px 9px #09201d;
+}
+html[data-skin="explorer"] header p{
+ color:#e7d7b3;font:italic 14px Georgia,serif;letter-spacing:.03em;
+}
+html[data-skin="explorer"] .brand-mark{
+ background:radial-gradient(circle,#f2dba2,#b58338);
+ color:#513a1e;border-radius:50%;border:3px double #694b27;
+ box-shadow:inset 0 0 0 2px #f2dfaf,0 4px 11px #0006;
+}
+html[data-skin="explorer"] .brand-mark svg{display:none}
+html[data-skin="explorer"] .brand-mark::before{content:"✥";font:32px Georgia,serif}
+html[data-skin="explorer"] .map-card,
+html[data-skin="explorer"] .config-card{
+ color:#3f301c;
+ background:repeating-linear-gradient(9deg,transparent 0 9px,#9b79420b 10px 11px),
+ linear-gradient(136deg,#f8edcf,#ecdbb7 60%,#e0c69b);
+ border:5px double #9b7542;border-radius:12px;
+ box-shadow:0 0 0 2px #3b3022,0 15px 34px #051a18aa,inset 0 0 30px #b59c6524;
+}
+html[data-skin="explorer"] .map-head{
+ background:linear-gradient(90deg,#d8b98166,transparent);
+ border-bottom:1px solid #ad8b58;
+}
+html[data-skin="explorer"] .card-label{
+ color:#76532c;font:700 11px Georgia,serif;letter-spacing:.14em;
+}
+html[data-skin="explorer"] .map-head h2,
+html[data-skin="explorer"] .poi-title strong,
+html[data-skin="explorer"] .story h3{
+ color:#412e1d;font-family:Georgia,"Times New Roman",serif;
+}
+html[data-skin="explorer"] .map-graphic{
+ border-top:1px solid #96774a;border-bottom:1px solid #96774a;background:#ddc79e;
+}
+html[data-skin="explorer"] .map-placeholder{
+ isolation:isolate;color:#42311c;
+ background:
+ radial-gradient(circle at 75% 28%,#f7e5bfa0,transparent 45%),
+ repeating-linear-gradient(0deg,transparent 0 34px,#92724622 35px,transparent 36px),
+ repeating-linear-gradient(90deg,transparent 0 34px,#92724622 35px,transparent 36px),
+ linear-gradient(130deg,#dec394,#f6e8c7 50%,#ddc294);
+}
+html[data-skin="explorer"] .map-placeholder::before{
+ content:"";position:absolute;pointer-events:none;z-index:-1;
+ width:220px;height:220px;top:-53px;right:-35px;border-radius:50%;
+ border:3px double #8363324d;
+ background:repeating-conic-gradient(from 22deg,#795b342e 0 2deg,transparent 3deg 45deg);
+ box-shadow:inset 0 0 0 28px #a8905c22,0 0 0 15px #93704811;
+}
+html[data-skin="explorer"] .map-placeholder::after{
+ content:"N · O · S · W";position:absolute;pointer-events:none;z-index:-1;
+ font:12px Georgia,serif;color:#8b683d99;letter-spacing:.2em;right:13px;bottom:10px;
+}
+html[data-skin="explorer"] .map-placeholder-icon{
+ color:#91612b;text-shadow:0 1px #fff8e5;font-size:54px;
+}
+html[data-skin="explorer"] .map-placeholder strong{
+ color:#48301c;font:700 clamp(18px,2.5vw,24px) Georgia,serif;
+}
+html[data-skin="explorer"] .map-placeholder span{color:#624e32}
+html[data-skin="explorer"] .map-placeholder .start,
+html[data-skin="explorer"] .route-panel .route-retry{
+ color:#3d2b17;background:linear-gradient(180deg,#f0d394,#be914e);
+ border:2px solid #80592c;border-radius:7px;
+ box-shadow:inset 0 2px #fff2c9a0,0 4px 0 #74502a,0 8px 14px #45311244;
+ font-family:Georgia,serif;font-weight:750;
+}
+html[data-skin="explorer"] .map-overlay,
+html[data-skin="explorer"] .gps-fetch-status,
+html[data-skin="explorer"] .discover-banner,
+html[data-skin="explorer"] .map-placeholder .gps-progress{
+ color:#4d3823;background:#f8e6c0ee;
+ border:1px solid #a98855;border-radius:6px;box-shadow:inset 0 0 0 1px #fff6dc;
+}
+html[data-skin="explorer"] .map-gps-status{
+ background:#ebdfbf;color:#285342;border:1px solid #8caa86;border-radius:6px;
+}
+html[data-skin="explorer"] .map-tools button,
+html[data-skin="explorer"] .route-panel .route-stop,
+html[data-skin="explorer"] .story-actions a,
+html[data-skin="explorer"] .story .close{
+ color:#fff0d1;background:linear-gradient(180deg,#487268,#285449);
+ border:1px solid #20453a;border-radius:6px;font-weight:750;
+}
+html[data-skin="explorer"] .map-tools button:hover{background:#567e70}
+html[data-skin="explorer"] .map-tools button:nth-child(even){
+ color:#fff3d6;background:linear-gradient(180deg,#9a713e,#76502c);border-color:#714b29;
+}
+html[data-skin="explorer"] .discover-banner strong{color:#67451e}
+html[data-skin="explorer"] .discover-banner button{
+ background:#315c50;color:#fdf1d4;border:1px solid #285346;border-radius:6px;
+}
+html[data-skin="explorer"] .poi{
+ background:#fbefcedb;color:#47321c;border:1px solid #b49663;border-radius:7px;
+ box-shadow:inset 0 1px #fff8eb,0 2px 4px #6446221a;
+}
+html[data-skin="explorer"] .poi:hover,
+html[data-skin="explorer"] .poi.active{
+ background:#e6cea1;border-color:#8b652e;box-shadow:inset 4px 0 #376459;
+}
+html[data-skin="explorer"] .poi-pin{
+ background:#3d685e;color:#f6e8c6;border-radius:50%;border:1px solid #275248;
+}
+html[data-skin="explorer"] .poi small,
+html[data-skin="explorer"] .help,
+html[data-skin="explorer"] .small-note,
+html[data-skin="explorer"] .poi-photo figcaption,
+html[data-skin="explorer"] .photo-placeholder{color:#63513a}
+html[data-skin="explorer"] .poi-distance{color:#845624}
+html[data-skin="explorer"] .config-fold{
+ border:1px solid #b69a69;background:#f6e7c6a8;border-radius:7px;
+ box-shadow:inset 0 1px #fff4d8;
+}
+html[data-skin="explorer"] .config-fold:last-of-type{border-color:#b69a69}
+html[data-skin="explorer"] .config-summary{
+ background:linear-gradient(90deg,#e9d5ae,#f9eace 75%,#f0dfbd);
+}
+html[data-skin="explorer"] .config-fold[open] .config-summary{
+ background:linear-gradient(90deg,#d8bd8b,#ead5aa);border-bottom:1px solid #a68a59;
+}
+html[data-skin="explorer"] .fold-label{
+ color:#382b1c;font:700 clamp(14px,1.55vw,16px) Georgia,serif;
+}
+html[data-skin="explorer"] .fold-number,
+html[data-skin="explorer"] .fold-arrow{color:#785329}
+html[data-skin="explorer"] .fold-current{color:#695436}
+html[data-skin="explorer"] .segment{
+ background:#e1cda5;border:1px solid #a98c5b;border-radius:6px;
+}
+html[data-skin="explorer"] .segment button{color:#594630;border-radius:5px}
+html[data-skin="explorer"] .segment button.selected{
+ color:#f9edd1;background:#39685d;box-shadow:0 2px 5px #53391f44;
+}
+html[data-skin="explorer"] .row-select,
+html[data-skin="explorer"] .line-option{color:#43331f}
+html[data-skin="explorer"] .line-option select,
+html[data-skin="explorer"] .row-select select{
+ background:#fbf0d6;color:#3c2d1c;border:1px solid #a78a58;border-radius:6px;
+}
+html[data-skin="explorer"] .checks label{color:#4b3926}
+html[data-skin="explorer"] .checks input,
+html[data-skin="explorer"] .skin-option input{accent-color:#356a5d}
+html[data-skin="explorer"] .switch input:checked+.slider{background:#477e6d}
+html[data-skin="explorer"] .skin-picks legend{color:#6a502e;font-family:Georgia,serif}
+html[data-skin="explorer"] .skin-option{
+ background:#f8e8c9;border:1px solid #b39a6e;border-radius:7px;box-shadow:inset 0 1px #fff6df;
+}
+html[data-skin="explorer"] .skin-option:has(input:checked){
+ background:#e5cda1;border-color:#86622e;box-shadow:inset 4px 0 #38685e;
+}
+html[data-skin="explorer"] .skin-option-text strong{color:#44321c}
+html[data-skin="explorer"] .skin-option-text small{color:#665339}
+html[data-skin="explorer"] .route-panel,
+html[data-skin="explorer"] .story{
+ color:#47311d;background:#f9ecd0;border:1px solid #a98b59;border-radius:7px;
+ box-shadow:inset 0 0 0 2px #fff5dc;
+}
+html[data-skin="explorer"] .route-panel strong{color:#513820;font-family:Georgia,serif}
+html[data-skin="explorer"] .route-panel .route-summary,
+html[data-skin="explorer"] .route-panel .route-progress,
+html[data-skin="explorer"] .route-panel .route-step,
+html[data-skin="explorer"] .route-panel .route-text,
+html[data-skin="explorer"] .story p{color:#4d3b27}
+html[data-skin="explorer"] .route-panel .route-arrival{color:#216c51}
+html[data-skin="explorer"] .story .origin{color:#8c5e2b}
+html[data-skin="explorer"] .walk-btn{
+ background:linear-gradient(180deg,#e9cb89,#bd914b);color:#44321e;
+ border:1px solid #98703c;border-radius:6px;
+}
+html[data-skin="explorer"] .poi-photo{
+ background:#e7d3ae;border:3px double #aa8650;border-radius:6px;
+}
+html[data-skin="explorer"] .poi-photo img{background:#e9d4ab}
+html[data-skin="explorer"] .poi-photo figcaption{background:#f3e2bb}
+html[data-skin="explorer"] a,
+html[data-skin="explorer"] .poi-photo figcaption a{color:#286157}
+html[data-skin="explorer"] .exit-placeholder{
+ background:#ead1a1;color:#493520;border:2px solid #8b6b43;border-radius:6px;
+}
+html[data-skin="explorer"] .config-summary:focus-visible,
+html[data-skin="explorer"] button:focus-visible{
+ outline:3px solid #307469;outline-offset:2px;
+}
+@media(max-width:600px){
+ html[data-skin="explorer"] .map-card,html[data-skin="explorer"] .config-card{border-width:4px}
+ html[data-skin="explorer"] .map-placeholder::before{width:162px;height:162px;top:-30px;right:-35px}
+ html[data-skin="explorer"] .map-placeholder-icon{font-size:37px}
+ html[data-skin="explorer"] .fold-label{font-size:14px}
+ html[data-skin="explorer"] header p{font-size:12px}
+}
+
 </style>
 </head>
 <body>
@@ -280,7 +501,7 @@ html[data-skin="lcars"] a{color:#f0b783}
 <section class="config-card" aria-label="Alle Einstellungen"><details class="section config-fold" id="settings01"><summary class="config-summary"><span class="fold-number">01</span><span class="fold-label">Dein Entdeckermodus</span><span class="fold-current" id="modeCurrent"></span><span class="fold-arrow" aria-hidden="true">⌄</span></summary><div class="config-content"><div class="segment" role="group" aria-label="Entdeckermodus"><button type="button" data-mode="auto">Automatisch</button><button type="button" data-mode="hint">Nur Hinweise</button><button type="button" data-mode="manual">Manuell</button></div><p class="help" id="modeHelp">Du erhältst unaufdringliche Hinweise auf interessante Orte und entscheidest selbst, ob du mehr erfahren möchtest.</p><div class="row-select"><label for="radius">Suchradius</label><select id="radius"><option value="300">300 Meter</option><option value="600" selected>600 Meter</option><option value="1000">1 Kilometer</option></select></div></div></details>
 <details class="section config-fold" id="settings02"><summary class="config-summary"><span class="fold-number">02</span><span class="fold-label">Stimme & Sprachsteuerung</span><span class="fold-current" id="voiceCurrent"></span><span class="fold-arrow" aria-hidden="true">⌄</span></summary><div class="config-content"><div class="line-option"><label for="voice">Erzählstil</label><select id="voice"><option value="warm">Warm & ruhig</option><option value="vivid">Lebendig & spannend</option><option value="factual">Sachlich & präzise</option></select></div><div class="line-option"><span>Sprachsteuerung</span><label class="switch" aria-label="Sprachsteuerung einschalten"><input type="checkbox" id="speech" checked/><span class="slider"></span></label></div><p class="help">Professionelle KI-Stimme und echte Sprachbefehle folgen nach der Server-Anbindung. Diese Version spielt keine Standard-Computerstimme ab.</p></div></details>
 <details class="section config-fold" id="settings03"><summary class="config-summary"><span class="fold-number">03</span><span class="fold-label">Was interessiert dich?</span><span class="fold-current" id="interestCurrent"></span><span class="fold-arrow" aria-hidden="true">⌄</span></summary><div class="config-content"><div class="checks"><label><input type="checkbox" data-interest="geschichte" checked> Geschichte</label><label><input type="checkbox" data-interest="architektur" checked> Architektur</label><label><input type="checkbox" data-interest="legenden" checked> Legenden</label><label><input type="checkbox" data-interest="kuriositaeten" checked> Kuriositäten</label></div></div></details>
-<details class="section config-fold" id="settings04"><summary class="config-summary"><span class="fold-number">04</span><span class="fold-label">Erscheinungsbild</span><span class="fold-current" id="skinCurrent">Original</span><span class="fold-arrow" aria-hidden="true">⌄</span></summary><div class="config-content"><fieldset class="skin-picks"><legend>Skin auswählen</legend><label class="skin-option"><input type="radio" name="skin" value="original" checked><span class="skin-swatch skin-original" aria-hidden="true"><i></i><i></i><i></i></span><span class="skin-option-text"><strong>Original</strong><small>ZEITREISE · Blau und Gold</small></span></label><label class="skin-option"><input type="radio" name="skin" value="lcars"><span class="skin-swatch skin-lcars" aria-hidden="true"><i></i><i></i><i></i></span><span class="skin-option-text"><strong>Raumschiffkonsole</strong><small>Raumschiff-Design · Orange und Lavendel</small></span></label></fieldset><p class="help">Nur das Aussehen ändert sich. Karte, Anordnung und Funktionen bleiben erhalten.</p></div></details>
+<details class="section config-fold" id="settings04"><summary class="config-summary"><span class="fold-number">04</span><span class="fold-label">Erscheinungsbild</span><span class="fold-current" id="skinCurrent">Original</span><span class="fold-arrow" aria-hidden="true">⌄</span></summary><div class="config-content"><fieldset class="skin-picks"><legend>Skin auswählen</legend><label class="skin-option"><input type="radio" name="skin" value="original" checked><span class="skin-swatch skin-original" aria-hidden="true"><i></i><i></i><i></i></span><span class="skin-option-text"><strong>Original</strong><small>ZEITREISE · Blau und Gold</small></span></label><label class="skin-option"><input type="radio" name="skin" value="lcars"><span class="skin-swatch skin-lcars" aria-hidden="true"><i></i><i></i><i></i></span><span class="skin-option-text"><strong>Raumschiffkonsole</strong><small>Raumschiff-Design · Orange und Lavendel</small></span></label><label class="skin-option"><input type="radio" name="skin" value="explorer"><span class="skin-swatch skin-explorer" aria-hidden="true"><i></i><i></i><i></i></span><span class="skin-option-text"><strong>Entdeckerkarte</strong><small>Pergament · Seekarten und Messing</small></span></label></fieldset><p class="help">Nur das Aussehen ändert sich. Karte, Anordnung und Funktionen bleiben erhalten.</p></div></details>
 </section>
 </div></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -292,6 +513,8 @@ function meters(a,b,c,d){const x=(c-a)*R,y=(d-b)*R;const f=Math.sin(x/2)**2+Math
 function distanceText(m){return m<1000?Math.round(m)+' m':(m/1000).toFixed(1).replace('.',',')+' km'}
 const state={skin:'original',routeTarget:null,routeLine:null,routeInfo:null,routeShape:null,routeManeuvers:[],routeRequest:0,routeWatch:false,searching:false,mapStyle:'osm',tileLayer:null,mode:'hint',watchId:null,places:[],selected:null,position:null,lastSearch:null,searchToken:0,shownIds:new Set(),map:null,markers:null,userCircle:null,accuracyCircle:null};
 const modeText={auto:'Wenn du einen neuen interessanten Ort erreichst, wird er automatisch als nächstes Ziel ausgewählt. Hörführungen mit echter KI-Stimme folgen nach der Audio-Anbindung.',hint:'Bei interessanten Orten erscheint ein unaufdringlicher Hinweis. Du entscheidest, ob du die Geschichte öffnen möchtest.',manual:'Die Karte und die Liste zeigen interessante Orte, aber nichts wird automatisch ausgewählt.'};
+/* Einheitliches Register: Namen gelten in Auswahl, Anzeige und Speicherung. */
+const SKIN_NAMES=Object.freeze({original:'Original',lcars:'Raumschiffkonsole',explorer:'Entdeckerkarte'});
 /* Einstellungen und Speicherung – eigenständiges Modul innerhalb der HTML-Datei. */
 const Preferences=(()=>{
 function note(s){const t=$('#fetchStatus');if(t)t.textContent=s}
@@ -302,10 +525,10 @@ function syncFoldSummaries(){
  $('#voiceCurrent').textContent=$('#voice').selectedOptions[0]?.textContent+' · '+($('#speech').checked?'Sprache an':'Sprache aus');
  const count=$$('[data-interest]').filter(x=>x.checked).length;
  $('#interestCurrent').textContent=count===0?'Keine Themen':count===1?'1 Thema':count+' Themen';
- $('#skinCurrent').textContent=state.skin==='lcars'?'Raumschiffkonsole':'Original';
+ $('#skinCurrent').textContent=SKIN_NAMES[state.skin]||SKIN_NAMES.original;
 }
 function persist(){syncFoldSummaries();try{localStorage.setItem('zeitreise-v02',JSON.stringify({skin:state.skin,mode:state.mode,voice:$('#voice').value,speech:$('#speech').checked,radius:$('#radius').value,interests:Object.fromEntries($$('[data-interest]').map(e=>[e.dataset.interest,e.checked]))}))}catch{}}
-try{const old=JSON.parse(localStorage.getItem('zeitreise-v02')||localStorage.getItem('zeitreise-v01')||'null');if(old){state.skin=old.skin==='lcars'?'lcars':'original';state.mode=['auto','hint','manual'].includes(old.mode)?old.mode:'hint';$('#voice').value=old.voice||'warm';$('#speech').checked=old.speech!==false;$('#radius').value=old.radius||'600';$$('[data-interest]').forEach(el=>{if(old.interests&&el.dataset.interest in old.interests)el.checked=old.interests[el.dataset.interest]})}}catch{}
+try{const old=JSON.parse(localStorage.getItem('zeitreise-v02')||localStorage.getItem('zeitreise-v01')||'null');if(old){state.skin=Object.prototype.hasOwnProperty.call(SKIN_NAMES,old.skin)?old.skin:'original';state.mode=['auto','hint','manual'].includes(old.mode)?old.mode:'hint';$('#voice').value=old.voice||'warm';$('#speech').checked=old.speech!==false;$('#radius').value=old.radius||'600';$$('[data-interest]').forEach(el=>{if(old.interests&&el.dataset.interest in old.interests)el.checked=old.interests[el.dataset.interest]})}}catch{}
 return {note,banner,syncFoldSummaries,persist};
 })();
 const {note,banner,syncFoldSummaries,persist}=Preferences;
@@ -314,12 +537,12 @@ const {note,banner,syncFoldSummaries,persist}=Preferences;
 const Appearance=(()=>{
 /* Skin-Steuerung: ändert ausschließlich das Erscheinungsbild, niemals GPS oder Navigationsdaten. */
 function applySkin(value,save=true){
- const skin=value==='lcars'?'lcars':'original';
+ const skin=Object.prototype.hasOwnProperty.call(SKIN_NAMES,value)?value:'original';
  state.skin=skin;
  document.documentElement.dataset.skin=skin;
  const option=$('input[name="skin"][value="'+skin+'"]');
  if(option)option.checked=true;
- const current=$('#skinCurrent');if(current)current.textContent=skin==='lcars'?'Raumschiffkonsole':'Original';
+ const current=$('#skinCurrent');if(current)current.textContent=SKIN_NAMES[skin];
  if(save)persist();
 }
 $$('input[name="skin"]').forEach(option=>option.addEventListener('change',()=>{
