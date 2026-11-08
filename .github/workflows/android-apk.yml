@@ -28,8 +28,11 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Android SDK einrichten
-        uses: android-actions/setup-android@v3
+      - name: Android SDK des GitHub-Linux-Runners prüfen
+        run: |
+          test -n "$ANDROID_HOME"
+          echo "Android SDK: $ANDROID_HOME"
+          test -d "$ANDROID_HOME/cmdline-tools" || { echo "SDK Kommandozeilentools fehlen"; exit 1; }
 
       - name: Gradle einrichten
         uses: gradle/actions/setup-gradle@v4
@@ -37,7 +40,12 @@ jobs:
           gradle-version: '8.10.2'
 
       - name: Android SDK 35 bereitstellen
-        run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
+        run: |
+          if [ ! -d "$ANDROID_HOME/platforms/android-35" ] || [ ! -d "$ANDROID_HOME/build-tools/35.0.0" ]; then
+            yes | sdkmanager "platforms;android-35" "build-tools;35.0.0" || true
+          fi
+          test -d "$ANDROID_HOME/platforms/android-35"
+          test -d "$ANDROID_HOME/build-tools/35.0.0"
 
       - name: Aktuelle ZEITREISE HTML in die APK kopieren
         run: |
