@@ -4,7 +4,7 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
 <meta name="theme-color" content="#071d40"/>
-<title>ZEITREISE 0.4.4 · GPS-Start direkt in der Karte</title>
+<title>ZEITREISE 0.4.5 · Interne Navigation</title>
 <link rel="manifest" href="./manifest.webmanifest"/>
 <meta name="referrer" content="strict-origin-when-cross-origin"/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
@@ -170,17 +170,24 @@ header p{margin-bottom:10px}
 .config-card{padding-bottom:12px}
 .config-fold:last-of-type{margin-bottom:0}
 @media(max-width:600px){.map-placeholder .start{font-size:14px;min-height:51px}.shell{padding-bottom:24px}.map-card,.config-card{margin-bottom:0}}
+
+.exit-placeholder{position:fixed;right:calc(12px + env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:9500;border:1px solid #abc4e477;border-radius:100px;background:#092d57ee;color:#d6e3f2;padding:9px 13px;box-shadow:0 3px 15px #0006;font-size:12px;font-weight:700;line-height:1.2}
+.exit-placeholder:disabled{opacity:.8;cursor:not-allowed}
+.shell{padding-bottom:calc(95px + env(safe-area-inset-bottom,0px))}
+.route-panel .route-retry{padding:9px 12px;border-radius:8px;border:1px solid #e5c77b99;background:#eac980;color:#0b2c4e;font-size:12px;font-weight:750}
+@media(max-width:600px){.exit-placeholder{font-size:11px;padding:8px 11px}.shell{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}}
 </style>
 </head>
 <body>
 <div id="rotateHint" role="status"><strong>↻ Bitte ins Hochformat drehen</strong><span>ZEITREISE ist auf Smartphones und Tablets für das Hochformat gestaltet. Am PC bleibt die normale Ansicht verfügbar.</span></div>
 <div class="shell">
+<button type="button" class="exit-placeholder" disabled title="Erst in der späteren Android-App verfügbar">⏻ Programm beenden</button>
 <header><div class="brand"><div class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V9l7-6 7 6v12M9 21v-8h6v8M8 9h.01M16 9h.01"/></svg></div><h1>ZEITREISE</h1></div><p>Geschichte entdecken. Orte verstehen.</p></header>
 
 <div class="layout">
 <section class="map-card" aria-label="Karte und Sehenswürdigkeiten"><div class="map-head"><div><div class="card-label">Deine Umgebung</div><h2 id="mapTitle">Deine aktuelle Umgebung</h2></div><span class="map-gps-status" id="gpsStatus" role="status" aria-live="polite" hidden></span></div>
 <div class="map-graphic"><div id="liveMap" aria-label="Live-Karte mit deinem Standort und Sehenswürdigkeiten"></div><div id="mapPlaceholder" class="map-placeholder"><div class="map-placeholder-icon" aria-hidden="true">⌖</div><strong>Deine Umgebung entdecken</strong><span>Starte deine Entdeckung – die Karte und die Orte in deiner Nähe erscheinen automatisch.</span><button type="button" id="startBtn" class="start">✦ Entdeckung mit GPS starten</button><p id="gpsProgress" class="gps-progress" role="status" aria-live="polite" hidden></p></div><div class="map-overlay" id="mapOverlay" hidden></div></div>
-<div class="map-bottom"><div class="route-panel" id="routePanel" role="status" aria-live="polite" hidden></div><div class="map-tools"><button id="stopGpsBtn" type="button" hidden>■ GPS beenden</button><button id="mapStyleBtn" type="button">Kartenstil wechseln</button><button id="retryBtn" type="button">Orte neu suchen</button><a id="externalMapLink" href="https://www.openstreetmap.org/" target="_blank" rel="noopener noreferrer">Karte extern öffnen ↗</a></div><div id="discoveryNote" class="discover-banner" role="status" aria-live="polite"></div><p id="fetchStatus" class="gps-fetch-status" role="status" aria-live="polite">Starte die Entdeckung, um Orte in deiner Umgebung zu finden.</p><div class="poi-title"><strong id="poiHead">In deiner Umgebung</strong><span class="small-note" id="poiCount">Noch keine Suche</span></div><div class="story" id="story" aria-live="polite"></div><div class="poi-list" id="poiList"></div></div></section>
+<div class="map-bottom"><div class="route-panel" id="routePanel" role="status" aria-live="polite" hidden></div><div class="map-tools"><button id="stopGpsBtn" type="button" hidden>■ GPS beenden</button><button id="mapStyleBtn" type="button">Kartenstil wechseln</button><button id="retryBtn" type="button">Orte neu suchen</button><button type="button" id="centerMapBtn">⌖ Standort zentrieren</button></div><div id="discoveryNote" class="discover-banner" role="status" aria-live="polite"></div><p id="fetchStatus" class="gps-fetch-status" role="status" aria-live="polite">Starte die Entdeckung, um Orte in deiner Umgebung zu finden.</p><div class="poi-title"><strong id="poiHead">In deiner Umgebung</strong><span class="small-note" id="poiCount">Noch keine Suche</span></div><div class="story" id="story" aria-live="polite"></div><div class="poi-list" id="poiList"></div></div></section>
 <section class="config-card" aria-label="Alle Einstellungen"><details class="section config-fold" id="settings01"><summary class="config-summary"><span class="fold-number">01</span><span class="fold-label">Dein Entdeckermodus</span><span class="fold-current" id="modeCurrent"></span><span class="fold-arrow" aria-hidden="true">⌄</span></summary><div class="config-content"><div class="segment" role="group" aria-label="Entdeckermodus"><button type="button" data-mode="auto">Automatisch</button><button type="button" data-mode="hint">Nur Hinweise</button><button type="button" data-mode="manual">Manuell</button></div><p class="help" id="modeHelp">Du erhältst unaufdringliche Hinweise auf interessante Orte und entscheidest selbst, ob du mehr erfahren möchtest.</p><div class="row-select"><label for="radius">Suchradius</label><select id="radius"><option value="300">300 Meter</option><option value="600" selected>600 Meter</option><option value="1000">1 Kilometer</option></select></div></div></details>
 <details class="section config-fold" id="settings02"><summary class="config-summary"><span class="fold-number">02</span><span class="fold-label">Stimme & Sprachsteuerung</span><span class="fold-current" id="voiceCurrent"></span><span class="fold-arrow" aria-hidden="true">⌄</span></summary><div class="config-content"><div class="line-option"><label for="voice">Erzählstil</label><select id="voice"><option value="warm">Warm & ruhig</option><option value="vivid">Lebendig & spannend</option><option value="factual">Sachlich & präzise</option></select></div><div class="line-option"><span>Sprachsteuerung</span><label class="switch" aria-label="Sprachsteuerung einschalten"><input type="checkbox" id="speech" checked/><span class="slider"></span></label></div><p class="help">Professionelle KI-Stimme und echte Sprachbefehle folgen nach der Server-Anbindung. Diese Version spielt keine Standard-Computerstimme ab.</p></div></details>
 <details class="section config-fold" id="settings03"><summary class="config-summary"><span class="fold-number">03</span><span class="fold-label">Was interessiert dich?</span><span class="fold-current" id="interestCurrent"></span><span class="fold-arrow" aria-hidden="true">⌄</span></summary><div class="config-content"><div class="checks"><label><input type="checkbox" data-interest="geschichte" checked> Geschichte</label><label><input type="checkbox" data-interest="architektur" checked> Architektur</label><label><input type="checkbox" data-interest="legenden" checked> Legenden</label><label><input type="checkbox" data-interest="kuriositaeten" checked> Kuriositäten</label></div></div></details>
@@ -214,7 +221,6 @@ function renderPoi(){const list=$('#poiList');list.replaceChildren();const items
  for(const p of items){const b=document.createElement('button');b.type='button';b.className='poi'+(state.selected?.id===p.id?' active':'');const pin=document.createElement('span');pin.className='poi-pin';pin.textContent='⌖';const wrap=document.createElement('span');wrap.className='poi-left';const title=document.createElement('b');title.textContent=p.name;const sub=document.createElement('small');sub.textContent=p.kind||'Sehenswürdigkeit';wrap.append(title,sub);b.append(pin,wrap);if(Number.isFinite(p.distance)){let dis=document.createElement('span');dis.className='poi-distance';dis.textContent=distanceText(p.distance);b.append(dis)}b.addEventListener('click',()=>showPlace(p));list.append(b)}
  updateMarkers();}
 function setStatus(msg,isLive=false){const el=$('#gpsStatus');el.hidden=!msg;el.textContent=msg;el.classList.toggle('live',isLive)}
-function mapLink(lat,lon){const a=$('#externalMapLink');a.href='https://www.openstreetmap.org/?mlat='+encodeURIComponent(lat.toFixed(6))+'&mlon='+encodeURIComponent(lon.toFixed(6))+'#map=16/'+lat.toFixed(6)+'/'+lon.toFixed(6)}
 function changeBaseLayer(){if(!state.map||typeof L==='undefined')return;
  if(state.tileLayer)state.map.removeLayer(state.tileLayer);
  const topo=state.mapStyle==='topo';
@@ -225,7 +231,6 @@ function changeBaseLayer(){if(!state.map||typeof L==='undefined')return;
  $('#mapOverlay').textContent='GPS-Karte'+' · '+(topo?'Topografische Karte':'OpenStreetMap');
 }
 function showMap(lat,lon,zoom=16){
- mapLink(lat,lon);
  if(typeof L==='undefined'){$('#mapOverlay').textContent='Kartenbibliothek nicht geladen · GPS-Ortsliste bleibt verfügbar';return}
  try{
  $('#mapPlaceholder').hidden=true;$('#mapOverlay').hidden=false;$('#liveMap').classList.add('is-visible');
@@ -241,6 +246,7 @@ function showMap(lat,lon,zoom=16){
  }catch(e){$('#mapOverlay').textContent='Karte nicht verfügbar · GPS-Ortsliste bleibt aktiv'}
 }
 $('#retryBtn').addEventListener('click',()=>{if(state.position){state.lastSearch=null;searchAround(true)}else note('Bitte zuerst den GPS-Standort ermitteln.')});
+$('#centerMapBtn').addEventListener('click',()=>{if(state.position&&state.map){state.map.setView([state.position.lat,state.position.lon],17,{animate:true});document.querySelector('.map-card').scrollIntoView({behavior:'smooth',block:'start'});}else note('Bitte zuerst den GPS-Standort ermitteln.');});
 $('#mapStyleBtn').addEventListener('click',()=>{
  state.mapStyle=state.mapStyle==='topo'?'osm':'topo';
  if(state.map){changeBaseLayer();state.map.setZoom(Math.min(state.map.getZoom(),state.mapStyle==='topo'?17:19));state.map.invalidateSize(true)}
@@ -372,11 +378,6 @@ function displayPlacePhoto(p){
 
 
 // Fußgänger-Routing mit tatsächlichem GPS-Standort.
-function googleDirections(p){
- const u=new URL('https://www.google.com/maps/dir/');
- u.search=new URLSearchParams({api:'1',destination:p.lat.toFixed(6)+','+p.lon.toFixed(6),travelmode:'walking',dir_action:'navigate'});
- return u.href;
-}
 function decodePolyline6(str){
  let index=0,lat=0,lon=0;const points=[];
  while(index<str.length&&points.length<30000){
@@ -432,8 +433,8 @@ function routeCardReady(p,trip,steps){
  const arrival=document.createElement('span');arrival.className='route-arrival';arrival.id='routeArrival';arrival.hidden=true;
  const instructions=document.createElement('span');instructions.className='route-step';instructions.textContent=steps?.[0]?.instruction||'Folge der farbigen Route auf der Karte.';
  const stop=document.createElement('button');stop.type='button';stop.className='route-stop';stop.textContent='Route beenden ×';stop.addEventListener('click',stopWalkingRoute);
- const maps=document.createElement('a');maps.href=googleDirections(p);maps.target='_blank';maps.rel='noopener noreferrer';maps.textContent='Abbiege-Navigation ↗';maps.className='route-google';
- box.append(title,summary,progress,arrival,instructions,maps,stop);
+ const retry=document.createElement('button');retry.type='button';retry.className='route-retry';retry.textContent='↻ Route neu berechnen';retry.addEventListener('click',()=>startWalkingRoute(p));
+ box.append(title,summary,progress,arrival,instructions,retry,stop);
  updateRouteProgress();
 }
 async function startWalkingRoute(p){
@@ -471,16 +472,16 @@ async function startWalkingRoute(p){
   if(token!==state.routeRequest||state.routeTarget!==p)return;
   const box=$('#routePanel');box.hidden=false;box.replaceChildren();
   const msg=document.createElement('span');msg.className='route-text';
-  msg.textContent='Die Fußweg-Berechnung ist gerade nicht verfügbar. Du kannst das Ziel dennoch mit Google Maps erreichen.';
-  const a=document.createElement('a');a.href=googleDirections(p);a.target='_blank';a.rel='noopener noreferrer';a.className='route-google';a.textContent='Mit Google Maps navigieren ↗';
+  msg.textContent='Die Fußweg-Berechnung ist gerade nicht verfügbar. Versuche es erneut – du bleibst dabei in ZEITREISE.';
+  const retry=document.createElement('button');retry.type='button';retry.className='route-retry';retry.textContent='↻ Erneut versuchen';retry.addEventListener('click',()=>startWalkingRoute(p));
   const stop=document.createElement('button');stop.type='button';stop.className='route-stop';stop.textContent='Schließen ×';stop.addEventListener('click',stopWalkingRoute);
-  box.append(msg,a,stop);
-  note('Fußwegdienst nicht erreichbar. Alternative Navigation ist verfügbar.');
+  box.append(msg,retry,stop);
+  note('Fußwegdienst gerade nicht erreichbar. Bitte erneut versuchen.');
  }
 }
 
 function revealStory(){const e=$('#story');e.classList.add('show')}
-function storyStructure(p){const card=$('#story');card.replaceChildren();let title=document.createElement('h3');title.textContent=p.name;const origin=document.createElement('div');origin.className='origin';origin.textContent=p.origin==='Wikipedia'?'Quelle: Wikipedia':p.origin==='OpenStreetMap'?'Standortdaten: OpenStreetMap':'Quelle: '+(p.origin||'Öffentlicher Eintrag');const paragraph=document.createElement('p');paragraph.textContent=p.blurb||'Zu diesem Ort liegen geografische Informationen vor. Eine fundierte historische Erzählung benötigt weitere Quellen.';const figure=document.createElement('figure');figure.className='poi-photo';figure.setAttribute('aria-label','Bild zu '+p.name);const wait=document.createElement('div');wait.className='photo-placeholder';wait.textContent='Passendes Foto wird gesucht …';figure.append(wait);const heading=document.createElement('div');heading.className='story-head';const dismiss=document.createElement('button');dismiss.type='button';dismiss.className='close';dismiss.textContent='Schließen ×';dismiss.addEventListener('click',()=>{card.classList.remove('show');state.selected=null;renderPoi()});heading.append(title,dismiss);const directions=document.createElement('div');directions.className='directions-action';const walk=document.createElement('button');walk.type='button';walk.className='walk-btn';walk.textContent=state.routeTarget?.id===p.id?'↗ Route auf Karte zeigen':'↗ Zu diesem Ort navigieren';walk.addEventListener('click',()=>startWalkingRoute(p));directions.append(walk);const google=document.createElement('a');google.href=googleDirections(p);google.target='_blank';google.rel='noopener noreferrer';google.textContent='Google Maps ↗';google.className='google-btn';directions.append(google);card.append(heading,directions,figure,origin,paragraph);const actions=document.createElement('div');actions.className='story-actions';if(p.source){let a=document.createElement('a');a.href=p.source;a.rel='noopener noreferrer';a.target='_blank';a.textContent='Quelle öffnen ↗';actions.append(a)}if(Number.isFinite(p.lat)&&Number.isFinite(p.lon)){let a=document.createElement('a');a.href='https://www.openstreetmap.org/?mlat='+p.lat+'&mlon='+p.lon+'#map=18/'+p.lat+'/'+p.lon;a.rel='noopener noreferrer';a.target='_blank';a.textContent='Auf Karte ansehen ↗';actions.append(a)}card.append(actions);let help=document.createElement('p');help.className='small-note';help.textContent='Die professionelle KI-Hörführung ist noch nicht angeschlossen. Die Texte sind zunächst öffentliche Quellenauszüge oder kurze Basisbeschreibungen.';card.append(help);revealStory();return paragraph}
+function storyStructure(p){const card=$('#story');card.replaceChildren();let title=document.createElement('h3');title.textContent=p.name;const origin=document.createElement('div');origin.className='origin';origin.textContent=p.origin==='Wikipedia'?'Quelle: Wikipedia':p.origin==='OpenStreetMap'?'Standortdaten: OpenStreetMap':'Quelle: '+(p.origin||'Öffentlicher Eintrag');const paragraph=document.createElement('p');paragraph.textContent=p.blurb||'Zu diesem Ort liegen geografische Informationen vor. Eine fundierte historische Erzählung benötigt weitere Quellen.';const figure=document.createElement('figure');figure.className='poi-photo';figure.setAttribute('aria-label','Bild zu '+p.name);const wait=document.createElement('div');wait.className='photo-placeholder';wait.textContent='Passendes Foto wird gesucht …';figure.append(wait);const heading=document.createElement('div');heading.className='story-head';const dismiss=document.createElement('button');dismiss.type='button';dismiss.className='close';dismiss.textContent='Schließen ×';dismiss.addEventListener('click',()=>{card.classList.remove('show');state.selected=null;renderPoi()});heading.append(title,dismiss);const directions=document.createElement('div');directions.className='directions-action';const walk=document.createElement('button');walk.type='button';walk.className='walk-btn';walk.textContent=state.routeTarget?.id===p.id?'↗ Route auf Karte zeigen':'↗ Zu diesem Ort navigieren';walk.addEventListener('click',()=>startWalkingRoute(p));directions.append(walk);card.append(heading,directions,figure,origin,paragraph);const actions=document.createElement('div');actions.className='story-actions';if(p.source){let a=document.createElement('a');a.href=p.source;a.rel='noopener noreferrer';a.target='_blank';a.textContent='Quelle öffnen ↗';actions.append(a)}if(Number.isFinite(p.lat)&&Number.isFinite(p.lon)){let a=document.createElement('a');a.href='#karte';a.textContent='Auf unserer Karte ansehen';a.addEventListener('click',event=>{event.preventDefault();if(state.map){state.map.setView([p.lat,p.lon],17,{animate:true});document.querySelector('.map-card').scrollIntoView({behavior:'smooth',block:'start'});}});actions.append(a)}card.append(actions);let help=document.createElement('p');help.className='small-note';help.textContent='Die professionelle KI-Hörführung ist noch nicht angeschlossen. Die Texte sind zunächst öffentliche Quellenauszüge oder kurze Basisbeschreibungen.';card.append(help);revealStory();return paragraph}
 async function showPlace(p){state.selected=p;banner(null);renderPoi();let paragraph=storyStructure(p);displayPlacePhoto(p);if(state.map&&Number.isFinite(p.lat)&&Number.isFinite(p.lon)){state.map.panTo([p.lat,p.lon])}requestAnimationFrame(()=>{$('#story')?.scrollIntoView({behavior:'smooth',block:'start'})});
  if(p.origin==='Wikipedia'&&p.pageid&&!p.blurb){paragraph.className='loading-line';paragraph.textContent='Lade geschichtliche Hintergrundinformationen von Wikipedia …';try{const u=new URL('https://de.wikipedia.org/w/api.php');u.search=new URLSearchParams({action:'query',prop:'extracts',exintro:'1',explaintext:'1',pageids:String(p.pageid),format:'json',origin:'*'});const response=await fetchTimed(u.toString(),12000);if(!response.ok)throw Error('Wiki '+response.status);const data=await response.json();let page=data.query?.pages?.[p.pageid];if(state.selected!==p)return;p.blurb=(page?.extract||'').trim().slice(0,1800)||'Für diesen Eintrag ist kein kurzer Beschreibungstext verfügbar. Öffne die Quelle, um mehr zu erfahren.';paragraph.className='';paragraph.textContent=p.blurb}catch{if(state.selected===p){paragraph.className='';paragraph.textContent='Der Wikipedia-Text ist momentan nicht abrufbar. Über „Quelle öffnen“ kannst du den Artikel direkt lesen.'}}}}
 function fetchTimed(url,ms=14000,opts={}){let ac=new AbortController();let timer=setTimeout(()=>ac.abort(),ms);return fetch(url,{...opts,signal:ac.signal}).finally(()=>clearTimeout(timer))}
