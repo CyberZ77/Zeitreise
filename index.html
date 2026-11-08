@@ -273,7 +273,7 @@ async function wikipediaPhoto(p){
 }
 function photoNameTokens(name){
  const ignore=new Set(['der','die','das','eine','einer','einem','beim','zum','und','von','des','st','sankt','alten','alte','neue','neuen']);
- return norm(name).split(/\s+/).filter(x=>x.length>=4&&!ignore.has(x)).map(x=>/^bremen|^bremer/.test(x)?'brem':x);
+ return norm(name).split(/\s+/).filter(x=>x.length>=4&&!ignore.has(x));
 }
 async function commonsSearchPhoto(p){
  const tokens=photoNameTokens(p.name);
@@ -281,7 +281,7 @@ async function commonsSearchPhoto(p){
  const data=await photoJson(photoEndpoint('commons.wikimedia.org',{generator:'search',gsrsearch:p.name,gsrnamespace:'6',gsrlimit:'12',prop:'imageinfo',iiprop:'url|extmetadata',iiurlwidth:'960'}),14000);
  const pages=data.query?.pages||[];
  const matches=pages.map(page=>{
-  const title=norm(page.title.replace(/^File:/i,'')).replace(/\bbremer\b|\bbremen\b/g,'brem');
+  const title=norm(page.title.replace(/^File:/i,''));
   const good=tokens.filter(t=>title.includes(t)).length;
   const bad=/\b(logo|flagge|wappen|karte|map|diagram|symbol|icon|grundriss)\b/i.test(title)||/\.(svg|pdf|gif)$/i.test(page.title);
   return{page,good,bad};
