@@ -4,7 +4,7 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
 <meta name="theme-color" content="#071d40"/>
-<title>ZEITREISE 0.5 · Original & LCARS</title>
+<title>ZEITREISE 0.5.1 · Skin- und Bedienungsfix</title>
 <link rel="manifest" href="./manifest.webmanifest"/>
 <meta name="referrer" content="strict-origin-when-cross-origin"/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
@@ -312,7 +312,7 @@ function applySkin(value,save=true){
  const current=$('#skinCurrent');if(current)current.textContent=skin==='lcars'?'LCARS':'Original';
  if(save)persist();
 }
-$('input[name="skin"]').forEach(option=>option.addEventListener('change',()=>{
+$$('input[name="skin"]').forEach(option=>option.addEventListener('change',()=>{
  if(option.checked)applySkin(option.value);
 }));
 applySkin(state.skin,false);
