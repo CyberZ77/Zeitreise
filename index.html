@@ -4,7 +4,7 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
 <meta name="theme-color" content="#071d40"/>
-<title>ZEITREISE 0.4.3 · GPS-Button repariert</title>
+<title>ZEITREISE 0.4.4 · GPS-Start direkt in der Karte</title>
 <link rel="manifest" href="./manifest.webmanifest"/>
 <meta name="referrer" content="strict-origin-when-cross-origin"/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
@@ -162,6 +162,14 @@ header p{margin-bottom:10px}
 .map-placeholder .gps-progress{font-size:clamp(12px,1.6vw,14px);font-weight:650;color:#ffe6b2;background:#173e70cf;border:1px solid #dfc38c66;border-radius:10px;padding:9px 12px;margin:0;max-width:380px;line-height:1.45}
 .map-placeholder .gps-progress[hidden]{display:none}
 .map-placeholder button:disabled{opacity:.75}
+
+/* 0.4.4: Einziger großer GPS-Startknopf im Kartenbereich; unter den Einstellungen kein zusätzlicher Inhalt */
+.map-placeholder .start{width:min(100%,385px);min-height:54px;margin-top:7px;padding:12px 17px;font-size:clamp(13px,1.8vw,16px);border-radius:14px;background:linear-gradient(115deg,#f2d99c,#dfb469);color:#08284f;box-shadow:0 9px 20px #0003}
+.map-placeholder .start:disabled{opacity:.8}
+.map-tools button[hidden]{display:none!important}
+.config-card{padding-bottom:12px}
+.config-fold:last-of-type{margin-bottom:0}
+@media(max-width:600px){.map-placeholder .start{font-size:14px;min-height:51px}.shell{padding-bottom:24px}.map-card,.config-card{margin-bottom:0}}
 </style>
 </head>
 <body>
@@ -171,13 +179,13 @@ header p{margin-bottom:10px}
 
 <div class="layout">
 <section class="map-card" aria-label="Karte und Sehenswürdigkeiten"><div class="map-head"><div><div class="card-label">Deine Umgebung</div><h2 id="mapTitle">Deine aktuelle Umgebung</h2></div><span class="map-gps-status" id="gpsStatus" role="status" aria-live="polite" hidden></span></div>
-<div class="map-graphic"><div id="liveMap" aria-label="Live-Karte mit deinem Standort und Sehenswürdigkeiten"></div><div id="mapPlaceholder" class="map-placeholder"><div class="map-placeholder-icon" aria-hidden="true">⌖</div><strong>Deine Umgebung entdecken</strong><span>Ermittle deinen Standort, um die Karte und Sehenswürdigkeiten in deiner Nähe zu sehen.</span><button type="button" id="mapGpsBtn">Standort ermitteln</button><p id="gpsProgress" class="gps-progress" role="status" aria-live="polite" hidden></p></div><div class="map-overlay" id="mapOverlay" hidden></div></div>
-<div class="map-bottom"><div class="route-panel" id="routePanel" role="status" aria-live="polite" hidden></div><div class="map-tools"><button id="mapStyleBtn" type="button">Kartenstil wechseln</button><button id="retryBtn" type="button">Orte neu suchen</button><a id="externalMapLink" href="https://www.openstreetmap.org/" target="_blank" rel="noopener noreferrer">Karte extern öffnen ↗</a></div><div id="discoveryNote" class="discover-banner" role="status" aria-live="polite"></div><p id="fetchStatus" class="gps-fetch-status" role="status" aria-live="polite">Tippe auf „Standort ermitteln“, um echte Sehenswürdigkeiten in deiner Umgebung zu finden.</p><div class="poi-title"><strong id="poiHead">In deiner Umgebung</strong><span class="small-note" id="poiCount">Noch keine Suche</span></div><div class="story" id="story" aria-live="polite"></div><div class="poi-list" id="poiList"></div></div></section>
+<div class="map-graphic"><div id="liveMap" aria-label="Live-Karte mit deinem Standort und Sehenswürdigkeiten"></div><div id="mapPlaceholder" class="map-placeholder"><div class="map-placeholder-icon" aria-hidden="true">⌖</div><strong>Deine Umgebung entdecken</strong><span>Starte deine Entdeckung – die Karte und die Orte in deiner Nähe erscheinen automatisch.</span><button type="button" id="startBtn" class="start">✦ Entdeckung mit GPS starten</button><p id="gpsProgress" class="gps-progress" role="status" aria-live="polite" hidden></p></div><div class="map-overlay" id="mapOverlay" hidden></div></div>
+<div class="map-bottom"><div class="route-panel" id="routePanel" role="status" aria-live="polite" hidden></div><div class="map-tools"><button id="stopGpsBtn" type="button" hidden>■ GPS beenden</button><button id="mapStyleBtn" type="button">Kartenstil wechseln</button><button id="retryBtn" type="button">Orte neu suchen</button><a id="externalMapLink" href="https://www.openstreetmap.org/" target="_blank" rel="noopener noreferrer">Karte extern öffnen ↗</a></div><div id="discoveryNote" class="discover-banner" role="status" aria-live="polite"></div><p id="fetchStatus" class="gps-fetch-status" role="status" aria-live="polite">Starte die Entdeckung, um Orte in deiner Umgebung zu finden.</p><div class="poi-title"><strong id="poiHead">In deiner Umgebung</strong><span class="small-note" id="poiCount">Noch keine Suche</span></div><div class="story" id="story" aria-live="polite"></div><div class="poi-list" id="poiList"></div></div></section>
 <section class="config-card" aria-label="Alle Einstellungen"><details class="section config-fold" id="settings01"><summary class="config-summary"><span class="fold-number">01</span><span class="fold-label">Dein Entdeckermodus</span><span class="fold-current" id="modeCurrent"></span><span class="fold-arrow" aria-hidden="true">⌄</span></summary><div class="config-content"><div class="segment" role="group" aria-label="Entdeckermodus"><button type="button" data-mode="auto">Automatisch</button><button type="button" data-mode="hint">Nur Hinweise</button><button type="button" data-mode="manual">Manuell</button></div><p class="help" id="modeHelp">Du erhältst unaufdringliche Hinweise auf interessante Orte und entscheidest selbst, ob du mehr erfahren möchtest.</p><div class="row-select"><label for="radius">Suchradius</label><select id="radius"><option value="300">300 Meter</option><option value="600" selected>600 Meter</option><option value="1000">1 Kilometer</option></select></div></div></details>
 <details class="section config-fold" id="settings02"><summary class="config-summary"><span class="fold-number">02</span><span class="fold-label">Stimme & Sprachsteuerung</span><span class="fold-current" id="voiceCurrent"></span><span class="fold-arrow" aria-hidden="true">⌄</span></summary><div class="config-content"><div class="line-option"><label for="voice">Erzählstil</label><select id="voice"><option value="warm">Warm & ruhig</option><option value="vivid">Lebendig & spannend</option><option value="factual">Sachlich & präzise</option></select></div><div class="line-option"><span>Sprachsteuerung</span><label class="switch" aria-label="Sprachsteuerung einschalten"><input type="checkbox" id="speech" checked/><span class="slider"></span></label></div><p class="help">Professionelle KI-Stimme und echte Sprachbefehle folgen nach der Server-Anbindung. Diese Version spielt keine Standard-Computerstimme ab.</p></div></details>
 <details class="section config-fold" id="settings03"><summary class="config-summary"><span class="fold-number">03</span><span class="fold-label">Was interessiert dich?</span><span class="fold-current" id="interestCurrent"></span><span class="fold-arrow" aria-hidden="true">⌄</span></summary><div class="config-content"><div class="checks"><label><input type="checkbox" data-interest="geschichte" checked> Geschichte</label><label><input type="checkbox" data-interest="architektur" checked> Architektur</label><label><input type="checkbox" data-interest="legenden" checked> Legenden</label><label><input type="checkbox" data-interest="kuriositaeten" checked> Kuriositäten</label></div></div></details>
-<button class="start" id="startBtn" type="button">✦ &nbsp; Entdeckung mit GPS starten</button><p class="note" id="appNote" role="status" aria-live="polite">Version 0.4.3 · GPS-Button repariert</p></section>
-</div><footer class="footer">ZEITREISE · Version 0.4.3 · Die Standortfreigabe erfolgt nur auf deinen Wunsch. Für GPS ist HTTPS oder eine unterstützte sichere lokale Umgebung notwendig.<br/>Für die Umkreissuche werden Koordinaten an Wikipedia und OpenStreetMap/Overpass übertragen. Die App selbst besitzt keinen eigenen Server. Eine professionelle KI-Stimme ist noch nicht integriert.</footer></div>
+</section>
+</div></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 (()=>{'use strict';
@@ -187,7 +195,7 @@ function meters(a,b,c,d){const x=(c-a)*R,y=(d-b)*R;const f=Math.sin(x/2)**2+Math
 function distanceText(m){return m<1000?Math.round(m)+' m':(m/1000).toFixed(1).replace('.',',')+' km'}
 const state={routeTarget:null,routeLine:null,routeInfo:null,routeRequest:0,routeWatch:false,searching:false,mapStyle:'osm',tileLayer:null,mode:'hint',watchId:null,places:[],selected:null,position:null,lastSearch:null,searchToken:0,shownIds:new Set(),map:null,markers:null,userCircle:null,accuracyCircle:null};
 const modeText={auto:'Wenn du einen neuen interessanten Ort erreichst, wird er automatisch als nächstes Ziel ausgewählt. Hörführungen mit echter KI-Stimme folgen nach der Audio-Anbindung.',hint:'Bei interessanten Orten erscheint ein unaufdringlicher Hinweis. Du entscheidest, ob du die Geschichte öffnen möchtest.',manual:'Die Karte und die Liste zeigen interessante Orte, aber nichts wird automatisch ausgewählt.'};
-function note(s){$('#appNote').textContent=s;const t=$('#fetchStatus');if(t)t.textContent=s}
+function note(s){const t=$('#fetchStatus');if(t)t.textContent=s}
 function banner(place){const e=$('#discoveryNote');if(!place){e.classList.remove('show');e.replaceChildren();return}e.replaceChildren();let strong=document.createElement('strong');strong.textContent='Interessanter Ort in deiner Nähe: '+place.name;let small=document.createElement('span');small.textContent='Etwa '+distanceText(place.distance||0)+' entfernt.';let btn=document.createElement('button');btn.type='button';btn.textContent='Jetzt entdecken';btn.onclick=()=>{banner(null);showPlace(place)};e.append(strong,small,document.createElement('br'),btn);e.classList.add('show')}
 function syncFoldSummaries(){
  const modeLabels={auto:'Automatisch',hint:'Nur Hinweise',manual:'Manuell'};
@@ -430,7 +438,7 @@ function routeCardReady(p,trip,steps){
 }
 async function startWalkingRoute(p){
  if(!Number.isFinite(p.lat)||!Number.isFinite(p.lon))return;
- if(!state.position){note('Bitte zuerst deinen GPS-Standort bestimmen.');$('#mapGpsBtn').focus();return;}
+ if(!state.position){note('Bitte zuerst deinen GPS-Standort bestimmen.');$('#startBtn').focus();return;}
  stopWalkingRoute();
  state.routeTarget=p;
  const start=routeOrigin();
@@ -509,39 +517,55 @@ function setPosition(pos){
  else if(state.map&&!state.map.getBounds().contains([lat,lon]))state.map.panTo([lat,lon]);
  updateMarkers();updateRouteProgress();searchAround(false);
 }
-function positionError(err){$('#mapGpsBtn').disabled=false;setStatus('Standort konnte nicht ermittelt werden');const msg=err?.code===1?'Standortfreigabe abgelehnt. Bitte im Browser erlauben.':err?.code===2?'Standort vorübergehend nicht verfügbar. GPS bzw. Standortdienste einschalten.':err?.code===3?'Standortabfrage hat zu lange gedauert. Versuch es im Freien erneut.':'GPS ist nicht verfügbar.';note(msg+(window.isSecureContext?'':' Diese Seite benötigt für GPS in der Regel HTTPS.'));const progress=$('#gpsProgress');if(progress){progress.hidden=false;progress.textContent=msg;}
+function positionError(err){$('#startBtn').disabled=false;setStatus('Standort konnte nicht ermittelt werden');const msg=err?.code===1?'Standortfreigabe abgelehnt. Bitte im Browser erlauben.':err?.code===2?'Standort vorübergehend nicht verfügbar. GPS bzw. Standortdienste einschalten.':err?.code===3?'Standortabfrage hat zu lange gedauert. Versuch es im Freien erneut.':'GPS ist nicht verfügbar.';note(msg+(window.isSecureContext?'':' Diese Seite benötigt für GPS in der Regel HTTPS.'));const progress=$('#gpsProgress');if(progress){progress.hidden=false;progress.textContent=msg;}
  if(state.watchId!==null){navigator.geolocation.clearWatch(state.watchId);state.watchId=null;setTrackingButton()}}
 function gpsCheck(){if(!navigator.geolocation){note('Dein Browser unterstützt leider keine GPS-Ortung.');return false}if(!window.isSecureContext){note('Für GPS musst du die HTML-App über HTTPS öffnen (oder eine vom Browser unterstützte sichere lokale Umgebung).');return false}return true}
-function setTrackingButton(){$('#startBtn').textContent=state.watchId===null?'✦  Entdeckung mit GPS starten':'■  GPS-Spaziergang beenden';$('#startBtn').setAttribute('aria-pressed',String(state.watchId!==null))}
-$('#mapGpsBtn').addEventListener('click',()=>{
- const button=$('#mapGpsBtn'),progress=$('#gpsProgress');
+function setTrackingButton(){
+ const btn=$('#startBtn'),stop=$('#stopGpsBtn');
+ btn.disabled=false;
+ btn.textContent='✦ Entdeckung mit GPS starten';
+ btn.setAttribute('aria-pressed',String(state.watchId!==null));
+ if(stop){stop.hidden=state.watchId===null;stop.textContent='■ GPS beenden'}
+}
+$('#startBtn').addEventListener('click',()=>{
+ const button=$('#startBtn'),progress=$('#gpsProgress');
  progress.hidden=false;
  progress.textContent='Standort wird ermittelt … Bitte Standortfreigabe bestätigen.';
  if(!gpsCheck()){
-  progress.textContent=$('#appNote').textContent||'Standortermittlung ist nicht verfügbar.';
+  progress.textContent=$('#fetchStatus')?.textContent||'Standortermittlung ist nicht verfügbar.';
   return;
  }
+ if(state.watchId!==null)return;
  button.disabled=true;
  button.textContent='Standort wird ermittelt …';
  setStatus('Standort wird ermittelt …');
  note('Standort wird ermittelt. Bitte die Standortfreigabe bestätigen.');
  try{
-  navigator.geolocation.getCurrentPosition(pos=>{
-   button.disabled=false;
-   button.textContent='Standort ermitteln';
-   progress.textContent='Standort gefunden – die Karte wird geöffnet.';
+  let firstFix=true;
+  state.watchId=navigator.geolocation.watchPosition(pos=>{
+   if(firstFix){
+    firstFix=false;
+    progress.textContent='Standort gefunden – die Karte wird geöffnet.';
+   }
    setPosition(pos);
+   setTrackingButton();
   },err=>{
-   button.textContent='Erneut versuchen';
    positionError(err);
   },{enableHighAccuracy:true,timeout:20000,maximumAge:0});
+  // Das Stoppen ist nach dem ersten erfolgreichen Standort auf der Karte möglich.
  }catch(err){
-  button.disabled=false;button.textContent='Erneut versuchen';
+  state.watchId=null;
+  setTrackingButton();
   progress.textContent='Standortabfrage konnte nicht gestartet werden. Bitte Berechtigungen prüfen.';
   note(progress.textContent);
  }
 });
-$('#startBtn').addEventListener('click',()=>{if(state.watchId!==null){navigator.geolocation.clearWatch(state.watchId);state.watchId=null;setTrackingButton();note('GPS-Spaziergang beendet. Die gefundenen Orte bleiben sichtbar.');return}if(!gpsCheck())return;note('GPS-Spaziergang startet. Bitte Standortzugriff erlauben.');setStatus('GPS-Standort wird ermittelt …');state.watchId=navigator.geolocation.watchPosition(pos=>{setPosition(pos)},positionError,{enableHighAccuracy:true,timeout:20000,maximumAge:7000});setTrackingButton()});
+$('#stopGpsBtn').addEventListener('click',()=>{
+ if(state.watchId!==null)navigator.geolocation.clearWatch(state.watchId);
+ state.watchId=null;state.routeWatch=false;
+ setTrackingButton();
+ note('GPS-Spaziergang beendet. Die gefundenen Orte bleiben sichtbar.');
+});
 renderPoi();setTrackingButton();
 // Es werden ausschließlich Orte am freigegebenen Standort angezeigt.
 
