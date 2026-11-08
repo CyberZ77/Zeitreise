@@ -176,7 +176,7 @@ header p{margin-bottom:10px}
 .shell{padding-bottom:calc(95px + env(safe-area-inset-bottom,0px))}
 .route-panel .route-retry{padding:9px 12px;border-radius:8px;border:1px solid #e5c77b99;background:#eac980;color:#0b2c4e;font-size:12px;font-weight:750}
 @media(max-width:600px){.exit-placeholder{font-size:11px;padding:8px 11px}.shell{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}}
-</style>
+.route-panel .route-next{color:#c9e0f7;opacity:.87}.route-panel .route-next[hidden]{display:none}</style>
 </head>
 <body>
 <div id="rotateHint" role="status"><strong>↻ Bitte ins Hochformat drehen</strong><span>ZEITREISE ist auf Smartphones und Tablets für das Hochformat gestaltet. Am PC bleibt die normale Ansicht verfügbar.</span></div>
@@ -200,7 +200,7 @@ const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll
 const R=Math.PI/180;
 function meters(a,b,c,d){const x=(c-a)*R,y=(d-b)*R;const f=Math.sin(x/2)**2+Math.cos(a*R)*Math.cos(c*R)*Math.sin(y/2)**2;return 12742000*Math.atan2(Math.sqrt(f),Math.sqrt(1-f))}
 function distanceText(m){return m<1000?Math.round(m)+' m':(m/1000).toFixed(1).replace('.',',')+' km'}
-const state={routeTarget:null,routeLine:null,routeInfo:null,routeRequest:0,routeWatch:false,searching:false,mapStyle:'osm',tileLayer:null,mode:'hint',watchId:null,places:[],selected:null,position:null,lastSearch:null,searchToken:0,shownIds:new Set(),map:null,markers:null,userCircle:null,accuracyCircle:null};
+const state={routeTarget:null,routeLine:null,routeInfo:null,routeShape:null,routeManeuvers:[],routeRequest:0,routeWatch:false,searching:false,mapStyle:'osm',tileLayer:null,mode:'hint',watchId:null,places:[],selected:null,position:null,lastSearch:null,searchToken:0,shownIds:new Set(),map:null,markers:null,userCircle:null,accuracyCircle:null};
 const modeText={auto:'Wenn du einen neuen interessanten Ort erreichst, wird er automatisch als nächstes Ziel ausgewählt. Hörführungen mit echter KI-Stimme folgen nach der Audio-Anbindung.',hint:'Bei interessanten Orten erscheint ein unaufdringlicher Hinweis. Du entscheidest, ob du die Geschichte öffnen möchtest.',manual:'Die Karte und die Liste zeigen interessante Orte, aber nichts wird automatisch ausgewählt.'};
 function note(s){const t=$('#fetchStatus');if(t)t.textContent=s}
 function banner(place){const e=$('#discoveryNote');if(!place){e.classList.remove('show');e.replaceChildren();return}e.replaceChildren();let strong=document.createElement('strong');strong.textContent='Interessanter Ort in deiner Nähe: '+place.name;let small=document.createElement('span');small.textContent='Etwa '+distanceText(place.distance||0)+' entfernt.';let btn=document.createElement('button');btn.type='button';btn.textContent='Jetzt entdecken';btn.onclick=()=>{banner(null);showPlace(place)};e.append(strong,small,document.createElement('br'),btn);e.classList.add('show')}
@@ -399,20 +399,37 @@ function routeOrigin(){
  return state.position;
 }
 function updateRouteProgress(){
- const p=state.routeTarget,box=$('#routePanel');
- if(!p||box.hidden)return;
- const start=routeOrigin();
- if(!start)return;
- const direct=Math.round(meters(start.lat,start.lon,p.lat,p.lon));
- const dist=$('#routeRemaining');
- if(dist)dist.textContent='Luftlinie noch '+distanceText(direct);
+ const p=state.routeTarget,box=$('#routePanel'),pos=state.position;
+ if(!p||box.hidden||!pos)return;
+ const direct=Math.round(meters(pos.lat,pos.lon,p.lat,p.lon));
  const arrived=$('#routeArrival');
- if(arrived&&direct<=Math.max(25,(start.accuracy||0)+10)){arrived.textContent='Du bist am Ziel oder ganz in der Nähe!';arrived.hidden=false}
+ if(arrived){const atDestination=direct<=Math.max(25,(pos.accuracy||0)+10);arrived.hidden=!atDestination;if(atDestination)arrived.textContent='Du bist am Ziel oder ganz in der Nähe!';}
+ const dist=$('#routeRemaining'),current=$('#routeCurrent'),next=$('#routeNext');
+ let remaining=direct,stepIndex=0,offRoute=0;
+ const points=state.routeShape||[];
+ if(points.length>=2){
+  let closestIndex=0,closestDistance=Infinity;
+  for(let i=0;i<points.length;i++){
+   const point=points[i],d=meters(pos.lat,pos.lon,point[0],point[1]);
+   if(d<closestDistance){closestDistance=d;closestIndex=i}
+  }
+  offRoute=Math.round(closestDistance);
+  remaining=0;
+  for(let i=closestIndex;i<points.length-1;i++)remaining+=meters(points[i][0],points[i][1],points[i+1][0],points[i+1][1]);
+  for(let i=0;i<state.routeManeuvers.length;i++){
+   if((state.routeManeuvers[i].begin_shape_index||0)<=closestIndex)stepIndex=i;
+   else break;
+  }
+ }
+ if(dist)dist.textContent=offRoute>75?'Du bist ca. '+distanceText(offRoute)+' von der Route entfernt – bitte neu berechnen.':'Noch etwa '+distanceText(remaining)+' Fußweg';
+ const steps=state.routeManeuvers;
+ if(current&&steps.length)current.textContent=steps[stepIndex]?.instruction||'Folge der eingezeichneten Route.';
+ if(next){if(steps[stepIndex+1]?.instruction){next.hidden=false;next.textContent='Danach: '+steps[stepIndex+1].instruction}else{next.hidden=true;next.textContent=''}}
 }
 function stopWalkingRoute(){
  ++state.routeRequest;
  if(state.routeLine&&state.map){state.map.removeLayer(state.routeLine)}
- state.routeLine=null;state.routeTarget=null;state.routeInfo=null;
+ state.routeLine=null;state.routeTarget=null;state.routeInfo=null;state.routeShape=null;state.routeManeuvers=[];
  const box=$('#routePanel');box.hidden=true;box.replaceChildren();
  if(state.routeWatch&&state.watchId!==null){navigator.geolocation.clearWatch(state.watchId);state.watchId=null;setTrackingButton()}
  state.routeWatch=false;
@@ -431,10 +448,10 @@ function routeCardReady(p,trip,steps){
  (Number.isFinite(seconds)?' · ca. '+Math.max(1,Math.round(seconds/60))+' Min. Fußweg':'');
  const progress=document.createElement('span');progress.className='route-progress';progress.id='routeRemaining';
  const arrival=document.createElement('span');arrival.className='route-arrival';arrival.id='routeArrival';arrival.hidden=true;
- const instructions=document.createElement('span');instructions.className='route-step';instructions.textContent=steps?.[0]?.instruction||'Folge der farbigen Route auf der Karte.';
+ const instructions=document.createElement('span');instructions.className='route-step';instructions.id='routeCurrent';instructions.textContent=steps?.[0]?.instruction||'Folge der farbigen Route auf der Karte.';const next=document.createElement('span');next.className='route-step route-next';next.id='routeNext';next.hidden=true;
  const stop=document.createElement('button');stop.type='button';stop.className='route-stop';stop.textContent='Route beenden ×';stop.addEventListener('click',stopWalkingRoute);
  const retry=document.createElement('button');retry.type='button';retry.className='route-retry';retry.textContent='↻ Route neu berechnen';retry.addEventListener('click',()=>startWalkingRoute(p));
- box.append(title,summary,progress,arrival,instructions,retry,stop);
+ box.append(title,summary,progress,arrival,instructions,next,retry,stop);
  updateRouteProgress();
 }
 async function startWalkingRoute(p){
@@ -458,7 +475,7 @@ async function startWalkingRoute(p){
   const shape=decodePolyline6(polyline);
   if(shape.length<2||!state.map||typeof L==='undefined')throw Error('Karte nicht verfügbar');
   state.routeLine=L.polyline(shape,{color:'#ffd168',weight:7,opacity:.94,lineCap:'round',lineJoin:'round'}).addTo(state.map);
-  state.routeInfo=data.trip;
+  state.routeInfo=data.trip;state.routeShape=shape;state.routeManeuvers=leg.maneuvers||[];
   state.map.fitBounds(state.routeLine.getBounds().pad(.22),{animate:true,maxZoom:17});
   routeCardReady(p,data.trip,leg.maneuvers);
   if(state.watchId===null&&gpsCheck()){
