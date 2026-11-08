@@ -4,7 +4,7 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
 <meta name="theme-color" content="#071d40"/>
-<title>ZEITREISE 0.5.10 · Historisch relevante Orte</title>
+<title>ZEITREISE 0.5.11 · Einhandbedienung</title>
 <link rel="manifest" href="./manifest.webmanifest"/>
 <meta name="referrer" content="strict-origin-when-cross-origin"/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
@@ -246,6 +246,88 @@ html{scroll-padding-top:calc(var(--zeitreise-header-height) + env(safe-area-inse
  .shell > header .brand-mark svg{width:19px;height:19px}
  .shell > header h1{font-size:21px}
  .shell > header p{font-size:11px}
+}
+
+/* ===============================================================
+   ZEITREISE 0.5.11 – EINHANDBEDIENUNG (nur gemeinsame Layout-Schicht)
+   Positionen und Mindest-Tippflächen unabhängig vom ausgewählten
+   oder künftig hinzugefügten Skin. Farben per --thumb-* Tokens.
+   =============================================================== */
+:root{
+ --thumb-dock-height:80px;
+ --thumb-surface:#0b2b52;
+ --thumb-border:#9cbbdb80;
+ --thumb-ink:#eef5ff;
+ --thumb-active:#e9bf72;
+ --thumb-active-ink:#152c43;
+}
+.thumb-dock{display:none}
+@media(max-width:700px){
+ html{scroll-padding-bottom:calc(var(--thumb-dock-height) + 12px)}
+ .shell{padding-bottom:calc(var(--thumb-dock-height) + 34px + env(safe-area-inset-bottom,0px))}
+ /* Der APK-Platzhalter hätte die Daumenleiste verdeckt; Desktop unverändert. */
+ .exit-placeholder{display:none}
+ #quickMapTarget,#quickPlacesTarget,#quickSettingsTarget{
+  scroll-margin-top:calc(var(--zeitreise-header-height) + env(safe-area-inset-top,0px) + 18px);
+ }
+ .thumb-dock{
+  position:fixed;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:3px;align-items:stretch;
+  bottom:0;left:0;right:0;z-index:9600;
+  padding:7px max(9px,env(safe-area-inset-right,0px))
+          calc(7px + env(safe-area-inset-bottom,0px))
+          max(9px,env(safe-area-inset-left,0px));
+  background:var(--thumb-surface);
+  border-top:1px solid var(--thumb-border);
+  box-shadow:0 -6px 24px #0006;
+ }
+ .thumb-dock-action{
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  gap:3px;min-height:56px;min-width:0;
+  padding:5px 2px;
+  border:1px solid transparent;border-radius:12px;
+  color:var(--thumb-ink);background:transparent;
+  font-size:clamp(10px,2.6vw,12px);font-weight:750;line-height:1.2;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+ }
+ .thumb-dock-action svg{
+  display:block;flex-shrink:0;width:24px;height:24px;
+  fill:none;stroke:currentColor;stroke-width:1.8;
+  stroke-linecap:round;stroke-linejoin:round;
+ }
+ .thumb-dock-action span{white-space:nowrap}
+ .thumb-dock-action.is-active{
+  color:var(--thumb-active-ink);background:var(--thumb-active);
+  border-color:var(--thumb-active);
+ }
+ .thumb-dock-action:focus-visible{
+  outline:3px solid var(--thumb-active);outline-offset:-1px;
+ }
+ .thumb-dock-locate{
+  border-color:var(--thumb-border);
+  background:color-mix(in srgb,var(--thumb-ink) 11%,transparent);
+ }
+ /* Häufig benutzte Bedienelemente sollen mit einem Daumen gut treffbar sein. */
+ .map-tools button,.map-view-tabs button,.segment button,.story .close,
+ .story-actions a,.directions-action button,.route-panel button,
+ .map-placeholder .start,.discover-banner button,.place-web-tools a{
+  min-height:48px;touch-action:manipulation;
+ }
+ .map-tools button,.map-view-tabs button{padding-inline:10px}
+ .poi,.skin-option,.config-summary{min-height:50px;touch-action:manipulation}
+ .skin-option input,.checks input{min-width:21px;min-height:21px}
+ /* Der Standortknopf liegt jetzt in der unteren Leiste.
+    Das bestehende Element bleibt als technische Aktion im DOM erhalten. */
+ #centerMapBtn{display:none}
+ .leaflet-touch .leaflet-bar a{width:44px;height:44px;line-height:44px;font-size:22px}
+}
+@media(max-width:355px){
+ .thumb-dock{gap:0;padding-inline:4px}
+ .thumb-dock-action{font-size:9.5px;padding-inline:1px}
+ .thumb-dock-action svg{width:22px;height:22px}
+}
+@media(prefers-reduced-motion:reduce){
+ .thumb-dock-action{transition:none}
 }
 </style>
 <style id="zeitreise-skins">
@@ -582,6 +664,22 @@ html[data-skin="explorer"] .place-info-note,html[data-skin="explorer"] .place-in
 html[data-skin="explorer"] .place-web-tools a{background:#3c685a;color:#fff3d5;border-color:#204e42}
 html[data-skin="explorer"] .place-web-frame{border-color:#a68a55}
 
+/* Skin-eigene Farben der gemeinsamen Daumennavigation (keine Layoutregeln). */
+html[data-skin="lcars"]{
+ --thumb-surface:#170f20;
+ --thumb-border:#a681b2;
+ --thumb-ink:#efd7f4;
+ --thumb-active:#eeac7b;
+ --thumb-active-ink:#1f1323;
+}
+html[data-skin="explorer"]{
+ --thumb-surface:#305447;
+ --thumb-border:#bd9657;
+ --thumb-ink:#f7e8c6;
+ --thumb-active:#e7c58e;
+ --thumb-active-ink:#392817;
+}
+
 </style>
 </head>
 <body>
@@ -591,7 +689,7 @@ html[data-skin="explorer"] .place-web-frame{border-color:#a68a55}
 <header><div class="brand"><div class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V9l7-6 7 6v12M9 21v-8h6v8M8 9h.01M16 9h.01"/></svg></div><h1>ZEITREISE</h1></div><p>Geschichte entdecken. Orte verstehen.</p></header>
 
 <div class="layout">
-<section class="map-card" aria-label="Karte und Sehenswürdigkeiten"><div class="map-head"><div><div class="card-label">Deine Umgebung</div><h2 id="mapTitle">Deine aktuelle Umgebung</h2></div><span class="map-gps-status" id="gpsStatus" role="status" aria-live="polite" hidden></span></div>
+<section class="map-card" id="quickMapTarget" aria-label="Karte und Sehenswürdigkeiten"><div class="map-head"><div><div class="card-label">Deine Umgebung</div><h2 id="mapTitle">Deine aktuelle Umgebung</h2></div><span class="map-gps-status" id="gpsStatus" role="status" aria-live="polite" hidden></span></div>
 <div class="map-view-tabs" role="group" aria-label="Ansicht für den gewählten Ort">
 <button type="button" id="viewTabMap" data-map-view="map" aria-pressed="true" class="is-active">⌖ Karte</button>
 <button type="button" id="viewTabInfo" data-map-view="info" aria-pressed="false" disabled>ℹ Informationen</button>
@@ -600,13 +698,33 @@ html[data-skin="explorer"] .place-web-frame{border-color:#a68a55}
 <div class="map-graphic"><div id="liveMap" aria-label="Live-Karte mit deinem Standort und Sehenswürdigkeiten"></div><div id="mapPlaceholder" class="map-placeholder"><div class="map-placeholder-icon" aria-hidden="true">⌖</div><strong>Deine Umgebung entdecken</strong><span>Starte deine Entdeckung – die Karte und die Orte in deiner Nähe erscheinen automatisch.</span><button type="button" id="startBtn" class="start">✦ Entdeckung mit GPS starten</button><p id="gpsProgress" class="gps-progress" role="status" aria-live="polite" hidden></p></div><div class="map-overlay" id="mapOverlay" hidden></div>
 <section id="placeInfoView" class="place-view-panel" aria-label="Besuchsinformationen zum gewählten Ort" hidden></section>
 <section id="placeWebsiteView" class="place-view-panel place-website-view" aria-label="Webseite zum gewählten Ort" hidden></section></div>
-<div class="map-bottom"><div class="route-panel" id="routePanel" role="status" aria-live="polite" hidden></div><div class="map-tools"><button id="stopGpsBtn" type="button" hidden>■ GPS beenden</button><button id="mapStyleBtn" type="button">Kartenstil wechseln</button><button id="retryBtn" type="button">Orte neu suchen</button><button type="button" id="centerMapBtn">⌖ Standort zentrieren</button></div><div id="discoveryNote" class="discover-banner" role="status" aria-live="polite"></div><p id="fetchStatus" class="gps-fetch-status" role="status" aria-live="polite">Starte die Entdeckung, um Orte in deiner Umgebung zu finden.</p><div class="poi-title"><strong id="poiHead">In deiner Umgebung</strong><span class="small-note" id="poiCount">Noch keine Suche</span></div><div class="story" id="story" aria-live="polite"></div><div class="poi-list" id="poiList"></div></div></section>
-<section class="config-card" aria-label="Alle Einstellungen"><details class="section config-fold" id="settings01"><summary class="config-summary"><span class="fold-number">01</span><span class="fold-label">Dein Entdeckermodus</span><span class="fold-current" id="modeCurrent"></span><span class="fold-arrow" aria-hidden="true">⌄</span></summary><div class="config-content"><div class="segment" role="group" aria-label="Entdeckermodus"><button type="button" data-mode="auto">Automatisch</button><button type="button" data-mode="hint">Nur Hinweise</button><button type="button" data-mode="manual">Manuell</button></div><p class="help" id="modeHelp">Du erhältst unaufdringliche Hinweise auf interessante Orte und entscheidest selbst, ob du mehr erfahren möchtest.</p><div class="row-select"><label for="radius">Suchradius</label><select id="radius"><option value="300">300 Meter</option><option value="600" selected>600 Meter</option><option value="1000">1 Kilometer</option></select></div></div></details>
+<div class="map-bottom"><div class="route-panel" id="routePanel" role="status" aria-live="polite" hidden></div><div class="map-tools"><button id="stopGpsBtn" type="button" hidden>■ GPS beenden</button><button id="mapStyleBtn" type="button">Kartenstil wechseln</button><button id="retryBtn" type="button">Orte neu suchen</button><button type="button" id="centerMapBtn">⌖ Standort zentrieren</button></div><div id="discoveryNote" class="discover-banner" role="status" aria-live="polite"></div><p id="fetchStatus" class="gps-fetch-status" role="status" aria-live="polite">Starte die Entdeckung, um Orte in deiner Umgebung zu finden.</p><div class="poi-title" id="quickPlacesTarget"><strong id="poiHead">In deiner Umgebung</strong><span class="small-note" id="poiCount">Noch keine Suche</span></div><div class="story" id="story" aria-live="polite"></div><div class="poi-list" id="poiList"></div></div></section>
+<section class="config-card" id="quickSettingsTarget" aria-label="Alle Einstellungen"><details class="section config-fold" id="settings01"><summary class="config-summary"><span class="fold-number">01</span><span class="fold-label">Dein Entdeckermodus</span><span class="fold-current" id="modeCurrent"></span><span class="fold-arrow" aria-hidden="true">⌄</span></summary><div class="config-content"><div class="segment" role="group" aria-label="Entdeckermodus"><button type="button" data-mode="auto">Automatisch</button><button type="button" data-mode="hint">Nur Hinweise</button><button type="button" data-mode="manual">Manuell</button></div><p class="help" id="modeHelp">Du erhältst unaufdringliche Hinweise auf interessante Orte und entscheidest selbst, ob du mehr erfahren möchtest.</p><div class="row-select"><label for="radius">Suchradius</label><select id="radius"><option value="300">300 Meter</option><option value="600" selected>600 Meter</option><option value="1000">1 Kilometer</option></select></div></div></details>
 <div class="section config-fold feature-pending" id="settings02" role="group" aria-label="Stimme und Sprachsteuerung – in Arbeit"><div class="config-summary"><span class="fold-number">02</span><span class="fold-label">Stimme &amp; Sprachsteuerung</span><span class="fold-current" id="voiceCurrent">In Arbeit</span></div><div class="config-content" hidden aria-hidden="true"><div class="line-option"><label for="voice">Erzählstil</label><select id="voice" disabled><option value="warm">Warm &amp; ruhig</option><option value="vivid">Lebendig &amp; spannend</option><option value="factual">Sachlich &amp; präzise</option></select></div><div class="line-option"><span>Sprachsteuerung</span><label class="switch"><input type="checkbox" id="speech" checked disabled><span class="slider"></span></label></div><p class="help">Professionelle KI-Stimme und Sprachbefehle sind noch in Entwicklung.</p></div></div>
 <details class="section config-fold" id="settings03"><summary class="config-summary"><span class="fold-number">03</span><span class="fold-label">Was interessiert dich?</span><span class="fold-current" id="interestCurrent"></span><span class="fold-arrow" aria-hidden="true">⌄</span></summary><div class="config-content"><div class="checks"><label><input type="checkbox" data-interest="geschichte" checked> Geschichte</label><label><input type="checkbox" data-interest="architektur" checked> Architektur</label><label><input type="checkbox" data-interest="legenden" checked> Legenden</label><label><input type="checkbox" data-interest="kuriositaeten" checked> Kuriositäten</label></div></div></details>
 <details class="section config-fold" id="settings04"><summary class="config-summary"><span class="fold-number">04</span><span class="fold-label">Erscheinungsbild</span><span class="fold-current" id="skinCurrent">Original</span><span class="fold-arrow" aria-hidden="true">⌄</span></summary><div class="config-content"><fieldset class="skin-picks"><legend>Skin auswählen</legend><label class="skin-option"><input type="radio" name="skin" value="original" checked><span class="skin-swatch skin-original" aria-hidden="true"><i></i><i></i><i></i></span><span class="skin-option-text"><strong>Original</strong><small>ZEITREISE · Blau und Gold</small></span></label><label class="skin-option"><input type="radio" name="skin" value="lcars"><span class="skin-swatch skin-lcars" aria-hidden="true"><i></i><i></i><i></i></span><span class="skin-option-text"><strong>Raumschiffkonsole</strong><small>Raumschiff-Design · Orange und Lavendel</small></span></label><label class="skin-option"><input type="radio" name="skin" value="explorer"><span class="skin-swatch skin-explorer" aria-hidden="true"><i></i><i></i><i></i></span><span class="skin-option-text"><strong>Entdeckerkarte</strong><small>Pergament · Seekarten und Messing</small></span></label></fieldset><p class="help">Nur das Aussehen ändert sich. Karte, Anordnung und Funktionen bleiben erhalten.</p></div></details>
 </section>
 </div></div>
+
+<!-- Einhandbedienung · gemeinsame Oberflächenstruktur, unabhängig vom Skin. -->
+<nav id="thumbDock" class="thumb-dock" aria-label="Schnellnavigation">
+ <button type="button" id="quickMapBtn" class="thumb-dock-action is-active" aria-pressed="true" aria-label="Zur Karte springen">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 6 6-2 6 2 6-2v14l-6 2-6-2-6 2V6ZM9 4v14m6-12v14"/></svg>
+  <span>Karte</span>
+ </button>
+ <button type="button" id="quickPlacesBtn" class="thumb-dock-action" aria-pressed="false" aria-label="Zur Liste der Sehenswürdigkeiten springen">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6 7-12a7 7 0 1 0-14 0c0 6 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>
+  <span>Orte</span>
+ </button>
+ <button type="button" id="quickLocateBtn" class="thumb-dock-action thumb-dock-locate" aria-label="Meinen GPS-Standort zentrieren">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3"/></svg>
+  <span>Standort</span>
+ </button>
+ <button type="button" id="quickSettingsBtn" class="thumb-dock-action" aria-pressed="false" aria-label="Zu den Einstellungen springen">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="8" cy="6" r="2" fill="currentColor" stroke="none"/><circle cx="16" cy="12" r="2" fill="currentColor" stroke="none"/><circle cx="10" cy="18" r="2" fill="currentColor" stroke="none"/></svg>
+  <span>Einstellungen</span>
+ </button>
+</nav>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 (()=>{'use strict';
@@ -1293,6 +1411,87 @@ const StickyTitleLayout=(()=>{
   observer.observe(titlebar);
  }else window.addEventListener('resize',update,{passive:true});
  return {};
+})();
+
+/* ================================================================
+   EinhandNavigation – eigenständiges Bedienmodul (V0.5.11).
+   Steuert nur die Ansicht/Scrollposition und verwendet bestehende
+   Karten- und GPS-Aktionen. Keine Skin- oder Datenquellenlogik.
+   ================================================================ */
+const EinhandNavigation=(()=>{
+ const dock=$('#thumbDock');
+ const actions={
+  map:$('#quickMapBtn'),places:$('#quickPlacesBtn'),
+  locate:$('#quickLocateBtn'),settings:$('#quickSettingsBtn')
+ };
+ const targets={
+  map:$('#quickMapTarget'),places:$('#quickPlacesTarget'),
+  settings:$('#quickSettingsTarget')
+ };
+ if(!dock||Object.values(actions).some(x=>!x)||Object.values(targets).some(x=>!x))return {};
+ const isMobile=()=>window.matchMedia('(max-width:700px)').matches;
+ const movement=()=>window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth';
+ let selected='map',updateScheduled=false;
+ function activate(section){
+  if(!['map','places','settings'].includes(section))return;
+  selected=section;
+  for(const name of ['map','places','settings']){
+   const active=name===section;
+   actions[name].classList.toggle('is-active',active);
+   actions[name].setAttribute('aria-pressed',String(active));
+  }
+ }
+ function goTo(section){
+  if(section==='map')setPlaceView('map');
+  if(!isMobile())return;
+  activate(section);
+  targets[section].scrollIntoView({behavior:movement(),block:'start'});
+  if(section==='map')requestAnimationFrame(()=>state.map?.invalidateSize(true));
+ }
+ actions.map.addEventListener('click',()=>goTo('map'));
+ actions.places.addEventListener('click',()=>goTo('places'));
+ actions.settings.addEventListener('click',()=>goTo('settings'));
+ actions.locate.addEventListener('click',()=>{
+  if(!state.position){
+   goTo('map');
+   if(!$('#startBtn').disabled)$('#startBtn').click();
+  }else{
+   $('#centerMapBtn').click();
+   activate('map');
+  }
+ });
+ function syncDockHeight(){
+  if(!isMobile())return;
+  const height=Math.ceil(dock.getBoundingClientRect().height);
+  if(height>0)document.documentElement.style.setProperty('--thumb-dock-height',height+'px');
+ }
+ function updateActiveOnScroll(){
+  if(!isMobile())return;
+  const headerHeight=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--zeitreise-header-height'))||70;
+  const limit=headerHeight+window.innerHeight*.12;
+  const settingsTop=targets.settings.getBoundingClientRect().top;
+  const placesTop=targets.places.getBoundingClientRect().top;
+  const section=settingsTop<=limit?'settings':placesTop<=limit?'places':'map';
+  if(section!==selected)activate(section);
+ }
+ function scheduleUpdate(){
+  if(updateScheduled)return;
+  updateScheduled=true;
+  requestAnimationFrame(()=>{
+   updateScheduled=false;
+   syncDockHeight();
+   updateActiveOnScroll();
+  });
+ }
+ dock.addEventListener('click',scheduleUpdate,{passive:true});
+ window.addEventListener('scroll',scheduleUpdate,{passive:true});
+ window.addEventListener('resize',scheduleUpdate,{passive:true});
+ if(typeof ResizeObserver!=='undefined'){
+  const observer=new ResizeObserver(scheduleUpdate);
+  observer.observe(dock);
+ }
+ scheduleUpdate();
+ return {goTo};
 })();
 
 })();
