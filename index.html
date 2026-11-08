@@ -4,7 +4,7 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
 <meta name="theme-color" content="#071d40"/>
-<title>ZEITREISE 0.5.14 · Schnelle Ortssuche</title>
+<title>ZEITREISE 0.5.15 · App beenden</title>
 <link rel="manifest" href="./manifest.webmanifest"/>
 <meta name="referrer" content="strict-origin-when-cross-origin"/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
@@ -357,6 +357,15 @@ html{scroll-padding-top:calc(var(--zeitreise-header-height) + env(safe-area-inse
  .voice-actions .voice-button{flex:1 1 170px}
  .voice-actions .voice-stop{min-width:76px}
 }
+
+/* Android-exklusiver App-Abschluss: strukturell einstellungsgebunden, Skins bleiben rein optisch. */
+.exit-placeholder{display:none !important}
+html.zeitreise-android .exit-placeholder{
+ display:block !important;position:static;right:auto;bottom:auto;
+ margin:16px 14px 18px;width:calc(100% - 28px);min-height:48px;
+ text-align:center;touch-action:manipulation;font-size:14px;cursor:pointer;
+}
+html.zeitreise-android .exit-placeholder:disabled{opacity:.55}
 </style>
 <style id="zeitreise-skins">
 /* SKIN-SCHICHT: Diese Regeln enthalten ausschließlich Optik, keinerlei Positionierung der Funktionen. */
@@ -725,7 +734,7 @@ html[data-skin="explorer"]{
 <body>
 <div id="rotateHint" role="status"><strong>↻ Bitte ins Hochformat drehen</strong><span>ZEITREISE ist auf Smartphones und Tablets für das Hochformat gestaltet. Am PC bleibt die normale Ansicht verfügbar.</span></div>
 <div class="shell">
-<button type="button" class="exit-placeholder" disabled title="Erst in der späteren Android-App verfügbar">⏻ Programm beenden</button>
+<button type="button" class="exit-placeholder" id="exitAppBtn" hidden disabled>⏻ App beenden</button>
 <header><div class="brand"><div class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V9l7-6 7 6v12M9 21v-8h6v8M8 9h.01M16 9h.01"/></svg></div><h1>ZEITREISE</h1></div><p>Geschichte entdecken. Orte verstehen.</p></header>
 
 <div class="layout">
@@ -1589,6 +1598,26 @@ const StickyTitleLayout=(()=>{
   const observer=new ResizeObserver(update);
   observer.observe(titlebar);
  }else window.addEventListener('resize',update,{passive:true});
+ return {};
+})();
+
+
+/* AndroidExit – die native Android-App kann die Activity sicher beenden.
+   Kein Beenden-Button in der normalen Webseite. Alle Skins nutzen dieselbe Logik. */
+const AndroidExit=(()=>{
+ const exitButton=$('#exitAppBtn');
+ if(!exitButton)return {};
+ const isNative=location.protocol==='https:'&&location.hostname==='appassets.androidplatform.net';
+ if(!isNative)return {};
+ const settingsPanel=$('#quickSettingsTarget');
+ if(!settingsPanel)return {};
+ document.documentElement.classList.add('zeitreise-android');
+ settingsPanel.append(exitButton);
+ exitButton.hidden=false;
+ exitButton.disabled=false;
+ exitButton.addEventListener('click',()=>{
+  window.location.href='zeitreise://exit';
+ });
  return {};
 })();
 

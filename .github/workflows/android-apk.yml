@@ -58,14 +58,14 @@ jobs:
 
       - name: APK eindeutig benennen
         run: |
-          cp android/app/build/outputs/apk/debug/app-debug.apk ZEITREISE-0.5.14-Test.apk
-          ls -lh ZEITREISE-0.5.14-Test.apk
+          cp android/app/build/outputs/apk/debug/app-debug.apk ZEITREISE-0.5.15-Test.apk
+          ls -lh ZEITREISE-0.5.15-Test.apk
 
       - name: APK als GitHub Actions Artefakt bereitstellen
         uses: actions/upload-artifact@v4
         with:
-          name: ZEITREISE-0.5.14-Android-APK
-          path: ZEITREISE-0.5.14-Test.apk
+          name: ZEITREISE-0.5.15-Android-APK
+          path: ZEITREISE-0.5.15-Test.apk
           retention-days: 30
           if-no-files-found: error
 
@@ -73,12 +73,12 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if gh release view android-preview-0.5.14 >/dev/null 2>&1; then
-            gh release upload android-preview-0.5.14 ZEITREISE-0.5.14-Test.apk --clobber
+          if gh release view android-preview-0.5.15 >/dev/null 2>&1; then
+            gh release upload android-preview-0.5.15 ZEITREISE-0.5.15-Test.apk --clobber
           else
-            gh release create android-preview-0.5.14 ZEITREISE-0.5.14-Test.apk \
+            gh release create android-preview-0.5.15 ZEITREISE-0.5.15-Test.apk \
               --target "$GITHUB_SHA" \
-              --title "ZEITREISE 0.5.14 – Android-Testversion" \
-              --notes "Erste Android-Testversion. Die App-Oberfläche ist lokal enthalten. Internet wird für Karten, Ortsdaten und den ersten Download der optionalen Thorsten-Stimme benötigt. Die Stimme wird im WebView-App-Speicher wiederverwendet, soweit der Android-System-WebView die lokale Speicherung unterstützt. Nicht als fertige Offline-Version gedacht." \
+              --title "ZEITREISE 0.5.15 – Android-Testversion" \
+              --notes "Android-Testversion mit App-beenden-Button in den Einstellungen. Die App-Oberfläche ist lokal enthalten. Internet wird für Karten, Ortsdaten und den ersten Download der optionalen Thorsten-Stimme benötigt. Die Stimme wird im WebView-App-Speicher wiederverwendet, soweit der Android-System-WebView die lokale Speicherung unterstützt. Nicht als fertige Offline-Version gedacht." \
               --prerelease
           fi

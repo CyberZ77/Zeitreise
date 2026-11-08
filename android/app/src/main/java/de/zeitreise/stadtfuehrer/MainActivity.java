@@ -64,6 +64,12 @@ public final class MainActivity extends Activity {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 Uri uri = request.getUrl();
+                if (request.isForMainFrame()
+                    && "zeitreise".equalsIgnoreCase(uri.getScheme())
+                    && "exit".equalsIgnoreCase(uri.getHost())) {
+                    showExitConfirmation();
+                    return true;
+                }
                 if ("https".equalsIgnoreCase(uri.getScheme())
                     && LOCAL_HOST.equalsIgnoreCase(uri.getHost())
                     && uri.getPath() != null
@@ -129,6 +135,15 @@ public final class MainActivity extends Activity {
         }
     }
 
+    private void showExitConfirmation() {
+        new AlertDialog.Builder(this)
+            .setTitle("ZEITREISE beenden?")
+            .setMessage("Möchtest du die App wirklich schließen?")
+            .setNegativeButton("Abbrechen", null)
+            .setPositiveButton("App beenden", (dialog, which) -> finishAndRemoveTask())
+            .show();
+    }
+
     @Override
     @Deprecated
     public void onBackPressed() {
@@ -136,12 +151,7 @@ public final class MainActivity extends Activity {
             webView.goBack();
             return;
         }
-        new AlertDialog.Builder(this)
-            .setTitle("ZEITREISE beenden?")
-            .setMessage("Möchtest du die App schließen?")
-            .setNegativeButton("Abbrechen", null)
-            .setPositiveButton("Beenden", (dialog, which) -> finish())
-            .show();
+        showExitConfirmation();
     }
 
     @Override protected void onPause() {

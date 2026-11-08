@@ -10,8 +10,8 @@ android {
         applicationId 'de.zeitreise.stadtfuehrer'
         minSdk 26
         targetSdk 34
-        versionCode 514
-        versionName '0.5.14-test'
+        versionCode 515
+        versionName '0.5.15-test'
     }
 
     compileOptions {
