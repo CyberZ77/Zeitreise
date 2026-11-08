@@ -1,0 +1,21 @@
+{
+  "id": "./",
+  "name": "ZEITREISE – Historischer Stadtführer",
+  "short_name": "ZEITREISE",
+  "description": "Geschichte entdecken. Orte verstehen.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#061a3b",
+  "theme_color": "#071d40",
+  "orientation": "portrait-primary",
+  "lang": "de",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
