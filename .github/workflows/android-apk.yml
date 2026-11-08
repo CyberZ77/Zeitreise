@@ -1,0 +1,76 @@
+name: ZEITREISE Android APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'android/**'
+      - 'index.html'
+      - 'icon.svg'
+      - 'manifest.webmanifest'
+      - '.github/workflows/android-apk.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Repository herunterladen
+        uses: actions/checkout@v4
+
+      - name: Java einrichten
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Android SDK einrichten
+        uses: android-actions/setup-android@v3
+
+      - name: Gradle einrichten
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.10.2'
+
+      - name: Android SDK 35 bereitstellen
+        run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
+
+      - name: Aktuelle ZEITREISE HTML in die APK kopieren
+        run: |
+          mkdir -p android/app/src/main/assets
+          cp index.html icon.svg manifest.webmanifest android/app/src/main/assets/
+
+      - name: Debug APK bauen
+        working-directory: android
+        run: gradle --no-daemon --stacktrace assembleDebug
+
+      - name: APK eindeutig benennen
+        run: |
+          cp android/app/build/outputs/apk/debug/app-debug.apk ZEITREISE-0.5.14-Test.apk
+          ls -lh ZEITREISE-0.5.14-Test.apk
+
+      - name: APK als GitHub Actions Artefakt bereitstellen
+        uses: actions/upload-artifact@v4
+        with:
+          name: ZEITREISE-0.5.14-Android-APK
+          path: ZEITREISE-0.5.14-Test.apk
+          retention-days: 30
+          if-no-files-found: error
+
+      - name: Test-APK direkt über GitHub Releases bereitstellen
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view android-preview-0.5.14 >/dev/null 2>&1; then
+            gh release upload android-preview-0.5.14 ZEITREISE-0.5.14-Test.apk --clobber
+          else
+            gh release create android-preview-0.5.14 ZEITREISE-0.5.14-Test.apk \
+              --target "$GITHUB_SHA" \
+              --title "ZEITREISE 0.5.14 – Android-Testversion" \
+              --notes "Erste Android-Testversion. Die App-Oberfläche ist lokal enthalten. Internet wird für Karten, Ortsdaten und den ersten Download der optionalen Thorsten-Stimme benötigt. Die Stimme wird im WebView-App-Speicher wiederverwendet, soweit der Android-System-WebView die lokale Speicherung unterstützt. Nicht als fertige Offline-Version gedacht." \
+              --prerelease
+          fi
