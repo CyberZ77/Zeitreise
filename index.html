@@ -4,7 +4,7 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
 <meta name="theme-color" content="#071d40"/>
-<title>ZEITREISE 0.5.9 · Statisch fixierte Titelleiste</title>
+<title>ZEITREISE 0.6.0 · Historisch relevante Orte</title>
 <link rel="manifest" href="./manifest.webmanifest"/>
 <meta name="referrer" content="strict-origin-when-cross-origin"/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
@@ -982,9 +982,52 @@ const {showPlace}=PlaceDetailView;
 const PlaceRepository=(()=>{
 function fetchTimed(url,ms=14000,opts={}){let ac=new AbortController();let timer=setTimeout(()=>ac.abort(),ms);return fetch(url,{...opts,signal:ac.signal}).finally(()=>clearTimeout(timer))}
 function norm(s){return(s||'').toLocaleLowerCase('de').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^\p{L}\p{N}]/gu,'').trim()}
-function nearWiki(lat,lon,radius){const u=new URL('https://de.wikipedia.org/w/api.php');u.search=new URLSearchParams({action:'query',list:'geosearch',gscoord:lat.toFixed(6)+'|'+lon.toFixed(6),gsradius:String(Math.min(10000,radius)),gslimit:'50',format:'json',origin:'*'});return fetchTimed(u.toString()).then(r=>{if(!r.ok)throw Error('Wikipedia '+r.status);return r.json()}).then(data=>(data.query?.geosearch||[]).map(x=>({id:'wiki-'+x.pageid,pageid:x.pageid,name:x.title,lat:x.lat,lon:x.lon,distance:Math.round(x.dist),kind:'Historischer oder kultureller Ort',origin:'Wikipedia',source:'https://de.wikipedia.org/?curid='+x.pageid}))) }
+
+/* Qualitätsfilter für historische Ortslisten: Eine vorhandene Wikipedia-Seite
+   beweist noch keine historische Bedeutung einer gewöhnlichen Straße. */
+function isStreetName(name){
+ const title=String(name||'').trim().replace(/\s*\([^()]*\)\s*$/,'').trim();
+ return /(?:straße|strasse|str\.|allee|chaussee|gasse|weg|pfad|ring|boulevard|avenue)$/i.test(title)
+  || /^(?:straße|strasse|allee|chaussee|gasse|weg|pfad|boulevard|avenue)\s+(?:des|der|die|von|am|an|zu|zur|zum)\b/i.test(title);
+}
+function historicalStreetTags(tags){
+ const heritage=String(tags.heritage||'').trim().toLowerCase();
+ const historic=String(tags.historic||'').trim().toLowerCase();
+ // Nur belegte historische Attribute zählen, nicht bloß ein berühmter Namensgeber.
+ return Boolean(heritage&&heritage!=='no'&&heritage!=='false')
+  || Boolean(historic&&historic!=='no'&&historic!=='false');
+}
+function isHistoricallyRelevantPlace(p){
+ return !isStreetName(p.name)||p.historicallyImportantStreet===true;
+}
+async function classifyWikipediaStreets(places){
+ const candidates=places.filter(p=>isStreetName(p.name)&&Number.isInteger(p.pageid));
+ if(!candidates.length)return places;
+ const u=new URL('https://de.wikipedia.org/w/api.php');
+ u.search=new URLSearchParams({
+  action:'query',prop:'categories',pageids:candidates.map(p=>p.pageid).join('|'),
+  cllimit:'max',format:'json',origin:'*'
+ });
+ try{
+  const r=await fetchTimed(u.toString(),10000);
+  if(!r.ok)return places;
+  const data=await r.json(),pages=data.query?.pages||{};
+  // Als Beleg zählen denkmal-/geschichtsbezogene Kategorien; allgemeine
+  // Kategorien wie "Straße in Bremerhaven" sind ausdrücklich nicht genug.
+  const evidence=/historisch|geschicht|kulturdenkmal|baudenkmal|denkmalschutz|denkmalgesch[uü]tzt|weltkulturerbe|welterbe|alter verkehrsweg|altstra(?:ß|ss)e|r[oö]merstra(?:ß|ss)e|r[oö]mische stra(?:ß|ss)e|handelsstra(?:ß|ss)e|arch[aä]olog|gedenkst[aä]tte/i;
+  for(const p of candidates){
+   const categories=pages[p.pageid]?.categories||[];
+   if(categories.some(c=>evidence.test(c.title||'')))p.historicallyImportantStreet=true;
+  }
+ }catch{
+  // Unbekannte Straßen werden im Zweifel nicht als Sehenswürdigkeit gezeigt.
+ }
+ return places;
+}
+
+function nearWiki(lat,lon,radius){const u=new URL('https://de.wikipedia.org/w/api.php');u.search=new URLSearchParams({action:'query',list:'geosearch',gscoord:lat.toFixed(6)+'|'+lon.toFixed(6),gsradius:String(Math.min(10000,radius)),gslimit:'50',format:'json',origin:'*'});return fetchTimed(u.toString()).then(r=>{if(!r.ok)throw Error('Wikipedia '+r.status);return r.json()}).then(data=>(data.query?.geosearch||[]).map(x=>({id:'wiki-'+x.pageid,pageid:x.pageid,name:x.title,lat:x.lat,lon:x.lon,distance:Math.round(x.dist),kind:'Historischer oder kultureller Ort',origin:'Wikipedia',source:'https://de.wikipedia.org/?curid='+x.pageid}))).then(classifyWikipediaStreets) }
 function nearOsm(lat,lon,radius){const query=`[out:json][timeout:17];(nwr(around:${radius},${lat.toFixed(6)},${lon.toFixed(6)})[historic][name];nwr(around:${radius},${lat.toFixed(6)},${lon.toFixed(6)})[tourism=attraction][name];nwr(around:${radius},${lat.toFixed(6)},${lon.toFixed(6)})[heritage][name];nwr(around:${radius},${lat.toFixed(6)},${lon.toFixed(6)})[tourism=museum][name];);out center 100;`;
- const body=new URLSearchParams({data:query});return fetchTimed('https://overpass.private.coffee/api/interpreter',18000,{method:'POST',body}).then(r=>{if(!r.ok)throw Error('Overpass '+r.status);return r.json()}).then(data=>(data.elements||[]).map(x=>{const latP=x.lat??x.center?.lat,lonP=x.lon??x.center?.lon;const tags=x.tags||{},name=tags['name:de']||tags.name;return{id:'osm-'+x.type+'-'+x.id,name,lat:latP,lon:lonP,distance:Math.round(meters(lat,lon,latP,lonP)),kind:tags.historic?'Historisches Denkmal':tags.tourism==='museum'?'Museum':'Sehenswürdigkeit',origin:'OpenStreetMap',wikipedia:tags.wikipedia||'',wikidata:tags.wikidata||'',commonsFile:tags.wikimedia_commons||'',source:'https://www.openstreetmap.org/'+x.type+'/'+x.id,blurb:tags.description||tags['description:de']||'',
+ const body=new URLSearchParams({data:query});return fetchTimed('https://overpass.private.coffee/api/interpreter',18000,{method:'POST',body}).then(r=>{if(!r.ok)throw Error('Overpass '+r.status);return r.json()}).then(data=>(data.elements||[]).map(x=>{const latP=x.lat??x.center?.lat,lonP=x.lon??x.center?.lon;const tags=x.tags||{},name=tags['name:de']||tags.name;return{id:'osm-'+x.type+'-'+x.id,name,lat:latP,lon:lonP,distance:Math.round(meters(lat,lon,latP,lonP)),kind:tags.historic?'Historisches Denkmal':tags.tourism==='museum'?'Museum':'Sehenswürdigkeit',origin:'OpenStreetMap',historicallyImportantStreet:historicalStreetTags(tags),wikipedia:tags.wikipedia||'',wikidata:tags.wikidata||'',commonsFile:tags.wikimedia_commons||'',source:'https://www.openstreetmap.org/'+x.type+'/'+x.id,blurb:tags.description||tags['description:de']||'',
 website:tags.website||tags['contact:website']||tags.url||'',
 websiteSource:'OpenStreetMap',
 openingHours:tags.opening_hours||'',fee:tags.fee||'',charge:tags.charge||'',
@@ -992,6 +1035,7 @@ wheelchair:tags.wheelchair||'',phone:tags.phone||tags['contact:phone']||''}}).fi
 function mergePlaces(wiki,osm){
  const all=[...wiki],seen=new Map(wiki.map(p=>[norm(p.name),p]));
  const enrich=(target,place)=>{
+  if(place.historicallyImportantStreet)target.historicallyImportantStreet=true;
   for(const key of ['website','websiteSource','openingHours','fee','charge','wheelchair','phone','wikidata','commonsFile','wikipedia']){
    if(!target[key]&&place[key])target[key]=place[key];
   }
@@ -1004,7 +1048,7 @@ function mergePlaces(wiki,osm){
   if(nearest){enrich(nearest,p);continue}
   all.push(p);seen.set(key,p);
  }
- return all.sort((a,b)=>a.distance-b.distance).slice(0,55);
+ return all.filter(isHistoricallyRelevantPlace).sort((a,b)=>a.distance-b.distance).slice(0,55);
 }
 return {fetchTimed,norm,nearWiki,nearOsm,mergePlaces};
 })();
