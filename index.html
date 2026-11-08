@@ -4,7 +4,7 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
 <meta name="theme-color" content="#071d40"/>
-<title>ZEITREISE 0.4 · Fußgänger-Navigation</title>
+<title>ZEITREISE 0.4.1 · Nur Live-GPS</title>
 <link rel="manifest" href="./manifest.webmanifest"/>
 <meta name="referrer" content="strict-origin-when-cross-origin"/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
@@ -121,35 +121,38 @@
 .route-panel .route-stop{background:#12385e;cursor:pointer}
 .route-panel .route-text{font-size:13px;flex-basis:100%;line-height:1.5}
 @media(max-width:600px){.map-graphic{height:clamp(225px,32vh,320px)}.poi-photo img{max-height:165px}.walk-btn,.google-btn{width:auto}.route-panel{padding:10px}.poi-list{max-height:235px}.story{padding:11px}}
+/* Start ohne Orts-Simulation */
+.map-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:12px;text-align:center;padding:28px 26px;background:radial-gradient(circle at 50% 35%,#285c94,#0b2b52 72%);color:#fff}
+.map-placeholder[hidden]{display:none}
+.map-placeholder-icon{font-size:48px;line-height:1;color:#efc781}
+.map-placeholder strong{font-size:clamp(16px,2vw,22px)}
+.map-placeholder span{font-size:13px;color:#d5e3f6;line-height:1.5;max-width:370px}
+.map-placeholder button{background:#e9bf72;border:0;border-radius:12px;color:#082748;font-weight:800;padding:11px 20px}
+@media(max-width:600px){.map-placeholder{padding:15px;gap:8px}.map-placeholder-icon{font-size:32px}.map-placeholder strong{font-size:16px}.map-placeholder span{font-size:12px}}
 </style>
 </head>
 <body>
 <div id="rotateHint" role="status"><strong>↻ Bitte ins Hochformat drehen</strong><span>ZEITREISE ist auf Smartphones und Tablets für das Hochformat gestaltet. Am PC bleibt die normale Ansicht verfügbar.</span></div>
 <div class="shell">
 <header><div class="brand"><div class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V9l7-6 7 6v12M9 21v-8h6v8M8 9h.01M16 9h.01"/></svg></div><h1>ZEITREISE</h1></div><p>Geschichte entdecken. Orte verstehen.</p></header>
-<div class="topline"><span class="status-pill"><span class="pulse" id="gpsDot"></span><span id="gpsStatus">Demo: Bremen · Marktplatz</span></span><button class="pill-button" type="button" id="gpsBtn">◎ Standort jetzt ermitteln</button><button class="pill-button" type="button" id="demoBtn">Demo Bremen</button><span class="gps-detail" id="coordText">Noch keine Standortfreigabe</span></div>
+<div class="topline"><span class="status-pill"><span class="pulse" id="gpsDot"></span><span id="gpsStatus">Standort noch nicht ermittelt</span></span><button class="pill-button" type="button" id="gpsBtn">◎ Standort jetzt ermitteln</button><span class="gps-detail" id="coordText">Noch keine Standortfreigabe</span></div>
 <div class="layout">
-<section class="map-card" aria-label="Karte und Sehenswürdigkeiten"><div class="map-head"><div><div class="card-label">Deine Umgebung</div><h2 id="mapTitle">Bremer Marktplatz</h2></div><span style="font-size:12px;color:#e6ca92">✦ ENTDECKEN</span></div>
-<div class="map-graphic"><div id="liveMap" aria-label="Live-Karte mit deinem Standort und Sehenswürdigkeiten"></div><svg viewBox="0 0 520 320" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Schematische Karte des Bremer Marktplatzes im Demo-Modus"><defs><pattern id="grid" width="28" height="28" patternUnits="userSpaceOnUse"><path d="M28 0H0V28" fill="none" stroke="#ffffff" stroke-opacity=".035" stroke-width="1"/></pattern><filter id="shadow"><feDropShadow dx="0" dy="3" stdDeviation="5" flood-opacity=".22"/></filter></defs><rect width="520" height="320" fill="#14375e"/><path d="M-40 25L180 115L110 190L-70 120Z" fill="#27557b"/><path d="M350 -50L575 112L510 213L256 38Z" fill="#25517a"/><path d="M-40 236L148 177L248 350L-30 370Z" fill="#255079"/><path d="M365 175L560 243L532 360L304 290Z" fill="#29547b"/><path d="M-40 25L180 115L110 190L-70 120Z M350 -50L575 112L510 213L256 38Z M-40 236L148 177L248 350L-30 370Z M365 175L560 243L532 360L304 290Z" stroke="#87b4d8" stroke-opacity=".22" stroke-width="2"/><path d="M-50 120L560 300M-50 225L530 70" stroke="#d2d9cb" stroke-width="35" opacity=".75"/><path d="M-50 120L560 300M-50 225L530 70" stroke="#d1bf97" stroke-width="1.5" stroke-dasharray="5 9" opacity=".9"/><path d="M160 80L350 123L330 235L154 196Z" fill="#b3a57d" stroke="#f1dfb1" stroke-opacity=".48" stroke-width="3"/><rect width="520" height="320" fill="url(#grid)"/><g fill="#f3e2bd" opacity=".9" font-size="13" font-weight="600"><text x="184" y="154">MARKTPLATZ</text><text x="38" y="68">ALTSTADT</text><text x="394" y="261">DOMSHOF</text></g><g class="map-pin-interactive" tabindex="0" data-map-poi="roland" transform="translate(231 187)" filter="url(#shadow)"><circle r="28" fill="#e4b971" opacity=".23"/><circle r="16" fill="#f2d08f"/><path d="M0-9V7M-7-2H7" stroke="#0c2a54" stroke-width="2.5" stroke-linecap="round"/><text y="-36" font-size="11" fill="white" text-anchor="middle" font-weight="700">Roland</text></g><g class="map-pin-interactive" tabindex="0" data-map-poi="rathaus" transform="translate(303 109)" filter="url(#shadow)"><circle r="16" fill="#f5fbff"/><path d="M-7 5V-3L0-8L7-3V5ZM-9 7H9" stroke="#173d66" stroke-width="2" fill="none"/><text y="-22" font-size="11" fill="white" text-anchor="middle" font-weight="700">Rathaus</text></g><g class="map-pin-interactive" tabindex="0" data-map-poi="dom" transform="translate(381 148)" filter="url(#shadow)"><circle r="16" fill="#f5fbff"/><path d="M-8 7V-2L-4-6L0-2L4-6L8-2V7M-10 8H10" stroke="#173d66" stroke-width="2" fill="none"/><text y="-23" font-size="11" fill="white" text-anchor="middle" font-weight="700">St. Petri Dom</text></g></svg><div class="map-overlay" id="mapOverlay">Illustrative Demo-Karte · keine Navigation</div></div>
-<div class="map-bottom"><div class="route-panel" id="routePanel" role="status" aria-live="polite" hidden></div><div class="map-tools"><button id="mapStyleBtn" type="button">Kartenstil wechseln</button><button id="retryBtn" type="button">Orte neu suchen</button><a id="externalMapLink" href="https://www.openstreetmap.org/" target="_blank" rel="noopener noreferrer">Karte extern öffnen ↗</a></div><div id="discoveryNote" class="discover-banner" role="status" aria-live="polite"></div><p id="fetchStatus" class="gps-fetch-status" role="status" aria-live="polite">Demo Bremen – für die echte Umgebung GPS starten.</p><div class="poi-title"><strong id="poiHead">Drei spannende Orte</strong><span class="small-note" id="poiCount">in der Demo</span></div><div class="story" id="story" aria-live="polite"></div><div class="poi-list" id="poiList"></div></div></section>
+<section class="map-card" aria-label="Karte und Sehenswürdigkeiten"><div class="map-head"><div><div class="card-label">Deine Umgebung</div><h2 id="mapTitle">Deine aktuelle Umgebung</h2></div><span style="font-size:12px;color:#e6ca92">✦ ENTDECKEN</span></div>
+<div class="map-graphic"><div id="liveMap" aria-label="Live-Karte mit deinem Standort und Sehenswürdigkeiten"></div><div id="mapPlaceholder" class="map-placeholder"><div class="map-placeholder-icon" aria-hidden="true">⌖</div><strong>Deine Umgebung entdecken</strong><span>Ermittle deinen Standort, um die Karte und Sehenswürdigkeiten in deiner Nähe zu sehen.</span><button type="button" id="mapGpsBtn">Standort ermitteln</button></div><div class="map-overlay" id="mapOverlay">Noch kein GPS-Standort</div></div>
+<div class="map-bottom"><div class="route-panel" id="routePanel" role="status" aria-live="polite" hidden></div><div class="map-tools"><button id="mapStyleBtn" type="button">Kartenstil wechseln</button><button id="retryBtn" type="button">Orte neu suchen</button><a id="externalMapLink" href="https://www.openstreetmap.org/" target="_blank" rel="noopener noreferrer">Karte extern öffnen ↗</a></div><div id="discoveryNote" class="discover-banner" role="status" aria-live="polite"></div><p id="fetchStatus" class="gps-fetch-status" role="status" aria-live="polite">Tippe auf „Standort ermitteln“, um echte Sehenswürdigkeiten in deiner Umgebung zu finden.</p><div class="poi-title"><strong id="poiHead">In deiner Umgebung</strong><span class="small-note" id="poiCount">Noch keine Suche</span></div><div class="story" id="story" aria-live="polite"></div><div class="poi-list" id="poiList"></div></div></section>
 <section class="config-card" aria-label="Alle Einstellungen"><div class="section"><h3 class="section-title"><span>01</span> Dein Entdeckermodus</h3><div class="segment" role="group" aria-label="Entdeckermodus"><button type="button" data-mode="auto">Automatisch</button><button type="button" data-mode="hint">Nur Hinweise</button><button type="button" data-mode="manual">Manuell</button></div><p class="help" id="modeHelp">Du erhältst unaufdringliche Hinweise auf interessante Orte und entscheidest selbst, ob du mehr erfahren möchtest.</p><div class="row-select"><label for="radius">Suchradius</label><select id="radius"><option value="300">300 Meter</option><option value="600" selected>600 Meter</option><option value="1000">1 Kilometer</option></select></div></div>
 <div class="section"><h3 class="section-title"><span>02</span> Stimme & Sprachsteuerung</h3><div class="line-option"><label for="voice">Erzählstil</label><select id="voice"><option value="warm">Warm & ruhig</option><option value="vivid">Lebendig & spannend</option><option value="factual">Sachlich & präzise</option></select></div><div class="line-option"><span>Sprachsteuerung</span><label class="switch" aria-label="Sprachsteuerung einschalten"><input type="checkbox" id="speech" checked/><span class="slider"></span></label></div><p class="help">Professionelle KI-Stimme und echte Sprachbefehle folgen nach der Server-Anbindung. Diese Version spielt keine Standard-Computerstimme ab.</p></div>
 <div class="section"><h3 class="section-title"><span>03</span> Was interessiert dich?</h3><div class="checks"><label><input type="checkbox" data-interest="geschichte" checked> Geschichte</label><label><input type="checkbox" data-interest="architektur" checked> Architektur</label><label><input type="checkbox" data-interest="legenden" checked> Legenden</label><label><input type="checkbox" data-interest="kuriositaeten" checked> Kuriositäten</label></div></div>
-<button class="start" id="startBtn" type="button">✦ &nbsp; Entdeckung mit GPS starten</button><p class="note" id="appNote" role="status" aria-live="polite">Version 0.4 · GPS, Bilder und Fußwege</p></section>
-</div><footer class="footer">ZEITREISE · Version 0.4 · Die Standortfreigabe erfolgt nur auf deinen Wunsch. Für GPS ist HTTPS oder eine unterstützte sichere lokale Umgebung notwendig.<br/>Für die Umkreissuche werden Koordinaten an Wikipedia und OpenStreetMap/Overpass übertragen. Die App selbst besitzt keinen eigenen Server. Eine professionelle KI-Stimme ist noch nicht integriert.</footer></div>
+<button class="start" id="startBtn" type="button">✦ &nbsp; Entdeckung mit GPS starten</button><p class="note" id="appNote" role="status" aria-live="polite">Version 0.4.1 · Nur echte GPS-Orte</p></section>
+</div><footer class="footer">ZEITREISE · Version 0.4.1 · Die Standortfreigabe erfolgt nur auf deinen Wunsch. Für GPS ist HTTPS oder eine unterstützte sichere lokale Umgebung notwendig.<br/>Für die Umkreissuche werden Koordinaten an Wikipedia und OpenStreetMap/Overpass übertragen. Die App selbst besitzt keinen eigenen Server. Eine professionelle KI-Stimme ist noch nicht integriert.</footer></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 (()=>{'use strict';
-const D={
- roland:{id:'roland',name:'Der Bremer Roland',kind:'Denkmal · 1404',blurb:'Der steinerne Roland von 1404 steht für die Rechte und die Freiheit Bremens. Gemeinsam mit dem Rathaus gehört er zum UNESCO-Welterbe.',source:'https://www.unesco.de/staette/rathaus-und-roland-in-bremen/',lat:53.07591,lon:8.80654,wikiTitle:'Bremer Roland',origin:'UNESCO'},
- rathaus:{id:'rathaus',name:'Das Bremer Rathaus',kind:'UNESCO-Welterbe',blurb:'Der gotische Bau des Bremer Rathauses entstand im 15. Jahrhundert. Die prachtvolle Renaissancefassade folgte Anfang des 17. Jahrhunderts.',source:'https://www.unesco.de/staette/rathaus-und-roland-in-bremen/',lat:53.07587,lon:8.80741,wikiTitle:'Bremer Rathaus',origin:'UNESCO'},
- dom:{id:'dom',name:'St. Petri Dom',kind:'Kirche · Stadtgeschichte',blurb:'Der Bremer St.-Petri-Dom erzählt über verschiedene Bauphasen von der kirchlichen und politischen Geschichte der Stadt.',source:'https://www.bremen.de/tourismus/sehenswuerdigkeiten/bremer-st-petri-dom',lat:53.07562,lon:8.80918,wikiTitle:'St.-Petri-Dom (Bremen)',origin:'Stadt Bremen'}
-};
 const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
 const R=Math.PI/180;
 function meters(a,b,c,d){const x=(c-a)*R,y=(d-b)*R;const f=Math.sin(x/2)**2+Math.cos(a*R)*Math.cos(c*R)*Math.sin(y/2)**2;return 12742000*Math.atan2(Math.sqrt(f),Math.sqrt(1-f))}
 function distanceText(m){return m<1000?Math.round(m)+' m':(m/1000).toFixed(1).replace('.',',')+' km'}
-const state={routeTarget:null,routeLine:null,routeInfo:null,routeRequest:0,routeWatch:false,searching:false,mapStyle:'osm',tileLayer:null,mode:'hint',demo:true,watchId:null,places:[],selected:null,position:null,lastSearch:null,searchToken:0,shownIds:new Set(),map:null,markers:null,userCircle:null,accuracyCircle:null};
+const state={routeTarget:null,routeLine:null,routeInfo:null,routeRequest:0,routeWatch:false,searching:false,mapStyle:'osm',tileLayer:null,mode:'hint',watchId:null,places:[],selected:null,position:null,lastSearch:null,searchToken:0,shownIds:new Set(),map:null,markers:null,userCircle:null,accuracyCircle:null};
 const modeText={auto:'Wenn du einen neuen interessanten Ort erreichst, wird er automatisch als nächstes Ziel ausgewählt. Hörführungen mit echter KI-Stimme folgen nach der Audio-Anbindung.',hint:'Bei interessanten Orten erscheint ein unaufdringlicher Hinweis. Du entscheidest, ob du die Geschichte öffnen möchtest.',manual:'Die Karte und die Liste zeigen interessante Orte, aber nichts wird automatisch ausgewählt.'};
 function note(s){$('#appNote').textContent=s;const t=$('#fetchStatus');if(t)t.textContent=s}
 function banner(place){const e=$('#discoveryNote');if(!place){e.classList.remove('show');e.replaceChildren();return}e.replaceChildren();let strong=document.createElement('strong');strong.textContent='Interessanter Ort in deiner Nähe: '+place.name;let small=document.createElement('span');small.textContent='Etwa '+distanceText(place.distance||0)+' entfernt.';let btn=document.createElement('button');btn.type='button';btn.textContent='Jetzt entdecken';btn.onclick=()=>{banner(null);showPlace(place)};e.append(strong,small,document.createElement('br'),btn);e.classList.add('show')}
@@ -158,10 +161,8 @@ try{const old=JSON.parse(localStorage.getItem('zeitreise-v02')||localStorage.get
 function setMode(m){state.mode=m;$$('[data-mode]').forEach(b=>{b.classList.toggle('selected',b.dataset.mode===m);b.setAttribute('aria-pressed',String(b.dataset.mode===m))});$('#modeHelp').textContent=modeText[m];banner(null);persist()}
 $$('[data-mode]').forEach(b=>b.addEventListener('click',()=>setMode(b.dataset.mode)));setMode(state.mode);
 $$('select,input').forEach(el=>el.addEventListener('change',persist));
-$('#radius').addEventListener('change',()=>{if(state.position&&!state.demo)searchAround(true)});
-function demoPlaces(){return Object.values(D).map(p=>({...p,distance:Math.round(meters(53.0761,8.8071,p.lat,p.lon))}))}
-function activePlaces(){return state.demo?demoPlaces():state.places}
-function renderPoi(){const list=$('#poiList');list.replaceChildren();const items=activePlaces();$('#poiHead').textContent=state.demo?'Bremen entdecken':'In deiner Umgebung';$('#poiCount').textContent=items.length+' Orte';if(!items.length){const t=document.createElement('div');t.className='small-note';t.textContent=state.searching?'Orte werden gerade über Wikipedia und OpenStreetMap gesucht …':'Keine Sehenswürdigkeiten gefunden. Versuche einen größeren Suchradius oder eine neue Suche.';list.append(t);return}
+$('#radius').addEventListener('change',()=>{if(state.position)searchAround(true)});
+function renderPoi(){const list=$('#poiList');list.replaceChildren();const items=state.places;$('#poiHead').textContent='In deiner Umgebung';$('#poiCount').textContent=state.position?items.length+' Orte':'GPS noch nicht gestartet';if(!items.length){const t=document.createElement('div');t.className='small-note';t.textContent=!state.position?'Bitte erteile zuerst die Standortfreigabe.':state.searching?'Orte werden gerade über Wikipedia und OpenStreetMap gesucht …':'Keine Sehenswürdigkeiten gefunden. Versuche einen größeren Suchradius oder eine neue Suche.';list.append(t);return}
  for(const p of items){const b=document.createElement('button');b.type='button';b.className='poi'+(state.selected?.id===p.id?' active':'');const pin=document.createElement('span');pin.className='poi-pin';pin.textContent='⌖';const wrap=document.createElement('span');wrap.className='poi-left';const title=document.createElement('b');title.textContent=p.name;const sub=document.createElement('small');sub.textContent=p.kind||'Sehenswürdigkeit';wrap.append(title,sub);b.append(pin,wrap);if(Number.isFinite(p.distance)){let dis=document.createElement('span');dis.className='poi-distance';dis.textContent=distanceText(p.distance);b.append(dis)}b.addEventListener('click',()=>showPlace(p));list.append(b)}
  updateMarkers();}
 function setStatus(msg,isLive=false){$('#gpsStatus').textContent=msg;$('#gpsDot').classList.toggle('live',isLive)}
@@ -173,13 +174,13 @@ function changeBaseLayer(){if(!state.map||typeof L==='undefined')return;
  const attribution=topo?'© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>, © <a href="https://opentopomap.org" target="_blank" rel="noopener">OpenTopoMap</a>':'© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap-Mitwirkende</a>';
  state.tileLayer=L.tileLayer(url,{maxZoom:topo?17:19,maxNativeZoom:topo?17:19,attribution,subdomains:topo?'abc':'',crossOrigin:false,detectRetina:false,updateWhenIdle:true}).addTo(state.map);
  state.tileLayer.on('tileerror',()=>{note('Einige Kartenkacheln konnten nicht geladen werden. Bitte „Kartenstil wechseln“ versuchen; GPS und Ortsliste funktionieren unabhängig davon.')});
- $('#mapOverlay').textContent=(state.demo?'Demo Bremen':'GPS-Karte')+' · '+(topo?'Topografische Karte':'OpenStreetMap');
+ $('#mapOverlay').textContent='GPS-Karte'+' · '+(topo?'Topografische Karte':'OpenStreetMap');
 }
 function showMap(lat,lon,zoom=16){
  mapLink(lat,lon);
  if(typeof L==='undefined'){$('#mapOverlay').textContent='Kartenbibliothek nicht geladen · GPS-Ortsliste bleibt verfügbar';return}
  try{
- $('#liveMap').classList.add('is-visible');
+ $('#mapPlaceholder').hidden=true;$('#liveMap').classList.add('is-visible');
  if(!state.map){
   state.map=L.map('liveMap',{zoomControl:true,attributionControl:true,preferCanvas:true});
   state.map.attributionControl.setPrefix(false);
@@ -187,17 +188,17 @@ function showMap(lat,lon,zoom=16){
   changeBaseLayer();
  }
  state.map.setView([lat,lon],Math.min(state.mapStyle==='topo'?17:19,zoom));
- $('#mapOverlay').textContent=(state.demo?'Demo Bremen':'Deine GPS-Position')+' · '+(state.mapStyle==='topo'?'Topografische Karte':'Straßenkarte');
+ $('#mapOverlay').textContent='Deine GPS-Position'+' · '+(state.mapStyle==='topo'?'Topografische Karte':'Straßenkarte');
  requestAnimationFrame(()=>{state.map?.invalidateSize(true);state.map?.panTo([lat,lon])});
  }catch(e){$('#mapOverlay').textContent='Karte nicht verfügbar · GPS-Ortsliste bleibt aktiv'}
 }
-$('#retryBtn').addEventListener('click',()=>{if(state.position&&!state.demo){state.lastSearch=null;searchAround(true)}else note('Bitte zuerst den GPS-Standort ermitteln.')});
+$('#retryBtn').addEventListener('click',()=>{if(state.position){state.lastSearch=null;searchAround(true)}else note('Bitte zuerst den GPS-Standort ermitteln.')});
 $('#mapStyleBtn').addEventListener('click',()=>{
  state.mapStyle=state.mapStyle==='topo'?'osm':'topo';
  if(state.map){changeBaseLayer();state.map.setZoom(Math.min(state.map.getZoom(),state.mapStyle==='topo'?17:19));state.map.invalidateSize(true)}
 });
-function updateMarkers(){if(!state.map||!state.markers)return;state.markers.clearLayers();for(const p of activePlaces()){if(!Number.isFinite(p.lat)||!Number.isFinite(p.lon))continue;const marker=L.circleMarker([p.lat,p.lon],{radius:8,color:'#fff',weight:2,fillColor:'#d5a451',fillOpacity:.98});marker.bindTooltip(p.name,{direction:'top'});marker.on('click',()=>showPlace(p));marker.addTo(state.markers)}
- if(state.position&&!state.demo){let {lat,lon,accuracy}=state.position;const coords=[lat,lon];if(state.userCircle){state.map.removeLayer(state.userCircle);state.map.removeLayer(state.accuracyCircle)}state.accuracyCircle=L.circle(coords,{radius:accuracy,color:'#317ff0',fillColor:'#3989fc',fillOpacity:.10,weight:1}).addTo(state.map);state.userCircle=L.circleMarker(coords,{radius:8,color:'#fff',weight:2,fillColor:'#247de2',fillOpacity:1}).bindTooltip('Du bist hier').addTo(state.map)}}
+function updateMarkers(){if(!state.map||!state.markers)return;state.markers.clearLayers();for(const p of state.places){if(!Number.isFinite(p.lat)||!Number.isFinite(p.lon))continue;const marker=L.circleMarker([p.lat,p.lon],{radius:8,color:'#fff',weight:2,fillColor:'#d5a451',fillOpacity:.98});marker.bindTooltip(p.name,{direction:'top'});marker.on('click',()=>showPlace(p));marker.addTo(state.markers)}
+ if(state.position){let {lat,lon,accuracy}=state.position;const coords=[lat,lon];if(state.userCircle){state.map.removeLayer(state.userCircle);state.map.removeLayer(state.accuracyCircle)}state.accuracyCircle=L.circle(coords,{radius:accuracy,color:'#317ff0',fillColor:'#3989fc',fillOpacity:.10,weight:1}).addTo(state.map);state.userCircle=L.circleMarker(coords,{radius:8,color:'#fff',weight:2,fillColor:'#247de2',fillOpacity:1}).bindTooltip('Du bist hier').addTo(state.map)}}
 
 // Fotos werden erst beim Öffnen eines Ortes geladen; Wikimedia-Dateien verbleiben auf den Originalservern.
 const photoCache=new Map();
@@ -322,8 +323,7 @@ function displayPlacePhoto(p){
 }
 
 
-// Fußgänger-Routing auf echten Wegen (Valhalla, Demo-Server von OSM Deutschland).
-// In der Demo ist der Startpunkt der Bremer Marktplatz, NICHT der tatsächliche Nutzerstandort.
+// Fußgänger-Routing mit tatsächlichem GPS-Standort.
 function googleDirections(p){
  const u=new URL('https://www.google.com/maps/dir/');
  u.search=new URLSearchParams({api:'1',destination:p.lat.toFixed(6)+','+p.lon.toFixed(6),travelmode:'walking',dir_action:'navigate'});
@@ -347,7 +347,7 @@ function decodePolyline6(str){
  return points;
 }
 function routeOrigin(){
- return state.demo?{lat:53.07592,lon:8.80735}:state.position;
+ return state.position;
 }
 function updateRouteProgress(){
  const p=state.routeTarget,box=$('#routePanel');
@@ -356,9 +356,9 @@ function updateRouteProgress(){
  if(!start)return;
  const direct=Math.round(meters(start.lat,start.lon,p.lat,p.lon));
  const dist=$('#routeRemaining');
- if(dist)dist.textContent=state.demo?'Demonstration ab Bremer Marktplatz':'Luftlinie noch '+distanceText(direct);
+ if(dist)dist.textContent='Luftlinie noch '+distanceText(direct);
  const arrived=$('#routeArrival');
- if(arrived&&!state.demo&&direct<=Math.max(25,(start.accuracy||0)+10)){arrived.textContent='Du bist am Ziel oder ganz in der Nähe!';arrived.hidden=false}
+ if(arrived&&direct<=Math.max(25,(start.accuracy||0)+10)){arrived.textContent='Du bist am Ziel oder ganz in der Nähe!';arrived.hidden=false}
 }
 function stopWalkingRoute(){
  ++state.routeRequest;
@@ -390,12 +390,12 @@ function routeCardReady(p,trip,steps){
 }
 async function startWalkingRoute(p){
  if(!Number.isFinite(p.lat)||!Number.isFinite(p.lon))return;
- if(!state.demo&&!state.position){note('Bitte zuerst deinen GPS-Standort bestimmen.');$('#gpsBtn').focus();return;}
+ if(!state.position){note('Bitte zuerst deinen GPS-Standort bestimmen.');$('#gpsBtn').focus();return;}
  stopWalkingRoute();
  state.routeTarget=p;
  const start=routeOrigin();
  const token=++state.routeRequest;
- routeCardText((state.demo?'Demo-Fußweg':'Fußweg')+' zu „'+p.name+'“ wird berechnet …');
+ routeCardText('Fußweg zu „'+p.name+'“ wird berechnet …');
  $('#routePanel').scrollIntoView({behavior:'smooth',block:'center'});
  const query={locations:[{lat:start.lat,lon:start.lon},{lat:p.lat,lon:p.lon}],costing:'pedestrian',units:'km',language:'de-DE'};
  try{
@@ -412,12 +412,12 @@ async function startWalkingRoute(p){
   state.routeInfo=data.trip;
   state.map.fitBounds(state.routeLine.getBounds().pad(.22),{animate:true,maxZoom:17});
   routeCardReady(p,data.trip,leg.maneuvers);
-  if(!state.demo&&state.watchId===null&&gpsCheck()){
+  if(state.watchId===null&&gpsCheck()){
    state.routeWatch=true;
    state.watchId=navigator.geolocation.watchPosition(setPosition,positionError,{enableHighAccuracy:true,timeout:20000,maximumAge:7000});
    setTrackingButton();
   }
-  $('#mapTitle').textContent=state.demo?'Demo-Fußweg auf der Karte':'Dein Fußweg zu '+p.name;
+  $('#mapTitle').textContent='Dein Fußweg zu '+p.name;
   document.querySelector('.map-card').scrollIntoView({behavior:'smooth',block:'start'});
  }catch(err){
   if(token!==state.routeRequest||state.routeTarget!==p)return;
@@ -432,7 +432,7 @@ async function startWalkingRoute(p){
 }
 
 function revealStory(){const e=$('#story');e.classList.add('show')}
-function storyStructure(p){const card=$('#story');card.replaceChildren();let title=document.createElement('h3');title.textContent=p.name;const origin=document.createElement('div');origin.className='origin';origin.textContent=p.origin==='Wikipedia'?'Quelle: Wikipedia':p.origin==='OpenStreetMap'?'Standortdaten: OpenStreetMap':'Quelle: '+(p.origin||'Öffentlicher Eintrag');const paragraph=document.createElement('p');paragraph.textContent=p.blurb||'Zu diesem Ort liegen geografische Informationen vor. Eine fundierte historische Erzählung benötigt weitere Quellen.';const figure=document.createElement('figure');figure.className='poi-photo';figure.setAttribute('aria-label','Bild zu '+p.name);const wait=document.createElement('div');wait.className='photo-placeholder';wait.textContent='Passendes Foto wird gesucht …';figure.append(wait);const heading=document.createElement('div');heading.className='story-head';const dismiss=document.createElement('button');dismiss.type='button';dismiss.className='close';dismiss.textContent='Schließen ×';dismiss.addEventListener('click',()=>{card.classList.remove('show');state.selected=null;renderPoi()});heading.append(title,dismiss);const directions=document.createElement('div');directions.className='directions-action';const walk=document.createElement('button');walk.type='button';walk.className='walk-btn';walk.textContent=state.routeTarget?.id===p.id?'↗ Route auf Karte zeigen':'↗ Zu diesem Ort navigieren';walk.addEventListener('click',()=>startWalkingRoute(p));directions.append(walk);const google=document.createElement('a');google.href=googleDirections(p);google.target='_blank';google.rel='noopener noreferrer';google.textContent='Google Maps ↗';google.className='google-btn';directions.append(google);card.append(heading,directions,figure,origin,paragraph);const actions=document.createElement('div');actions.className='story-actions';if(p.source){let a=document.createElement('a');a.href=p.source;a.rel='noopener noreferrer';a.target='_blank';a.textContent='Quelle öffnen ↗';actions.append(a)}if(Number.isFinite(p.lat)&&Number.isFinite(p.lon)){let a=document.createElement('a');a.href='https://www.openstreetmap.org/?mlat='+p.lat+'&mlon='+p.lon+'#map=18/'+p.lat+'/'+p.lon;a.rel='noopener noreferrer';a.target='_blank';a.textContent='Auf Karte ansehen ↗';actions.append(a)}card.append(actions);let help=document.createElement('p');help.className='small-note';help.textContent='Die professionelle KI-Hörführung ist noch nicht angeschlossen. Die Texte sind zunächst öffentliche Quellenauszüge oder kurze Demo-Beschreibungen.';card.append(help);revealStory();return paragraph}
+function storyStructure(p){const card=$('#story');card.replaceChildren();let title=document.createElement('h3');title.textContent=p.name;const origin=document.createElement('div');origin.className='origin';origin.textContent=p.origin==='Wikipedia'?'Quelle: Wikipedia':p.origin==='OpenStreetMap'?'Standortdaten: OpenStreetMap':'Quelle: '+(p.origin||'Öffentlicher Eintrag');const paragraph=document.createElement('p');paragraph.textContent=p.blurb||'Zu diesem Ort liegen geografische Informationen vor. Eine fundierte historische Erzählung benötigt weitere Quellen.';const figure=document.createElement('figure');figure.className='poi-photo';figure.setAttribute('aria-label','Bild zu '+p.name);const wait=document.createElement('div');wait.className='photo-placeholder';wait.textContent='Passendes Foto wird gesucht …';figure.append(wait);const heading=document.createElement('div');heading.className='story-head';const dismiss=document.createElement('button');dismiss.type='button';dismiss.className='close';dismiss.textContent='Schließen ×';dismiss.addEventListener('click',()=>{card.classList.remove('show');state.selected=null;renderPoi()});heading.append(title,dismiss);const directions=document.createElement('div');directions.className='directions-action';const walk=document.createElement('button');walk.type='button';walk.className='walk-btn';walk.textContent=state.routeTarget?.id===p.id?'↗ Route auf Karte zeigen':'↗ Zu diesem Ort navigieren';walk.addEventListener('click',()=>startWalkingRoute(p));directions.append(walk);const google=document.createElement('a');google.href=googleDirections(p);google.target='_blank';google.rel='noopener noreferrer';google.textContent='Google Maps ↗';google.className='google-btn';directions.append(google);card.append(heading,directions,figure,origin,paragraph);const actions=document.createElement('div');actions.className='story-actions';if(p.source){let a=document.createElement('a');a.href=p.source;a.rel='noopener noreferrer';a.target='_blank';a.textContent='Quelle öffnen ↗';actions.append(a)}if(Number.isFinite(p.lat)&&Number.isFinite(p.lon)){let a=document.createElement('a');a.href='https://www.openstreetmap.org/?mlat='+p.lat+'&mlon='+p.lon+'#map=18/'+p.lat+'/'+p.lon;a.rel='noopener noreferrer';a.target='_blank';a.textContent='Auf Karte ansehen ↗';actions.append(a)}card.append(actions);let help=document.createElement('p');help.className='small-note';help.textContent='Die professionelle KI-Hörführung ist noch nicht angeschlossen. Die Texte sind zunächst öffentliche Quellenauszüge oder kurze Basisbeschreibungen.';card.append(help);revealStory();return paragraph}
 async function showPlace(p){state.selected=p;banner(null);renderPoi();let paragraph=storyStructure(p);displayPlacePhoto(p);if(state.map&&Number.isFinite(p.lat)&&Number.isFinite(p.lon)){state.map.panTo([p.lat,p.lon])}requestAnimationFrame(()=>{$('#story')?.scrollIntoView({behavior:'smooth',block:'start'})});
  if(p.origin==='Wikipedia'&&p.pageid&&!p.blurb){paragraph.className='loading-line';paragraph.textContent='Lade geschichtliche Hintergrundinformationen von Wikipedia …';try{const u=new URL('https://de.wikipedia.org/w/api.php');u.search=new URLSearchParams({action:'query',prop:'extracts',exintro:'1',explaintext:'1',pageids:String(p.pageid),format:'json',origin:'*'});const response=await fetchTimed(u.toString(),12000);if(!response.ok)throw Error('Wiki '+response.status);const data=await response.json();let page=data.query?.pages?.[p.pageid];if(state.selected!==p)return;p.blurb=(page?.extract||'').trim().slice(0,1800)||'Für diesen Eintrag ist kein kurzer Beschreibungstext verfügbar. Öffne die Quelle, um mehr zu erfahren.';paragraph.className='';paragraph.textContent=p.blurb}catch{if(state.selected===p){paragraph.className='';paragraph.textContent='Der Wikipedia-Text ist momentan nicht abrufbar. Über „Quelle öffnen“ kannst du den Artikel direkt lesen.'}}}}
 function fetchTimed(url,ms=14000,opts={}){let ac=new AbortController();let timer=setTimeout(()=>ac.abort(),ms);return fetch(url,{...opts,signal:ac.signal}).finally(()=>clearTimeout(timer))}
@@ -441,25 +441,43 @@ function nearWiki(lat,lon,radius){const u=new URL('https://de.wikipedia.org/w/ap
 function nearOsm(lat,lon,radius){const query=`[out:json][timeout:17];(nwr(around:${radius},${lat.toFixed(6)},${lon.toFixed(6)})[historic][name];nwr(around:${radius},${lat.toFixed(6)},${lon.toFixed(6)})[tourism=attraction][name];nwr(around:${radius},${lat.toFixed(6)},${lon.toFixed(6)})[heritage][name];nwr(around:${radius},${lat.toFixed(6)},${lon.toFixed(6)})[tourism=museum][name];);out center 100;`;
  const body=new URLSearchParams({data:query});return fetchTimed('https://overpass.private.coffee/api/interpreter',18000,{method:'POST',body}).then(r=>{if(!r.ok)throw Error('Overpass '+r.status);return r.json()}).then(data=>(data.elements||[]).map(x=>{const latP=x.lat??x.center?.lat,lonP=x.lon??x.center?.lon;const tags=x.tags||{},name=tags['name:de']||tags.name;return{id:'osm-'+x.type+'-'+x.id,name,lat:latP,lon:lonP,distance:Math.round(meters(lat,lon,latP,lonP)),kind:tags.historic?'Historisches Denkmal':tags.tourism==='museum'?'Museum':'Sehenswürdigkeit',origin:'OpenStreetMap',wikipedia:tags.wikipedia||'',wikidata:tags.wikidata||'',commonsFile:tags.wikimedia_commons||'',source:'https://www.openstreetmap.org/'+x.type+'/'+x.id,blurb:tags.description||tags['description:de']||''}}).filter(x=>x.name&&Number.isFinite(x.lat)&&Number.isFinite(x.lon)&&x.distance<=radius+70))}
 function mergePlaces(wiki,osm){let all=[...wiki];let seen=new Set(wiki.map(p=>norm(p.name)));for(const p of osm){let key=norm(p.name);if(seen.has(key))continue;let nearest=wiki.find(w=>meters(w.lat,w.lon,p.lat,p.lon)<35&&(norm(w.name).includes(key)||key.includes(norm(w.name))));if(nearest)continue;all.push(p);seen.add(key)}return all.sort((a,b)=>a.distance-b.distance).slice(0,55)}
-function discoveryLogic(){if(state.mode==='manual'||state.demo||!state.position)return;const close=state.places.find(p=>p.distance<=(Math.max(80,Math.min(140,state.position.accuracy+60)))&&!state.shownIds.has(p.id));if(!close)return;state.shownIds.add(close.id);if(state.mode==='auto'){showPlace(close);note('Neuen Ort entdeckt: '+close.name+'. Automatische Audioführung folgt in einem späteren Schritt.')}else{banner(close);note('Neuer Ort in der Nähe: '+close.name)}}
-async function searchAround(force=false){const pos=state.position;if(!pos||state.demo)return;const radius=Number($('#radius').value)||600;const prev=state.lastSearch;if(!force&&prev&&meters(pos.lat,pos.lon,prev.lat,prev.lon)<Math.min(100,radius*.25)&&Date.now()-prev.at<120000)return;
- state.lastSearch={lat:pos.lat,lon:pos.lon,at:Date.now()};const token=++state.searchToken;state.searching=true;renderPoi();note('Suche historische Orte im Umkreis von '+radius+' Metern …');const result=await Promise.allSettled([nearWiki(pos.lat,pos.lon,radius),nearOsm(pos.lat,pos.lon,radius)]);if(token!==state.searchToken||state.demo)return;
+function discoveryLogic(){if(state.mode==='manual'||!state.position)return;const close=state.places.find(p=>p.distance<=(Math.max(80,Math.min(140,state.position.accuracy+60)))&&!state.shownIds.has(p.id));if(!close)return;state.shownIds.add(close.id);if(state.mode==='auto'){showPlace(close);note('Neuen Ort entdeckt: '+close.name+'. Automatische Audioführung folgt in einem späteren Schritt.')}else{banner(close);note('Neuer Ort in der Nähe: '+close.name)}}
+async function searchAround(force=false){const pos=state.position;if(!pos)return;const radius=Number($('#radius').value)||600;const prev=state.lastSearch;if(!force&&prev&&meters(pos.lat,pos.lon,prev.lat,prev.lon)<Math.min(100,radius*.25)&&Date.now()-prev.at<120000)return;
+ state.lastSearch={lat:pos.lat,lon:pos.lon,at:Date.now()};const token=++state.searchToken;state.searching=true;renderPoi();note('Suche historische Orte im Umkreis von '+radius+' Metern …');const result=await Promise.allSettled([nearWiki(pos.lat,pos.lon,radius),nearOsm(pos.lat,pos.lon,radius)]);if(token!==state.searchToken)return;
  const wiki=result[0].status==='fulfilled'?result[0].value:[], osm=result[1].status==='fulfilled'?result[1].value:[];state.places=mergePlaces(wiki,osm);state.searching=false;renderPoi();const count=state.places.length;
  if(!count){note(result.every(x=>x.status==='rejected')?'Die Suchdienste sind derzeit nicht erreichbar. GPS funktioniert trotzdem. Tippe auf „Orte neu suchen“ oder erhöhe den Suchradius.':'Keine Einträge in diesem Radius gefunden. Probiere 1 Kilometer Suchradius oder „Orte neu suchen“.')}
  else{note(count+' interessante Orte gefunden'+(result.some(x=>x.status==='rejected')?' (ein Datenanbieter derzeit nicht erreichbar)':'')+'.');discoveryLogic()}}
-function setPosition(pos){const {latitude:lat,longitude:lon,accuracy}=pos.coords;if(!Number.isFinite(lat)||!Number.isFinite(lon))return;const wasDemo=state.demo;const movedFar=state.position&&meters(state.position.lat,state.position.lon,lat,lon)>Math.max(180,Number($('#radius').value)*.5);state.demo=false;state.position={lat,lon,accuracy};if(wasDemo||movedFar){state.places=[];if(!state.routeTarget)state.selected=null;state.lastSearch=null;state.shownIds.clear();$('#story').classList.remove('show');banner(null);state.searching=true;renderPoi()}else{for(const p of state.places)p.distance=Math.round(meters(lat,lon,p.lat,p.lon));state.places.sort((a,b)=>a.distance-b.distance);renderPoi()}setStatus('Standort erkannt · ±'+Math.round(accuracy)+' m',true);$('#coordText').textContent=lat.toFixed(5)+'°, '+lon.toFixed(5)+'°';$('#mapTitle').textContent='Deine aktuelle Umgebung';showMap(lat,lon,16);updateMarkers();updateRouteProgress();searchAround(false)}
+function setPosition(pos){
+ const {latitude:lat,longitude:lon,accuracy}=pos.coords;
+ if(!Number.isFinite(lat)||!Number.isFinite(lon))return;
+ const firstPosition=!state.position;
+ const movedFar=state.position&&meters(state.position.lat,state.position.lon,lat,lon)>Math.max(180,Number($('#radius').value)*.5);
+ state.position={lat,lon,accuracy};
+ if(firstPosition||movedFar){
+   state.places=[];if(!state.routeTarget)state.selected=null;
+   state.lastSearch=null;state.shownIds.clear();
+   if(!state.routeTarget)$('#story').classList.remove('show');
+   banner(null);state.searching=true;renderPoi();
+ }else{
+   for(const p of state.places)p.distance=Math.round(meters(lat,lon,p.lat,p.lon));
+   state.places.sort((a,b)=>a.distance-b.distance);renderPoi();
+ }
+ setStatus('Standort erkannt · ±'+Math.round(accuracy)+' m',true);
+ $('#coordText').textContent=lat.toFixed(5)+'°, '+lon.toFixed(5)+'°';
+ $('#mapTitle').textContent=state.routeTarget?'Dein Fußweg zu '+state.routeTarget.name:'Deine aktuelle Umgebung';
+ if(!state.routeLine)showMap(lat,lon,16);
+ else if(state.map&&!state.map.getBounds().contains([lat,lon]))state.map.panTo([lat,lon]);
+ updateMarkers();updateRouteProgress();searchAround(false);
+}
 function positionError(err){$('#gpsBtn').disabled=false;setStatus('Standort konnte nicht ermittelt werden');const msg=err?.code===1?'Standortfreigabe abgelehnt. Bitte im Browser erlauben.':err?.code===2?'Standort vorübergehend nicht verfügbar. GPS bzw. Standortdienste einschalten.':err?.code===3?'Standortabfrage hat zu lange gedauert. Versuch es im Freien erneut.':'GPS ist nicht verfügbar.';note(msg+(window.isSecureContext?'':' Diese Seite benötigt für GPS in der Regel HTTPS.'));
  if(state.watchId!==null){navigator.geolocation.clearWatch(state.watchId);state.watchId=null;setTrackingButton()}}
 function gpsCheck(){if(!navigator.geolocation){note('Dein Browser unterstützt leider keine GPS-Ortung.');return false}if(!window.isSecureContext){note('Für GPS musst du die HTML-App über HTTPS öffnen (oder eine vom Browser unterstützte sichere lokale Umgebung).');return false}return true}
 function setTrackingButton(){$('#startBtn').textContent=state.watchId===null?'✦  Entdeckung mit GPS starten':'■  GPS-Spaziergang beenden';$('#startBtn').setAttribute('aria-pressed',String(state.watchId!==null))}
 $('#gpsBtn').addEventListener('click',()=>{if(!gpsCheck())return;$('#gpsBtn').disabled=true;setStatus('GPS-Standort wird ermittelt …');note('Standortfreigabe im Browser bitte bestätigen.');navigator.geolocation.getCurrentPosition(pos=>{$('#gpsBtn').disabled=false;setPosition(pos) },positionError,{enableHighAccuracy:true,timeout:18000,maximumAge:6000})});
 $('#startBtn').addEventListener('click',()=>{if(state.watchId!==null){navigator.geolocation.clearWatch(state.watchId);state.watchId=null;setTrackingButton();note('GPS-Spaziergang beendet. Die gefundenen Orte bleiben sichtbar.');return}if(!gpsCheck())return;note('GPS-Spaziergang startet. Bitte Standortzugriff erlauben.');setStatus('GPS-Standort wird ermittelt …');state.watchId=navigator.geolocation.watchPosition(pos=>{setPosition(pos)},positionError,{enableHighAccuracy:true,timeout:20000,maximumAge:7000});setTrackingButton()});
-function demoMode(){stopWalkingRoute();if(state.watchId!==null){navigator.geolocation.clearWatch(state.watchId);state.watchId=null}setTrackingButton();++state.searchToken;state.demo=true;state.searching=false;state.position=null;state.places=[];state.selected=null;state.shownIds.clear();state.lastSearch=null;banner(null);setStatus('Demo: Bremen · Marktplatz');$('#coordText').textContent='Kein GPS aktiv';$('#mapTitle').textContent='Bremer Marktplatz';$('#mapOverlay').textContent='Demo Bremen · Karte mit Ortsmarkierungen';$('#story').classList.remove('show');showMap(53.07591,8.8075,17);renderPoi();note('Demo Bremen geöffnet. Für deinen wirklichen Standort: „Standort jetzt ermitteln“ oder „Entdeckung starten“.')}
-$('#demoBtn').addEventListener('click',demoMode);
-$$('[data-map-poi]').forEach(el=>{const go=()=>{if(state.demo)showPlace(D[el.dataset.mapPoi])};el.addEventListener('click',go);el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go()}})});
 renderPoi();setTrackingButton();
-// Karte im Demo-Modus optional initialisieren. Falls die Kartenbibliothek nicht lädt, bleibt die SVG-Demokarte sichtbar.
-if(typeof L!=='undefined')showMap(53.07591,8.8075,17);renderPoi();
+// Es werden ausschließlich Orte am freigegebenen Standort angezeigt.
+$('#mapGpsBtn').addEventListener('click',()=>$('#gpsBtn').click());
 })();
 </script>
 </body>
