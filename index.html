@@ -4,7 +4,7 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
 <meta name="theme-color" content="#071d40"/>
-<title>ZEITREISE 0.5.12 · Thorsten-Hörführung</title>
+<title>ZEITREISE 0.5.13 · Thorsten-Fehlerbehebung</title>
 <link rel="manifest" href="./manifest.webmanifest"/>
 <meta name="referrer" content="strict-origin-when-cross-origin"/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
@@ -1544,7 +1544,12 @@ const EinhandNavigation=(()=>{
    ============================================================== */
 const LocalNarration=(()=>{
  const VOICE_ID='de_DE-thorsten-medium';
- const PIPER_MODULE='https://esm.sh/@mintplex-labs/piper-tts-web@1.0.5?bundle';
+ /* Piper- und ONNX-WASM müssen dieselbe Laufzeitversion benutzen.
+    cdnjs/1.18.0 enthält kein benötigtes ort-wasm-simd-threaded.mjs. */
+ const ORT_VERSION='1.20.1';
+ const PIPER_MODULE='https://esm.sh/@mintplex-labs/piper-tts-web@1.0.5?bundle&deps=onnxruntime-web@'+ORT_VERSION;
+ const ORT_DIST='https://cdn.jsdelivr.net/npm/onnxruntime-web@'+ORT_VERSION+'/dist/';
+ const PHONEMIZER='https://cdn.jsdelivr.net/npm/@diffusionstudio/piper-wasm@1.0.0/build/piper_phonemize';
  const DEMO='Willkommen bei Zeitreise. Entdecke die Geschichte deiner Umgebung. Historische Orte erzählen von Menschen, Ereignissen und Veränderungen, die bis heute Spuren hinterlassen haben.';
  const demoButton=$('#voiceDemoBtn'),demoStop=$('#voiceDemoStopBtn'),demoStatus=$('#voiceDemoStatus');
  let worker=null,workerUrl=null,requestId=0,playing=null,current=null;
@@ -1583,20 +1588,28 @@ const LocalNarration=(()=>{
   const source=[
     'const LIB='+JSON.stringify(PIPER_MODULE)+';',
     'const VOICE='+JSON.stringify(VOICE_ID)+';',
-    'let runtime=null;',
+    'const ORT_DIST='+JSON.stringify(ORT_DIST)+';',
+    'const PHONEMIZER='+JSON.stringify(PHONEMIZER)+';',
+    'let runtime=null,session=null;',
     'self.onmessage=async(event)=>{',
     ' const {id,text}=event.data||{};',
     ' try{',
     '  if(!runtime){self.postMessage({id,type:"status",message:"Lade Piper-Sprachbibliothek …"});runtime=import(LIB);}',
     '  const tts=await runtime;',
-    '  if(typeof tts.predict!=="function")throw new Error("Sprachbibliothek stellt keine Vorlesefunktion bereit.");',
-    '  self.postMessage({id,type:"status",message:"Bereite Thorsten-Stimme vor und berechne die Aufnahme …"});',
-    '  const wav=await tts.predict({text,voiceId:VOICE},p=>{',
-    '   if(p&&p.total>0&&p.loaded>=0){',
-    '    const percent=Math.min(100,Math.round(p.loaded/p.total*100));',
-    '    self.postMessage({id,type:"progress",percent});',
-    '   }',
-    '  });',
+    '  if(typeof tts.TtsSession?.create!=="function")throw new Error("Die Piper-Sprachsitzung ist nicht verfügbar.");',
+    '  if(!session){',
+    '   self.postMessage({id,type:"status",message:"Lade Thorsten-Stimme und passende ONNX-Laufzeit …"});',
+    '   session=await tts.TtsSession.create({',
+    '    voiceId:VOICE,',
+    '    wasmPaths:{onnxWasm:ORT_DIST,piperData:PHONEMIZER+".data",piperWasm:PHONEMIZER+".wasm"},',
+    '    progress:p=>{if(p&&p.total>0&&p.loaded>=0){',
+    '     const percent=Math.min(100,Math.round(p.loaded/p.total*100));',
+    '     self.postMessage({id,type:"progress",percent});',
+    '    }}',
+    '   });',
+    '  }',
+    '  self.postMessage({id,type:"status",message:"Thorsten berechnet die Hörführung auf diesem Gerät …"});',
+    '  const wav=await session.predict(text);',
     '  if(!(wav instanceof Blob))throw new Error("Keine Audiodaten erzeugt.");',
     '  self.postMessage({id,type:"result",audio:wav});',
     ' }catch(err){self.postMessage({id,type:"error",message:String(err?.message||err)});}',
@@ -1613,7 +1626,10 @@ const LocalNarration=(()=>{
     const message=data.message||'Unbekannter Fehler';
     const status=current.status;
     stop();
-    display(status,'Vorlesen nicht möglich. Prüfe Internet, freien Speicher und Browser-Unterstützung. '+message.slice(0,170));
+    const technical=/no available backend|failed to fetch dynamically imported module|wasm|onnx/i.test(message);
+    display(status,technical
+      ?'Die lokale Sprachausgabe konnte nicht vollständig geladen werden. Bitte die Hörprobe erneut über WLAN versuchen. Bei anhaltendem Fehler hilft uns ein Screenshot.'
+      :'Vorlesen derzeit nicht möglich. Bitte Internetverbindung und freien Speicher prüfen.');
     return;
    }
    if(data.type==='result')handleAudio(data.audio,data.id);
