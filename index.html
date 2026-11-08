@@ -4,7 +4,7 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
 <meta name="theme-color" content="#071d40"/>
-<title>ZEITREISE 0.5.5 · Sprachfunktionen in Arbeit</title>
+<title>ZEITREISE 0.5.6 · Ortsinformationen und Webseiten</title>
 <link rel="manifest" href="./manifest.webmanifest"/>
 <meta name="referrer" content="strict-origin-when-cross-origin"/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
@@ -182,6 +182,31 @@ header p{margin-bottom:10px}
 .config-fold.feature-pending .config-summary{cursor:not-allowed;user-select:none}
 .config-fold.feature-pending .fold-current{font-weight:800;font-size:12px}
 .config-fold.feature-pending .config-content[hidden]{display:none!important}
+
+/* V0.5.6: Karten-/Info-/Webansicht teilen sich einen Viewport ohne Karten-Neustart. */
+.map-view-tabs{display:flex;align-items:stretch;gap:5px;padding:9px 12px;background:var(--navy);border-top:1px solid var(--line)}
+.map-view-tabs button{flex:1 1 0;min-width:0;padding:10px 6px;border:1px solid var(--line);border-radius:9px;background:var(--panel);color:var(--white);font-size:clamp(11px,1.8vw,13px);font-weight:750}
+.map-view-tabs button.is-active{background:var(--gold);color:var(--navy);border-color:var(--gold)}
+.map-view-tabs button:disabled{opacity:.42;cursor:not-allowed}
+.place-view-panel{position:absolute;inset:0;z-index:520;overflow-y:auto;overscroll-behavior:contain;padding:clamp(12px,2vw,22px);background:linear-gradient(140deg,#16416c,#092b51);color:#f5f0df;scrollbar-gutter:stable}
+.place-view-panel[hidden]{display:none!important}
+.place-info-title{font:750 clamp(17px,2.6vw,23px) Georgia,serif;color:#ffdf99;margin:0 0 5px}
+.place-info-note{font-size:12px;line-height:1.55;color:#c7d9eb;margin:0 0 12px}
+.place-fact-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:9px}
+.place-fact{background:#ffffff10;border:1px solid #e9c67d44;border-radius:9px;padding:10px 12px;min-width:0}
+.place-fact-label{display:block;color:#f0d090;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;margin:0 0 5px}
+.place-fact-value{font-size:13px;line-height:1.48;overflow-wrap:anywhere}
+.place-fact-value a{color:#ffe1a0;text-underline-offset:2px}
+.place-info-foot{margin-top:12px;color:#bed0e1;font-size:11px;line-height:1.5}
+.place-website-view{display:flex;flex-direction:column;gap:9px;overflow:hidden}
+.place-website-view[hidden]{display:none!important}
+.place-web-heading{font:700 16px Georgia,serif;color:#f4d799;margin:0}
+.place-web-tools{display:flex;align-items:center;justify-content:space-between;gap:9px;flex-wrap:wrap}
+.place-web-tools a{display:inline-block;background:#e8c57c;color:#172b33;border:1px solid #fff1be;border-radius:7px;padding:8px 12px;text-decoration:none;font-size:12px;font-weight:800}
+.place-web-message{color:#dce8ef;font-size:11px;line-height:1.4;margin:0}
+.place-web-frame{display:block;flex:1 1 auto;width:100%;min-height:115px;border:1px solid #ffffff55;border-radius:7px;background:#fff}
+.place-web-empty{font-size:13px;line-height:1.5;color:#f5e8cb}
+@media(max-width:390px){.map-view-tabs{gap:3px;padding:8px}.map-view-tabs button{font-size:11px;padding:8px 4px}.place-view-panel{padding:11px}}
 </style>
 <style id="zeitreise-skins">
 /* SKIN-SCHICHT: Diese Regeln enthalten ausschließlich Optik, keinerlei Positionierung der Funktionen. */
@@ -491,6 +516,31 @@ html[data-skin="explorer"] button:focus-visible{
  html[data-skin="explorer"] header p{font-size:12px}
 }
 
+/* Browser- und Ortsinformationen in allen drei Skins */
+html[data-skin="lcars"] .map-view-tabs{background:#100c18;border-color:#8b6e96}
+html[data-skin="lcars"] .map-view-tabs button{background:#2b1c32;color:#f5dbf0;border-color:#9479a2;border-radius:18px 5px 5px 5px}
+html[data-skin="lcars"] .map-view-tabs button.is-active{background:#eba770;border-color:#eba770;color:#190f20}
+html[data-skin="lcars"] .place-view-panel{background:#140f1c;color:#f1dfe9}
+html[data-skin="lcars"] .place-info-title,html[data-skin="lcars"] .place-web-heading{color:#f6b88d}
+html[data-skin="lcars"] .place-fact{background:#2b1d35;border-color:#997bad}
+html[data-skin="lcars"] .place-fact-label{color:#ecb68d}
+html[data-skin="lcars"] .place-fact-value a{color:#fac596}
+html[data-skin="lcars"] .place-info-note,html[data-skin="lcars"] .place-info-foot,html[data-skin="lcars"] .place-web-message{color:#d5bedc}
+html[data-skin="explorer"] .map-view-tabs{background:#e4cea3;border-color:#97754a}
+html[data-skin="explorer"] .map-view-tabs button{background:#f7e8c7;border-color:#a88a5b;border-radius:6px;color:#44331f;font-family:Georgia,serif}
+html[data-skin="explorer"] .map-view-tabs button.is-active{background:#3d675b;color:#fff2d2;border-color:#255247}
+html[data-skin="explorer"] .place-view-panel{
+ background:repeating-linear-gradient(8deg,transparent 0 12px,#896f3b0a 13px 14px),linear-gradient(130deg,#f7e9c8,#e3c99c);
+ color:#473321;
+}
+html[data-skin="explorer"] .place-info-title,html[data-skin="explorer"] .place-web-heading{color:#51361c}
+html[data-skin="explorer"] .place-fact{background:#fff3d9aa;border-color:#ab8952;border-radius:6px}
+html[data-skin="explorer"] .place-fact-label{color:#815629}
+html[data-skin="explorer"] .place-fact-value a{color:#286053}
+html[data-skin="explorer"] .place-info-note,html[data-skin="explorer"] .place-info-foot,html[data-skin="explorer"] .place-web-message,html[data-skin="explorer"] .place-web-empty{color:#604b30}
+html[data-skin="explorer"] .place-web-tools a{background:#3c685a;color:#fff3d5;border-color:#204e42}
+html[data-skin="explorer"] .place-web-frame{border-color:#a68a55}
+
 </style>
 </head>
 <body>
@@ -501,7 +551,14 @@ html[data-skin="explorer"] button:focus-visible{
 
 <div class="layout">
 <section class="map-card" aria-label="Karte und Sehenswürdigkeiten"><div class="map-head"><div><div class="card-label">Deine Umgebung</div><h2 id="mapTitle">Deine aktuelle Umgebung</h2></div><span class="map-gps-status" id="gpsStatus" role="status" aria-live="polite" hidden></span></div>
-<div class="map-graphic"><div id="liveMap" aria-label="Live-Karte mit deinem Standort und Sehenswürdigkeiten"></div><div id="mapPlaceholder" class="map-placeholder"><div class="map-placeholder-icon" aria-hidden="true">⌖</div><strong>Deine Umgebung entdecken</strong><span>Starte deine Entdeckung – die Karte und die Orte in deiner Nähe erscheinen automatisch.</span><button type="button" id="startBtn" class="start">✦ Entdeckung mit GPS starten</button><p id="gpsProgress" class="gps-progress" role="status" aria-live="polite" hidden></p></div><div class="map-overlay" id="mapOverlay" hidden></div></div>
+<div class="map-view-tabs" role="group" aria-label="Ansicht für den gewählten Ort">
+<button type="button" id="viewTabMap" data-map-view="map" aria-pressed="true" class="is-active">⌖ Karte</button>
+<button type="button" id="viewTabInfo" data-map-view="info" aria-pressed="false" disabled>ℹ Informationen</button>
+<button type="button" id="viewTabWebsite" data-map-view="website" aria-pressed="false" disabled>↗ Webseite</button>
+</div>
+<div class="map-graphic"><div id="liveMap" aria-label="Live-Karte mit deinem Standort und Sehenswürdigkeiten"></div><div id="mapPlaceholder" class="map-placeholder"><div class="map-placeholder-icon" aria-hidden="true">⌖</div><strong>Deine Umgebung entdecken</strong><span>Starte deine Entdeckung – die Karte und die Orte in deiner Nähe erscheinen automatisch.</span><button type="button" id="startBtn" class="start">✦ Entdeckung mit GPS starten</button><p id="gpsProgress" class="gps-progress" role="status" aria-live="polite" hidden></p></div><div class="map-overlay" id="mapOverlay" hidden></div>
+<section id="placeInfoView" class="place-view-panel" aria-label="Besuchsinformationen zum gewählten Ort" hidden></section>
+<section id="placeWebsiteView" class="place-view-panel place-website-view" aria-label="Webseite zum gewählten Ort" hidden></section></div>
 <div class="map-bottom"><div class="route-panel" id="routePanel" role="status" aria-live="polite" hidden></div><div class="map-tools"><button id="stopGpsBtn" type="button" hidden>■ GPS beenden</button><button id="mapStyleBtn" type="button">Kartenstil wechseln</button><button id="retryBtn" type="button">Orte neu suchen</button><button type="button" id="centerMapBtn">⌖ Standort zentrieren</button></div><div id="discoveryNote" class="discover-banner" role="status" aria-live="polite"></div><p id="fetchStatus" class="gps-fetch-status" role="status" aria-live="polite">Starte die Entdeckung, um Orte in deiner Umgebung zu finden.</p><div class="poi-title"><strong id="poiHead">In deiner Umgebung</strong><span class="small-note" id="poiCount">Noch keine Suche</span></div><div class="story" id="story" aria-live="polite"></div><div class="poi-list" id="poiList"></div></div></section>
 <section class="config-card" aria-label="Alle Einstellungen"><details class="section config-fold" id="settings01"><summary class="config-summary"><span class="fold-number">01</span><span class="fold-label">Dein Entdeckermodus</span><span class="fold-current" id="modeCurrent"></span><span class="fold-arrow" aria-hidden="true">⌄</span></summary><div class="config-content"><div class="segment" role="group" aria-label="Entdeckermodus"><button type="button" data-mode="auto">Automatisch</button><button type="button" data-mode="hint">Nur Hinweise</button><button type="button" data-mode="manual">Manuell</button></div><p class="help" id="modeHelp">Du erhältst unaufdringliche Hinweise auf interessante Orte und entscheidest selbst, ob du mehr erfahren möchtest.</p><div class="row-select"><label for="radius">Suchradius</label><select id="radius"><option value="300">300 Meter</option><option value="600" selected>600 Meter</option><option value="1000">1 Kilometer</option></select></div></div></details>
 <div class="section config-fold feature-pending" id="settings02" role="group" aria-label="Stimme und Sprachsteuerung – in Arbeit"><div class="config-summary"><span class="fold-number">02</span><span class="fold-label">Stimme &amp; Sprachsteuerung</span><span class="fold-current" id="voiceCurrent">In Arbeit</span></div><div class="config-content" hidden aria-hidden="true"><div class="line-option"><label for="voice">Erzählstil</label><select id="voice" disabled><option value="warm">Warm &amp; ruhig</option><option value="vivid">Lebendig &amp; spannend</option><option value="factual">Sachlich &amp; präzise</option></select></div><div class="line-option"><span>Sprachsteuerung</span><label class="switch"><input type="checkbox" id="speech" checked disabled><span class="slider"></span></label></div><p class="help">Professionelle KI-Stimme und Sprachbefehle sind noch in Entwicklung.</p></div></div>
@@ -516,7 +573,7 @@ const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll
 const R=Math.PI/180;
 function meters(a,b,c,d){const x=(c-a)*R,y=(d-b)*R;const f=Math.sin(x/2)**2+Math.cos(a*R)*Math.cos(c*R)*Math.sin(y/2)**2;return 12742000*Math.atan2(Math.sqrt(f),Math.sqrt(1-f))}
 function distanceText(m){return m<1000?Math.round(m)+' m':(m/1000).toFixed(1).replace('.',',')+' km'}
-const state={skin:'original',routeTarget:null,routeLine:null,routeInfo:null,routeShape:null,routeManeuvers:[],routeRequest:0,routeWatch:false,searching:false,mapStyle:'osm',tileLayer:null,mode:'hint',watchId:null,places:[],selected:null,position:null,lastSearch:null,searchToken:0,shownIds:new Set(),map:null,markers:null,userCircle:null,accuracyCircle:null};
+const state={activePlaceView:'map',skin:'original',routeTarget:null,routeLine:null,routeInfo:null,routeShape:null,routeManeuvers:[],routeRequest:0,routeWatch:false,searching:false,mapStyle:'osm',tileLayer:null,mode:'hint',watchId:null,places:[],selected:null,position:null,lastSearch:null,searchToken:0,shownIds:new Set(),map:null,markers:null,userCircle:null,accuracyCircle:null};
 const modeText={auto:'Wenn du einen neuen interessanten Ort erreichst, wird er automatisch als nächstes Ziel ausgewählt. Hörführungen mit echter KI-Stimme folgen nach der Audio-Anbindung.',hint:'Bei interessanten Orten erscheint ein unaufdringlicher Hinweis. Du entscheidest, ob du die Geschichte öffnen möchtest.',manual:'Die Karte und die Liste zeigen interessante Orte, aber nichts wird automatisch ausgewählt.'};
 /* Einheitliches Register: Namen gelten in Auswahl, Anzeige und Speicherung. */
 const SKIN_NAMES=Object.freeze({original:'Original',lcars:'Raumschiffkonsole',explorer:'Entdeckerkarte'});
@@ -599,8 +656,9 @@ function showMap(lat,lon,zoom=16){
  }catch(e){$('#mapOverlay').textContent='Karte nicht verfügbar · GPS-Ortsliste bleibt aktiv'}
 }
 $('#retryBtn').addEventListener('click',()=>{if(state.position){state.lastSearch=null;searchAround(true)}else note('Bitte zuerst den GPS-Standort ermitteln.')});
-$('#centerMapBtn').addEventListener('click',()=>{if(state.position&&state.map){state.map.setView([state.position.lat,state.position.lon],17,{animate:true});document.querySelector('.map-card').scrollIntoView({behavior:'smooth',block:'start'});}else note('Bitte zuerst den GPS-Standort ermitteln.');});
+$('#centerMapBtn').addEventListener('click',()=>{setPlaceView('map');if(state.position&&state.map){state.map.setView([state.position.lat,state.position.lon],17,{animate:true});document.querySelector('.map-card').scrollIntoView({behavior:'smooth',block:'start'});}else note('Bitte zuerst den GPS-Standort ermitteln.');});
 $('#mapStyleBtn').addEventListener('click',()=>{
+ setPlaceView('map');
  state.mapStyle=state.mapStyle==='topo'?'osm':'topo';
  if(state.map){changeBaseLayer();state.map.setZoom(Math.min(state.map.getZoom(),state.mapStyle==='topo'?17:19));state.map.invalidateSize(true)}
 });
@@ -824,6 +882,7 @@ function routeCardReady(p,trip,steps){
 }
 async function startWalkingRoute(p){
  if(!Number.isFinite(p.lat)||!Number.isFinite(p.lon))return;
+ setPlaceView('map');
  if(!state.position){note('Bitte zuerst deinen GPS-Standort bestimmen.');$('#startBtn').focus();return;}
  stopWalkingRoute();
  state.routeTarget=p;
@@ -871,8 +930,8 @@ const {decodePolyline6,updateRouteProgress,stopWalkingRoute,startWalkingRoute}=R
 /* Ortsdetails und Darstellung – eigenständiges Modul innerhalb der HTML-Datei. */
 const PlaceDetailView=(()=>{
 function revealStory(){const e=$('#story');e.classList.add('show')}
-function storyStructure(p){const card=$('#story');card.replaceChildren();let title=document.createElement('h3');title.textContent=p.name;const origin=document.createElement('div');origin.className='origin';origin.textContent=p.origin==='Wikipedia'?'Quelle: Wikipedia':p.origin==='OpenStreetMap'?'Standortdaten: OpenStreetMap':'Quelle: '+(p.origin||'Öffentlicher Eintrag');const paragraph=document.createElement('p');paragraph.textContent=p.blurb||'Zu diesem Ort liegen geografische Informationen vor. Eine fundierte historische Erzählung benötigt weitere Quellen.';const figure=document.createElement('figure');figure.className='poi-photo';figure.setAttribute('aria-label','Bild zu '+p.name);const wait=document.createElement('div');wait.className='photo-placeholder';wait.textContent='Passendes Foto wird gesucht …';figure.append(wait);const heading=document.createElement('div');heading.className='story-head';const dismiss=document.createElement('button');dismiss.type='button';dismiss.className='close';dismiss.textContent='Schließen ×';dismiss.addEventListener('click',()=>{card.classList.remove('show');state.selected=null;renderPoi()});heading.append(title,dismiss);const directions=document.createElement('div');directions.className='directions-action';const walk=document.createElement('button');walk.type='button';walk.className='walk-btn';walk.textContent=state.routeTarget?.id===p.id?'↗ Route auf Karte zeigen':'↗ Zu diesem Ort navigieren';walk.addEventListener('click',()=>startWalkingRoute(p));directions.append(walk);card.append(heading,directions,figure,origin,paragraph);const actions=document.createElement('div');actions.className='story-actions';if(p.source){let a=document.createElement('a');a.href=p.source;a.rel='noopener noreferrer';a.target='_blank';a.textContent='Quelle öffnen ↗';actions.append(a)}if(Number.isFinite(p.lat)&&Number.isFinite(p.lon)){let a=document.createElement('a');a.href='#karte';a.textContent='Auf unserer Karte ansehen';a.addEventListener('click',event=>{event.preventDefault();if(state.map){state.map.setView([p.lat,p.lon],17,{animate:true});document.querySelector('.map-card').scrollIntoView({behavior:'smooth',block:'start'});}});actions.append(a)}card.append(actions);let help=document.createElement('p');help.className='small-note';help.textContent='Die professionelle KI-Hörführung ist noch nicht angeschlossen. Die Texte sind zunächst öffentliche Quellenauszüge oder kurze Basisbeschreibungen.';card.append(help);revealStory();return paragraph}
-async function showPlace(p){state.selected=p;banner(null);renderPoi();let paragraph=storyStructure(p);displayPlacePhoto(p);if(state.map&&Number.isFinite(p.lat)&&Number.isFinite(p.lon)){state.map.panTo([p.lat,p.lon])}requestAnimationFrame(()=>{$('#story')?.scrollIntoView({behavior:'smooth',block:'start'})});
+function storyStructure(p){const card=$('#story');card.replaceChildren();let title=document.createElement('h3');title.textContent=p.name;const origin=document.createElement('div');origin.className='origin';origin.textContent=p.origin==='Wikipedia'?'Quelle: Wikipedia':p.origin==='OpenStreetMap'?'Standortdaten: OpenStreetMap':'Quelle: '+(p.origin||'Öffentlicher Eintrag');const paragraph=document.createElement('p');paragraph.textContent=p.blurb||'Zu diesem Ort liegen geografische Informationen vor. Eine fundierte historische Erzählung benötigt weitere Quellen.';const figure=document.createElement('figure');figure.className='poi-photo';figure.setAttribute('aria-label','Bild zu '+p.name);const wait=document.createElement('div');wait.className='photo-placeholder';wait.textContent='Passendes Foto wird gesucht …';figure.append(wait);const heading=document.createElement('div');heading.className='story-head';const dismiss=document.createElement('button');dismiss.type='button';dismiss.className='close';dismiss.textContent='Schließen ×'; dismiss.addEventListener('click',()=>{card.classList.remove('show');state.selected=null;clearPlaceView();renderPoi()});heading.append(title,dismiss);const directions=document.createElement('div');directions.className='directions-action';const walk=document.createElement('button');walk.type='button';walk.className='walk-btn';walk.textContent=state.routeTarget?.id===p.id?'↗ Route auf Karte zeigen':'↗ Zu diesem Ort navigieren';walk.addEventListener('click',()=>startWalkingRoute(p));directions.append(walk);card.append(heading,directions,figure,origin,paragraph);const actions=document.createElement('div');actions.className='story-actions';if(p.source){let a=document.createElement('a');a.href=p.source;a.rel='noopener noreferrer';a.target='_blank';a.textContent='Quelle öffnen ↗';actions.append(a)}if(Number.isFinite(p.lat)&&Number.isFinite(p.lon)){let a=document.createElement('a');a.href='#karte';a.textContent='Auf unserer Karte ansehen';a.addEventListener('click',event=>{event.preventDefault();if(state.map){state.map.setView([p.lat,p.lon],17,{animate:true});document.querySelector('.map-card').scrollIntoView({behavior:'smooth',block:'start'});}});actions.append(a)}card.append(actions);let help=document.createElement('p');help.className='small-note';help.textContent='Die professionelle KI-Hörführung ist noch nicht angeschlossen. Die Texte sind zunächst öffentliche Quellenauszüge oder kurze Basisbeschreibungen.';card.append(help);revealStory();return paragraph}
+async function showPlace(p){state.selected=p;banner(null);renderPoi();let paragraph=storyStructure(p);inspectPlace(p);displayPlacePhoto(p);if(state.map&&Number.isFinite(p.lat)&&Number.isFinite(p.lon)){state.map.panTo([p.lat,p.lon])}requestAnimationFrame(()=>{$('.map-card')?.scrollIntoView({behavior:'smooth',block:'start'})});
  if(p.origin==='Wikipedia'&&p.pageid&&!p.blurb){paragraph.className='loading-line';paragraph.textContent='Lade geschichtliche Hintergrundinformationen von Wikipedia …';try{const u=new URL('https://de.wikipedia.org/w/api.php');u.search=new URLSearchParams({action:'query',prop:'extracts',exintro:'1',explaintext:'1',pageids:String(p.pageid),format:'json',origin:'*'});const response=await fetchTimed(u.toString(),12000);if(!response.ok)throw Error('Wiki '+response.status);const data=await response.json();let page=data.query?.pages?.[p.pageid];if(state.selected!==p)return;p.blurb=(page?.extract||'').trim().slice(0,1800)||'Für diesen Eintrag ist kein kurzer Beschreibungstext verfügbar. Öffne die Quelle, um mehr zu erfahren.';paragraph.className='';paragraph.textContent=p.blurb}catch{if(state.selected===p){paragraph.className='';paragraph.textContent='Der Wikipedia-Text ist momentan nicht abrufbar. Über „Quelle öffnen“ kannst du den Artikel direkt lesen.'}}}}
 return {showPlace};
 })();
@@ -884,8 +943,28 @@ function fetchTimed(url,ms=14000,opts={}){let ac=new AbortController();let timer
 function norm(s){return(s||'').toLocaleLowerCase('de').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^\p{L}\p{N}]/gu,'').trim()}
 function nearWiki(lat,lon,radius){const u=new URL('https://de.wikipedia.org/w/api.php');u.search=new URLSearchParams({action:'query',list:'geosearch',gscoord:lat.toFixed(6)+'|'+lon.toFixed(6),gsradius:String(Math.min(10000,radius)),gslimit:'50',format:'json',origin:'*'});return fetchTimed(u.toString()).then(r=>{if(!r.ok)throw Error('Wikipedia '+r.status);return r.json()}).then(data=>(data.query?.geosearch||[]).map(x=>({id:'wiki-'+x.pageid,pageid:x.pageid,name:x.title,lat:x.lat,lon:x.lon,distance:Math.round(x.dist),kind:'Historischer oder kultureller Ort',origin:'Wikipedia',source:'https://de.wikipedia.org/?curid='+x.pageid}))) }
 function nearOsm(lat,lon,radius){const query=`[out:json][timeout:17];(nwr(around:${radius},${lat.toFixed(6)},${lon.toFixed(6)})[historic][name];nwr(around:${radius},${lat.toFixed(6)},${lon.toFixed(6)})[tourism=attraction][name];nwr(around:${radius},${lat.toFixed(6)},${lon.toFixed(6)})[heritage][name];nwr(around:${radius},${lat.toFixed(6)},${lon.toFixed(6)})[tourism=museum][name];);out center 100;`;
- const body=new URLSearchParams({data:query});return fetchTimed('https://overpass.private.coffee/api/interpreter',18000,{method:'POST',body}).then(r=>{if(!r.ok)throw Error('Overpass '+r.status);return r.json()}).then(data=>(data.elements||[]).map(x=>{const latP=x.lat??x.center?.lat,lonP=x.lon??x.center?.lon;const tags=x.tags||{},name=tags['name:de']||tags.name;return{id:'osm-'+x.type+'-'+x.id,name,lat:latP,lon:lonP,distance:Math.round(meters(lat,lon,latP,lonP)),kind:tags.historic?'Historisches Denkmal':tags.tourism==='museum'?'Museum':'Sehenswürdigkeit',origin:'OpenStreetMap',wikipedia:tags.wikipedia||'',wikidata:tags.wikidata||'',commonsFile:tags.wikimedia_commons||'',source:'https://www.openstreetmap.org/'+x.type+'/'+x.id,blurb:tags.description||tags['description:de']||''}}).filter(x=>x.name&&Number.isFinite(x.lat)&&Number.isFinite(x.lon)&&x.distance<=radius+70))}
-function mergePlaces(wiki,osm){let all=[...wiki];let seen=new Set(wiki.map(p=>norm(p.name)));for(const p of osm){let key=norm(p.name);if(seen.has(key))continue;let nearest=wiki.find(w=>meters(w.lat,w.lon,p.lat,p.lon)<35&&(norm(w.name).includes(key)||key.includes(norm(w.name))));if(nearest)continue;all.push(p);seen.add(key)}return all.sort((a,b)=>a.distance-b.distance).slice(0,55)}
+ const body=new URLSearchParams({data:query});return fetchTimed('https://overpass.private.coffee/api/interpreter',18000,{method:'POST',body}).then(r=>{if(!r.ok)throw Error('Overpass '+r.status);return r.json()}).then(data=>(data.elements||[]).map(x=>{const latP=x.lat??x.center?.lat,lonP=x.lon??x.center?.lon;const tags=x.tags||{},name=tags['name:de']||tags.name;return{id:'osm-'+x.type+'-'+x.id,name,lat:latP,lon:lonP,distance:Math.round(meters(lat,lon,latP,lonP)),kind:tags.historic?'Historisches Denkmal':tags.tourism==='museum'?'Museum':'Sehenswürdigkeit',origin:'OpenStreetMap',wikipedia:tags.wikipedia||'',wikidata:tags.wikidata||'',commonsFile:tags.wikimedia_commons||'',source:'https://www.openstreetmap.org/'+x.type+'/'+x.id,blurb:tags.description||tags['description:de']||'',
+website:tags.website||tags['contact:website']||tags.url||'',
+websiteSource:'OpenStreetMap',
+openingHours:tags.opening_hours||'',fee:tags.fee||'',charge:tags.charge||'',
+wheelchair:tags.wheelchair||'',phone:tags.phone||tags['contact:phone']||''}}).filter(x=>x.name&&Number.isFinite(x.lat)&&Number.isFinite(x.lon)&&x.distance<=radius+70))}
+function mergePlaces(wiki,osm){
+ const all=[...wiki],seen=new Map(wiki.map(p=>[norm(p.name),p]));
+ const enrich=(target,place)=>{
+  for(const key of ['website','websiteSource','openingHours','fee','charge','wheelchair','phone','wikidata','commonsFile','wikipedia']){
+   if(!target[key]&&place[key])target[key]=place[key];
+  }
+ };
+ for(const p of osm){
+  const key=norm(p.name);
+  const exact=seen.get(key);
+  if(exact){enrich(exact,p);continue}
+  const nearest=wiki.find(w=>meters(w.lat,w.lon,p.lat,p.lon)<35&&(norm(w.name).includes(key)||key.includes(norm(w.name))));
+  if(nearest){enrich(nearest,p);continue}
+  all.push(p);seen.set(key,p);
+ }
+ return all.sort((a,b)=>a.distance-b.distance).slice(0,55);
+}
 return {fetchTimed,norm,nearWiki,nearOsm,mergePlaces};
 })();
 const {fetchTimed,norm,nearWiki,nearOsm,mergePlaces}=PlaceRepository;
@@ -913,7 +992,7 @@ function setPosition(pos){
  if(firstPosition||movedFar){
    state.places=[];if(!state.routeTarget)state.selected=null;
    state.lastSearch=null;state.shownIds.clear();
-   if(!state.routeTarget)$('#story').classList.remove('show');
+   if(!state.routeTarget){$('#story').classList.remove('show');clearPlaceView();}
    banner(null);state.searching=true;renderPoi();
  }else{
    for(const p of state.places)p.distance=Math.round(meters(lat,lon,p.lat,p.lon));
@@ -981,6 +1060,137 @@ return {setPosition,positionError,gpsCheck,setTrackingButton};
 })();
 const {setPosition,positionError,gpsCheck,setTrackingButton}=GpsController;
 
+/* Ortsinformationen und optionale externe Website im Kartenfenster.
+   Externe Seiten werden erst nach Nutzerklick als iframe geladen.
+   Fehlt ein öffentlicher Datensatz, werden keine Preise/Zeiten erfunden. */
+const PlaceInspector=(()=>{
+ const tabs={map:$('#viewTabMap'),info:$('#viewTabInfo'),website:$('#viewTabWebsite')};
+ const info=$('#placeInfoView'),webView=$('#placeWebsiteView');
+ function websiteUrl(raw){
+  if(typeof raw!=='string')return '';
+  const value=raw.trim();
+  if(!value||value.length>1500||/[\s<>]/.test(value))return '';
+  try{
+   const u=new URL(/^[a-z][a-z\d+.-]*:/i.test(value)?value:'https://'+value);
+   return ['http:','https:'].includes(u.protocol)&&u.hostname.includes('.')?u.href:'';
+  }catch{return ''}
+ }
+ function fact(parent,label,value,linkUrl=''){
+  const card=document.createElement('div');card.className='place-fact';
+  const heading=document.createElement('span');heading.className='place-fact-label';heading.textContent=label;
+  const details=document.createElement('div');details.className='place-fact-value';
+  if(linkUrl){
+   const a=document.createElement('a');a.href=linkUrl;a.target='_blank';a.rel='noopener noreferrer';
+   a.textContent=value;details.append(a);
+  }else details.textContent=value;
+  card.append(heading,details);parent.append(card);
+ }
+ function setPlaceView(mode){
+  if(!['map','info','website'].includes(mode))return;
+  if(mode!=='map'&&!state.selected)return;
+  if(mode==='website'&&!websiteUrl(state.selected?.website))return;
+  state.activePlaceView=mode;
+  for(const [name,btn] of Object.entries(tabs)){
+   btn.classList.toggle('is-active',name===mode);
+   btn.setAttribute('aria-pressed',String(name===mode));
+  }
+  info.hidden=mode!=='info';webView.hidden=mode!=='website';
+  const mapVisible=mode==='map';
+  $('#liveMap').inert=!mapVisible;
+  $('#mapPlaceholder').inert=!mapVisible;
+  if(mapVisible)requestAnimationFrame(()=>state.map?.invalidateSize(true));
+  if(mode==='website')renderWebPreview();
+ }
+ function renderPlaceInfo(p){
+  if(state.selected!==p)return;
+  info.replaceChildren();
+  const head=document.createElement('h3');head.className='place-info-title';head.textContent=p.name;
+  const help=document.createElement('p');help.className='place-info-note';
+  help.textContent='Besuchsinformationen aus öffentlich hinterlegten Angaben – bitte vor dem Besuch bei der Einrichtung prüfen.';
+  const facts=document.createElement('div');facts.className='place-fact-list';
+  const open=p.openingHours?String(p.openingHours).slice(0,220):'Keine Öffnungszeiten hinterlegt';
+  fact(facts,'Öffnungszeiten',open);
+  const fee=String(p.fee||'').toLowerCase().trim();
+  const charge=String(p.charge||'').slice(0,180);
+  const cost=charge?charge:(fee==='no'?'Laut OpenStreetMap kostenfrei':fee==='yes'?'Eintritt möglicherweise kostenpflichtig – Preis nicht hinterlegt':'Keine Eintrittsangaben hinterlegt');
+  fact(facts,'Eintritt',cost);
+  const accessibility={yes:'Als rollstuhlgerecht eingetragen',limited:'Teilweise rollstuhlgerecht eingetragen',no:'Als nicht rollstuhlgerecht eingetragen',designated:'Als rollstuhlgerecht ausgewiesen'};
+  fact(facts,'Barrierefreiheit',accessibility[p.wheelchair]||'Keine Angaben hinterlegt');
+  if(p.phone)fact(facts,'Kontakt',String(p.phone).slice(0,160));
+  const url=websiteUrl(p.website);
+  fact(facts,'Webseite',url?new URL(url).hostname:(p.siteLoading?'Webseite wird geprüft …':'Keine Webseite in den verfügbaren Quellen hinterlegt'),url);
+  const foot=document.createElement('p');foot.className='place-info-foot';
+  foot.textContent='Öffnungszeiten, Preise und Zugänglichkeit können sich ändern. Angaben zu Besuchen stammen aus OpenStreetMap; Webseiten werden zusätzlich über Wikidata gesucht.';
+  info.append(head,help,facts,foot);
+  tabs.info.disabled=false;
+  tabs.website.disabled=!url;
+  if(state.activePlaceView==='website'&&!url)setPlaceView('info');
+ }
+ function renderWebPreview(){
+  webView.replaceChildren();
+  const p=state.selected;if(!p)return;
+  const url=websiteUrl(p.website);if(!url)return;
+  const h=document.createElement('h3');h.className='place-web-heading';h.textContent=p.name;
+  const actions=document.createElement('div');actions.className='place-web-tools';
+  const link=document.createElement('a');link.href=url;link.rel='noopener noreferrer';link.target='_blank';link.textContent='Webseite separat öffnen ↗';
+  actions.append(link);
+  const notice=document.createElement('p');notice.className='place-web-message';
+  notice.textContent='Die Seite wird von ihrem Betreiber geladen. Manche Webseiten erlauben keine Einbettung. Falls hier nichts erscheint, nutze „Webseite separat öffnen“.';
+  webView.append(h,actions,notice);
+  if(url.startsWith('https://')){
+   const iframe=document.createElement('iframe');iframe.className='place-web-frame';
+   iframe.title='Webseite: '+p.name;
+   iframe.loading='lazy';iframe.referrerPolicy='no-referrer';
+   iframe.setAttribute('sandbox','allow-scripts allow-forms allow-same-origin allow-popups');
+   iframe.src=url;webView.append(iframe);
+  }else{
+   const missing=document.createElement('p');missing.className='place-web-empty';
+   missing.textContent='Diese Webseite verwendet keine verschlüsselte Verbindung und lässt sich hier nicht sicher einbetten. Bitte separat öffnen.';
+   webView.append(missing);
+  }
+ }
+ async function findOfficialWebsite(p){
+  let qid=/^Q\d+$/.test(String(p.wikidata||''))?p.wikidata:'';
+  if(!qid&&p.pageid){
+   try{
+    const wiki=new URL('https://de.wikipedia.org/w/api.php');
+    wiki.search=new URLSearchParams({action:'query',prop:'pageprops',pageids:String(p.pageid),format:'json',origin:'*'});
+    const r=await fetchTimed(wiki.toString(),10000);
+    if(r.ok){const data=await r.json();qid=data.query?.pages?.[p.pageid]?.pageprops?.wikibase_item||'';}
+   }catch{}
+  }
+  if(!/^Q\d+$/.test(qid))return '';
+  try{
+   const w=new URL('https://www.wikidata.org/w/api.php');
+   w.search=new URLSearchParams({action:'wbgetentities',ids:qid,props:'claims',format:'json',origin:'*'});
+   const r=await fetchTimed(w.toString(),11000);if(!r.ok)return '';
+   const data=await r.json();const pages=data.entities?.[qid];
+   const urls=(pages?.claims?.P856||[]).map(x=>x.mainsnak?.datavalue?.value).filter(x=>typeof x==='string');
+   return urls.map(websiteUrl).find(Boolean)||'';
+  }catch{return ''}
+ }
+ function inspectPlace(p){
+  p.website=websiteUrl(p.website);
+  p.siteLoading=!p.website;
+  renderPlaceInfo(p);
+  setPlaceView('info');
+  if(p.siteLoading){
+   findOfficialWebsite(p).then(url=>{
+    if(url&&!p.website){p.website=url;p.websiteSource='Wikidata';}
+    p.siteLoading=false;
+    if(state.selected===p)renderPlaceInfo(p);
+   }).catch(()=>{p.siteLoading=false;if(state.selected===p)renderPlaceInfo(p)});
+  }
+ }
+ function clearPlaceView(){
+  setPlaceView('map');tabs.info.disabled=true;tabs.website.disabled=true;
+  info.replaceChildren();webView.replaceChildren();
+ }
+ Object.entries(tabs).forEach(([name,btn])=>btn.addEventListener('click',()=>setPlaceView(name)));
+ clearPlaceView();
+ return {setPlaceView,inspectPlace,clearPlaceView};
+})();
+const {setPlaceView,inspectPlace,clearPlaceView}=PlaceInspector;
 
 })();
 </script>
