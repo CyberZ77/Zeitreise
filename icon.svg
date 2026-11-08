@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="ZEITREISE">
+<defs><linearGradient id="bg" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#103d79"/><stop offset="1" stop-color="#061a3b"/></linearGradient><linearGradient id="gold" x1="0" x2=".7" y1="0" y2="1"><stop stop-color="#ffe4aa"/><stop offset="1" stop-color="#b78239"/></linearGradient></defs>
+<rect width="512" height="512" rx="100" fill="url(#bg)"/>
+<rect x="85" y="85" width="342" height="342" rx="77" fill="url(#gold)"/>
+<g fill="none" stroke="#09284f" stroke-width="18" stroke-linecap="round" stroke-linejoin="round">
+<path d="M144 388h224M169 388V230l87-83 87 83v158M224 388V272h64v116M203 245h.1M309 245h.1"/>
+</g></svg>
