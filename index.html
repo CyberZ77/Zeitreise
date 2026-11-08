@@ -4,12 +4,68 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
 <meta name="theme-color" content="#071d40"/>
-<title>ZEITREISE 0.2.2 · Kartenfehler behoben</title>
+<title>ZEITREISE 0.3 · Bilder & responsives Design</title>
+<link rel="manifest" href="./manifest.webmanifest"/>
 <meta name="referrer" content="strict-origin-when-cross-origin"/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <style>
 :root{color-scheme:dark;--navy:#061a3b;--blue:#0a2a58;--panel:#113461;--panel2:#173d70;--line:rgba(197,218,255,.18);--white:#f7fbff;--soft:#bcd0ed;--gold:#e9bf72;--green:#7ee3bd}
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;color:var(--white);background:radial-gradient(ellipse at 50% -20%,#1f5391 0%,transparent 54%),linear-gradient(160deg,#071b3a,#092a56 62%,#061b3a);min-height:100vh}button,select,input{font:inherit}button{cursor:pointer}button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:2px}a{color:#ffdb9b}button:disabled{opacity:.5;cursor:not-allowed}.shell{max-width:1060px;margin:0 auto;padding:24px 20px 96px}.brand{display:flex;align-items:center;gap:12px;justify-content:center;margin-bottom:6px}.brand-mark{background:linear-gradient(145deg,#f4d69d,#b7843e);color:#09274b;width:46px;height:46px;display:grid;place-items:center;border-radius:14px;box-shadow:0 5px 22px #0004}.brand-mark svg{width:25px;height:25px}h1{margin:0;font-size:clamp(24px,4vw,32px);letter-spacing:.14em;font-weight:800}header p{text-align:center;margin:2px 0 23px;color:var(--soft);font-size:13px}.topline{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:18px}.status-pill{border:1px solid var(--line);background:#183f71;border-radius:999px;padding:9px 14px;display:inline-flex;gap:8px;align-items:center;font-size:13px;color:#e3f0ff}.pulse{background:var(--gold);height:8px;width:8px;border-radius:50%;box-shadow:0 0 0 3px #e9bf7220}.pill-button{border:1px solid #799ed04c;border-radius:999px;background:#174475;color:white;padding:9px 15px;font-weight:650;font-size:13px}.pill-button:hover{background:#27609b}.layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(330px,.87fr);gap:20px}.map-card,.config-card{background:linear-gradient(145deg,rgba(32,77,128,.68),rgba(10,41,86,.90));border:1px solid var(--line);border-radius:22px;box-shadow:0 14px 42px #0002;overflow:hidden}.card-label{font-size:11px;letter-spacing:.12em;font-weight:800;color:#c4d8f5;text-transform:uppercase}.map-head{padding:19px 20px 12px;display:flex;align-items:center;justify-content:space-between;gap:9px}.map-head h2{margin:5px 0 0;font-size:22px}.map-graphic{position:relative;overflow:hidden;min-height:320px;background:#123b68;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.map-graphic > svg{display:block;width:100%;height:320px}.map-overlay{position:absolute;top:14px;left:14px;background:#09284bdc;border:1px solid #ffffff25;padding:7px 11px;border-radius:10px;font-size:12px;backdrop-filter:blur(8px)}.map-bottom{padding:17px 19px}.poi-title{display:flex;align-items:center;justify-content:space-between;gap:12px}.poi-title strong{font-size:16px}.small-note{font-size:12px;color:var(--soft);line-height:1.5}.poi-list{display:grid;gap:7px;margin-top:11px;max-height:215px;overflow:auto}.poi{display:flex;gap:9px;text-align:left;align-items:center;background:#ffffff0b;color:white;border:1px solid var(--line);border-radius:12px;padding:11px 12px;width:100%;font-size:13px}.poi:hover,.poi.active{background:#1e4d81;border-color:#dec48b}.poi b{font-size:13px}.poi small{display:block;color:var(--soft);margin-top:2px}.poi-pin{display:grid;place-items:center;border-radius:9px;background:#c79d5c26;color:#f4c77a;width:34px;height:34px;flex-shrink:0;font-size:17px}.config-card{padding:20px}.section{padding:0 0 17px;border-bottom:1px solid var(--line);margin-bottom:17px}.section:last-of-type{border:0;margin-bottom:0}.section-title{margin:0 0 10px;font-size:15px;font-weight:750;display:flex;align-items:center;gap:9px}.section-title span{color:var(--gold)}.segment{display:grid;grid-template-columns:repeat(3,1fr);background:#061c3c;border:1px solid #ffffff26;padding:4px;gap:4px;border-radius:12px}.segment button{border:0;background:transparent;color:#c9def8;min-height:42px;padding:7px 5px;border-radius:9px;font-size:13px;font-weight:700}.segment button.selected{background:#e7bd76;color:#092449;box-shadow:0 4px 12px #0004}.help{font-size:12px;line-height:1.5;color:var(--soft);margin:10px 0 0}.line-option{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:10px}.line-option select{border:1px solid var(--line);background:#0c2c54;color:white;border-radius:9px;padding:9px 10px;min-width:165px;max-width:61%}.switch{position:relative;display:inline-block;width:49px;height:28px;flex-shrink:0}.switch input{opacity:0;width:0;height:0}.slider{position:absolute;inset:0;background:#547093;border-radius:99px;transition:.15s}.slider:before{content:"";position:absolute;width:20px;height:20px;left:4px;top:4px;background:white;border-radius:50%;transition:.15s}.switch input:checked+.slider{background:#dbb66f}.switch input:checked+.slider:before{transform:translateX(21px);background:#0b2b56}.checks{display:grid;grid-template-columns:1fr 1fr;gap:11px}.checks label{font-size:13px;color:#e9f3ff;display:flex;gap:8px;align-items:center;cursor:pointer}.checks input{accent-color:#e5be79;width:16px;height:16px}.start{width:100%;display:flex;gap:8px;justify-content:center;align-items:center;margin-top:13px;background:linear-gradient(120deg,#f0d497,#dfaf5e);color:#08284f;border:0;border-radius:14px;min-height:54px;font-weight:850;box-shadow:0 9px 20px #0003}.start:hover{filter:brightness(1.07)}.note{padding-top:11px;text-align:center;color:#c1d6f0;font-size:11px}.story{margin-top:15px;background:#082650;border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:none}.story.show{display:block}.story h3{margin:0 0 7px;color:#f4d39a}.story p{font-size:13px;line-height:1.65;color:#d5e6fa}.story .close{background:#173f72;border:1px solid var(--line);color:white;padding:7px 11px;border-radius:9px}.story a{font-size:12px}.footer{text-align:center;color:#a8bfdd;font-size:11px;margin-top:22px}.gps-detail{color:#c4d6ef;font-size:12px;margin-left:auto}.loading{opacity:.6}.map-pin-interactive{cursor:pointer}.map-pin-interactive:focus{outline:none;filter:drop-shadow(0 0 8px #ffd78f)}@media(max-width:760px){.shell{padding:16px 13px 96px}.brand{margin-bottom:3px}.brand-mark{width:40px;height:40px}.topline{margin-bottom:13px}.layout{grid-template-columns:minmax(0,1fr);gap:13px}.map-graphic{min-height:200px}.map-graphic > svg{height:220px}.map-head{padding:12px 15px 10px}.map-head h2{font-size:18px}.map-bottom{padding:12px 14px}.poi-list{max-height:134px}.config-card{padding:16px}.section{padding-bottom:13px;margin-bottom:14px}.section-title{font-size:14px;margin-bottom:8px}header p{margin-bottom:14px}.footer{margin-top:10px}}@media(max-width:390px){.segment button{font-size:12px}.checks{gap:9px}.checks label{font-size:12px}.gps-detail{width:100%;margin-left:0}.map-graphic > svg{height:185px}}
+
+/* v0.3 – responsive Kartenansicht und gezielter Bildabruf */
+.shell{max-width:1380px;padding-left:clamp(13px,2.5vw,34px);padding-right:clamp(13px,2.5vw,34px)}
+.layout{grid-template-columns:minmax(0,1.14fr) minmax(340px,.86fr);align-items:start}
+.map-graphic{height:clamp(300px,36vw,470px);min-height:0}
+.map-graphic > svg{width:100%;height:100%}
+#liveMap{min-height:0}
+.poi-list{max-height:none;overflow:visible}
+.map-head h2{font-size:clamp(18px,2vw,27px)}
+.story{min-width:0}
+.poi-photo{width:100%;margin:12px 0 14px;min-height:185px;display:grid;align-items:center;justify-items:center;overflow:hidden;border-radius:13px;background:linear-gradient(135deg,#1d4979,#0a2b52);border:1px solid #ffffff2a;position:relative}
+.poi-photo img{display:block;width:100%;height:auto;max-height:clamp(230px,38vw,420px);object-fit:contain;background:#0d294a}
+.poi-photo figcaption{width:100%;padding:10px 11px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:7px;font-size:11px;color:#d3e4f7}
+.poi-photo figcaption a{font-size:11px;font-weight:750;color:#ffdb9b;white-space:nowrap}
+.poi-photo .photo-placeholder{text-align:center;padding:24px 14px;line-height:1.5;color:#c5d8ef;font-size:13px}
+.poi-photo .photo-placeholder::before{content:"▧";display:block;font-size:35px;color:#e6c78c;margin-bottom:5px}
+.poi-photo figcaption .photo-meta{flex:1;min-width:140px;overflow-wrap:anywhere}
+#rotateHint{display:none}
+@media(max-width:1120px){
+ .layout{grid-template-columns:minmax(0,1fr)}
+ .map-graphic{height:clamp(300px,42vh,530px);min-height:0}
+ .map-graphic > svg{height:100%}
+ .poi-list{max-height:none;overflow:visible}
+ .shell{max-width:920px}
+ .config-card{padding:clamp(16px,3vw,30px)}
+ .segment button{min-height:47px}
+}
+@media(max-width:600px){
+ .shell{padding:15px 12px 84px}
+ .map-graphic{height:clamp(245px,35vh,350px);min-height:0}
+ .map-graphic > svg{height:100%}
+ .topline{gap:8px}
+ .pill-button{font-size:12px;padding:10px 12px}
+ .map-head{padding:14px 15px 12px}
+ .map-overlay{font-size:11px;max-width:calc(100% - 28px);overflow-wrap:anywhere}
+ .poi-photo{min-height:170px}
+ .poi-photo img{max-height:310px}
+ .poi-list{max-height:none;overflow:visible}
+ .story p{font-size:14px}
+ .checks{gap:12px}
+}
+@media(min-width:601px) and (max-width:1120px){
+ .brand-mark{width:56px;height:56px}
+ .brand-mark svg{width:30px;height:30px}
+ .story p{font-size:15px}
+ .poi{padding:14px;font-size:15px}
+ .poi b{font-size:15px}
+ .poi-pin{width:42px;height:42px}
+}
+@media(orientation:landscape) and (pointer:coarse) and (max-height:850px){
+ #rotateHint{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:15px;background:#071b3a;color:#fff;text-align:center;padding:32px}
+ #rotateHint strong{font-size:clamp(24px,4vw,36px)}
+ #rotateHint span{max-width:440px;line-height:1.5;color:#c6d9f3}
+ body{overflow:hidden}
+}
 
 /* v0.2.1: GPS-Ortswechsel, Kartenauswahl und Fehlermeldungen */
 .map-tools{position:relative;z-index:3;display:flex;flex-direction:row;flex-wrap:wrap;gap:7px;align-items:center;padding-bottom:12px}.map-tools button,.map-tools a{display:inline-block;border:1px solid #ffffff50;background:#0b2d55ed;color:#fff;border-radius:8px;padding:7px 9px;font-size:11px;text-decoration:none;font-weight:650}.map-tools button:active{background:#3169a4}.gps-fetch-status{font-size:12px;color:#e7f3ff;background:#19457188;padding:8px 10px;border-radius:9px;margin:0 0 12px;line-height:1.45;border:1px solid #ffffff28}.map-tools a{background:#133b64e8}.map-overlay{right:6px;width:max-content;max-width:calc(100% - 20px);z-index:501;pointer-events:none}
@@ -41,6 +97,7 @@
 </style>
 </head>
 <body>
+<div id="rotateHint" role="status"><strong>↻ Bitte ins Hochformat drehen</strong><span>ZEITREISE ist auf Smartphones und Tablets für das Hochformat gestaltet. Am PC bleibt die normale Ansicht verfügbar.</span></div>
 <div class="shell">
 <header><div class="brand"><div class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V9l7-6 7 6v12M9 21v-8h6v8M8 9h.01M16 9h.01"/></svg></div><h1>ZEITREISE</h1></div><p>Geschichte entdecken. Orte verstehen.</p></header>
 <div class="topline"><span class="status-pill"><span class="pulse" id="gpsDot"></span><span id="gpsStatus">Demo: Bremen · Marktplatz</span></span><button class="pill-button" type="button" id="gpsBtn">◎ Standort jetzt ermitteln</button><button class="pill-button" type="button" id="demoBtn">Demo Bremen</button><span class="gps-detail" id="coordText">Noch keine Standortfreigabe</span></div>
@@ -52,14 +109,14 @@
 <div class="section"><h3 class="section-title"><span>02</span> Stimme & Sprachsteuerung</h3><div class="line-option"><label for="voice">Erzählstil</label><select id="voice"><option value="warm">Warm & ruhig</option><option value="vivid">Lebendig & spannend</option><option value="factual">Sachlich & präzise</option></select></div><div class="line-option"><span>Sprachsteuerung</span><label class="switch" aria-label="Sprachsteuerung einschalten"><input type="checkbox" id="speech" checked/><span class="slider"></span></label></div><p class="help">Professionelle KI-Stimme und echte Sprachbefehle folgen nach der Server-Anbindung. Diese Version spielt keine Standard-Computerstimme ab.</p></div>
 <div class="section"><h3 class="section-title"><span>03</span> Was interessiert dich?</h3><div class="checks"><label><input type="checkbox" data-interest="geschichte" checked> Geschichte</label><label><input type="checkbox" data-interest="architektur" checked> Architektur</label><label><input type="checkbox" data-interest="legenden" checked> Legenden</label><label><input type="checkbox" data-interest="kuriositaeten" checked> Kuriositäten</label></div></div>
 <button class="start" id="startBtn" type="button">✦ &nbsp; Entdeckung mit GPS starten</button><p class="note" id="appNote" role="status" aria-live="polite">Version 0.2 · GPS und Sehenswürdigkeiten</p></section>
-</div><footer class="footer">ZEITREISE · Version 0.2.2 · Die Standortfreigabe erfolgt nur auf deinen Wunsch. Für GPS ist HTTPS oder eine unterstützte sichere lokale Umgebung notwendig.<br/>Für die Umkreissuche werden Koordinaten an Wikipedia und OpenStreetMap/Overpass übertragen. Die App selbst besitzt keinen eigenen Server. Eine professionelle KI-Stimme ist noch nicht integriert.</footer></div>
+</div><footer class="footer">ZEITREISE · Version 0.3 · Die Standortfreigabe erfolgt nur auf deinen Wunsch. Für GPS ist HTTPS oder eine unterstützte sichere lokale Umgebung notwendig.<br/>Für die Umkreissuche werden Koordinaten an Wikipedia und OpenStreetMap/Overpass übertragen. Die App selbst besitzt keinen eigenen Server. Eine professionelle KI-Stimme ist noch nicht integriert.</footer></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 (()=>{'use strict';
 const D={
- roland:{id:'roland',name:'Der Bremer Roland',kind:'Denkmal · 1404',blurb:'Der steinerne Roland von 1404 steht für die Rechte und die Freiheit Bremens. Gemeinsam mit dem Rathaus gehört er zum UNESCO-Welterbe.',source:'https://www.unesco.de/staette/rathaus-und-roland-in-bremen/',lat:53.07591,lon:8.80654,origin:'UNESCO'},
- rathaus:{id:'rathaus',name:'Das Bremer Rathaus',kind:'UNESCO-Welterbe',blurb:'Der gotische Bau des Bremer Rathauses entstand im 15. Jahrhundert. Die prachtvolle Renaissancefassade folgte Anfang des 17. Jahrhunderts.',source:'https://www.unesco.de/staette/rathaus-und-roland-in-bremen/',lat:53.07587,lon:8.80741,origin:'UNESCO'},
- dom:{id:'dom',name:'St. Petri Dom',kind:'Kirche · Stadtgeschichte',blurb:'Der Bremer St.-Petri-Dom erzählt über verschiedene Bauphasen von der kirchlichen und politischen Geschichte der Stadt.',source:'https://www.bremen.de/tourismus/sehenswuerdigkeiten/bremer-st-petri-dom',lat:53.07562,lon:8.80918,origin:'Stadt Bremen'}
+ roland:{id:'roland',name:'Der Bremer Roland',kind:'Denkmal · 1404',blurb:'Der steinerne Roland von 1404 steht für die Rechte und die Freiheit Bremens. Gemeinsam mit dem Rathaus gehört er zum UNESCO-Welterbe.',source:'https://www.unesco.de/staette/rathaus-und-roland-in-bremen/',lat:53.07591,lon:8.80654,wikiTitle:'Bremer Roland',origin:'UNESCO'},
+ rathaus:{id:'rathaus',name:'Das Bremer Rathaus',kind:'UNESCO-Welterbe',blurb:'Der gotische Bau des Bremer Rathauses entstand im 15. Jahrhundert. Die prachtvolle Renaissancefassade folgte Anfang des 17. Jahrhunderts.',source:'https://www.unesco.de/staette/rathaus-und-roland-in-bremen/',lat:53.07587,lon:8.80741,wikiTitle:'Bremer Rathaus',origin:'UNESCO'},
+ dom:{id:'dom',name:'St. Petri Dom',kind:'Kirche · Stadtgeschichte',blurb:'Der Bremer St.-Petri-Dom erzählt über verschiedene Bauphasen von der kirchlichen und politischen Geschichte der Stadt.',source:'https://www.bremen.de/tourismus/sehenswuerdigkeiten/bremer-st-petri-dom',lat:53.07562,lon:8.80918,wikiTitle:'St.-Petri-Dom (Bremen)',origin:'Stadt Bremen'}
 };
 const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
 const R=Math.PI/180;
@@ -114,15 +171,138 @@ $('#mapStyleBtn').addEventListener('click',()=>{
 });
 function updateMarkers(){if(!state.map||!state.markers)return;state.markers.clearLayers();for(const p of activePlaces()){if(!Number.isFinite(p.lat)||!Number.isFinite(p.lon))continue;const marker=L.circleMarker([p.lat,p.lon],{radius:8,color:'#fff',weight:2,fillColor:'#d5a451',fillOpacity:.98});marker.bindTooltip(p.name,{direction:'top'});marker.on('click',()=>showPlace(p));marker.addTo(state.markers)}
  if(state.position&&!state.demo){let {lat,lon,accuracy}=state.position;const coords=[lat,lon];if(state.userCircle){state.map.removeLayer(state.userCircle);state.map.removeLayer(state.accuracyCircle)}state.accuracyCircle=L.circle(coords,{radius:accuracy,color:'#317ff0',fillColor:'#3989fc',fillOpacity:.10,weight:1}).addTo(state.map);state.userCircle=L.circleMarker(coords,{radius:8,color:'#fff',weight:2,fillColor:'#247de2',fillOpacity:1}).bindTooltip('Du bist hier').addTo(state.map)}}
+
+// Fotos werden erst beim Öffnen eines Ortes geladen; Wikimedia-Dateien verbleiben auf den Originalservern.
+const photoCache=new Map();
+function photoEndpoint(host,parameters){
+ const u=new URL('https://'+host+'/w/api.php');
+ u.search=new URLSearchParams({action:'query',format:'json',formatversion:'2',origin:'*',...parameters});
+ return u.toString();
+}
+async function photoJson(url,timeout=11000){
+ const response=await fetchTimed(url,timeout);
+ if(!response.ok)throw Error('Bilddienst HTTP '+response.status);
+ return response.json();
+}
+function safePhotoUrl(src){
+ try{const u=new URL(src);return u.protocol==='https:'&&/(\.|^)wikimedia\.org$/.test(u.hostname)||u.protocol==='https:'&&/(\.|^)wikipedia\.org$/.test(u.hostname)?u.href:''}catch{return ''}
+}
+function photoMetadataText(value){
+ const node=new DOMParser().parseFromString(String(value||''),'text/html');
+ return (node.body.textContent||'').replace(/\s+/g,' ').trim().slice(0,125);
+}
+function commonsFromInfo(page){
+ if(!page||!page.title)return null;
+ const info=page.imageinfo?.[0];
+ const src=safePhotoUrl(info?.thumburl||info?.url);
+ if(!src)return null;
+ const ext=info.extmetadata||{};
+ return {src,source:info.descriptionurl||'https://commons.wikimedia.org/wiki/'+encodeURIComponent(page.title.replace(/ /g,'_')),
+  author:photoMetadataText(ext.Artist?.value),license:photoMetadataText(ext.LicenseShortName?.value)||'Lizenzinformationen über die Bildquelle'};
+}
+async function commonsFilePhoto(title){
+ if(!title)return null;
+ let name=String(title).trim();
+ // OSM kann Commons-Kategorien statt Bildern liefern; solche Kategorien nicht als Foto verwenden.
+ if(/^category:/i.test(name))return null;
+ if(!/^(file|datei):/i.test(name))name='File:'+name;
+ const data=await photoJson(photoEndpoint('commons.wikimedia.org',{prop:'imageinfo',iiprop:'url|extmetadata',iiurlwidth:'960',titles:name}));
+ return commonsFromInfo(data.query?.pages?.[0]);
+}
+async function wikidataPhoto(qid){
+ if(!/^Q\d+$/.test(String(qid||'')))return null;
+ const u=new URL('https://www.wikidata.org/w/api.php');
+ u.search=new URLSearchParams({action:'wbgetentities',ids:qid,props:'claims',format:'json',origin:'*'});
+ const data=await photoJson(u.toString());
+ const filename=data.entities?.[qid]?.claims?.P18?.[0]?.mainsnak?.datavalue?.value;
+ if(typeof filename==='string'&&filename)return commonsFilePhoto(filename);
+ return null;
+}
+function getWikiArticle(p){
+ if(p.pageid)return{lang:'de',pageids:String(p.pageid)};
+ const raw=String(p.wikiTitle||p.wikipedia||'').trim();
+ if(!raw)return null;
+ let lang='de',title=raw;
+ const match=raw.match(/^([a-z]{2,3}):(.+)$/i);
+ if(match){lang=match[1].toLowerCase();title=match[2];}
+ if(!['de','en'].includes(lang))return null;
+ return{lang,titles:title};
+}
+async function wikipediaPhoto(p){
+ const article=getWikiArticle(p);
+ if(!article)return null;
+ const url=photoEndpoint(article.lang+'.wikipedia.org',{prop:'pageimages|pageprops',piprop:'thumbnail|name',pithumbsize:'960',pilicense:'free',...('pageids' in article?{pageids:article.pageids}:{titles:article.titles})});
+ const data=await photoJson(url);
+ const page=data.query?.pages?.find(x=>!x.missing);
+ if(!page)return null;
+ if(page.pageimage){
+  try{const photo=await commonsFilePhoto(page.pageimage);if(photo)return photo}catch{}
+ }
+ const image=safePhotoUrl(page.thumbnail?.source);
+ if(image)return{src:image,source:'https://'+article.lang+'.wikipedia.org/wiki/'+encodeURIComponent(page.title.replace(/ /g,'_')),author:'',license:'Bildquelle und Nutzungsbedingungen ansehen'};
+ const qid=page.pageprops?.wikibase_item;
+ return qid?wikidataPhoto(qid):null;
+}
+function photoNameTokens(name){
+ const ignore=new Set(['der','die','das','eine','einer','einem','beim','zum','und','von','des','st','sankt','alten','alte','neue','neuen']);
+ return norm(name).split(/\s+/).filter(x=>x.length>=4&&!ignore.has(x)).map(x=>/^bremen|^bremer/.test(x)?'brem':x);
+}
+async function commonsSearchPhoto(p){
+ const tokens=photoNameTokens(p.name);
+ if(!tokens.length)return null;
+ const data=await photoJson(photoEndpoint('commons.wikimedia.org',{generator:'search',gsrsearch:p.name,gsrnamespace:'6',gsrlimit:'12',prop:'imageinfo',iiprop:'url|extmetadata',iiurlwidth:'960'}),14000);
+ const pages=data.query?.pages||[];
+ const matches=pages.map(page=>{
+  const title=norm(page.title.replace(/^File:/i,'')).replace(/\bbremer\b|\bbremen\b/g,'brem');
+  const good=tokens.filter(t=>title.includes(t)).length;
+  const bad=/\b(logo|flagge|wappen|karte|map|diagram|symbol|icon|grundriss)\b/i.test(title)||/\.(svg|pdf|gif)$/i.test(page.title);
+  return{page,good,bad};
+ }).filter(x=>!x.bad&&x.good>=Math.min(2,tokens.length)).sort((a,b)=>b.good-a.good);
+ return commonsFromInfo(matches[0]?.page);
+}
+async function findPlacePhoto(p){
+ try{
+  if(p.commonsFile){const photo=await commonsFilePhoto(p.commonsFile);if(photo)return photo;}
+  if(p.pageid||p.wikiTitle||p.wikipedia){const photo=await wikipediaPhoto(p);if(photo)return photo;}
+  if(p.wikidata){const photo=await wikidataPhoto(p.wikidata);if(photo)return photo;}
+  return await commonsSearchPhoto(p);
+ }catch(e){
+  // Bei Ausfall eines Bilddienstes bleibt die historische Beschreibung nutzbar.
+  try{return await commonsSearchPhoto(p)}catch{return null}
+ }
+}
+function displayPlacePhoto(p){
+ const figure=$('#story .poi-photo');
+ if(!figure)return;
+ let promise=photoCache.get(p.id);
+ if(!promise){promise=findPlacePhoto(p);photoCache.set(p.id,promise);}
+ Promise.resolve(promise).then(photo=>{
+  if(state.selected!==p||!figure.isConnected)return;
+  figure.replaceChildren();
+  if(!photo){const unavailable=document.createElement('div');unavailable.className='photo-placeholder';unavailable.textContent='Zu diesem Ort ist derzeit kein eindeutig passendes Bild verfügbar.';figure.append(unavailable);return;}
+  const img=document.createElement('img');img.loading='lazy';img.decoding='async';img.alt='Abbildung: '+p.name;
+  img.onerror=()=>{figure.replaceChildren();const fallback=document.createElement('div');fallback.className='photo-placeholder';fallback.textContent='Das Bild konnte nicht geladen werden. Der historische Text bleibt verfügbar.';figure.append(fallback);};
+  const caption=document.createElement('figcaption');
+  const meta=document.createElement('span');meta.className='photo-meta';
+  meta.textContent='Bild: Wikimedia Commons'+(photo.author?' · '+photo.author:'')+(photo.license?' · '+photo.license:'');
+  const link=document.createElement('a');link.href=photo.source;link.target='_blank';link.rel='noopener noreferrer';link.textContent='Bildquelle & Lizenz ↗';
+  caption.append(meta,link);figure.append(img,caption);img.src=photo.src;
+ }).catch(()=>{
+  if(state.selected!==p||!figure.isConnected)return;
+  figure.replaceChildren();
+  const unavailable=document.createElement('div');unavailable.className='photo-placeholder';unavailable.textContent='Bilddienst momentan nicht erreichbar.';figure.append(unavailable);
+ });
+}
+
 function revealStory(){const e=$('#story');e.classList.add('show')}
-function storyStructure(p){const card=$('#story');card.replaceChildren();let title=document.createElement('h3');title.textContent=p.name;const origin=document.createElement('div');origin.className='origin';origin.textContent=p.origin==='Wikipedia'?'Quelle: Wikipedia':p.origin==='OpenStreetMap'?'Standortdaten: OpenStreetMap':'Quelle: '+(p.origin||'Öffentlicher Eintrag');const paragraph=document.createElement('p');paragraph.textContent=p.blurb||'Zu diesem Ort liegen geografische Informationen vor. Eine fundierte historische Erzählung benötigt weitere Quellen.';card.append(title,origin,paragraph);const actions=document.createElement('div');actions.className='story-actions';if(p.source){let a=document.createElement('a');a.href=p.source;a.rel='noopener noreferrer';a.target='_blank';a.textContent='Quelle öffnen ↗';actions.append(a)}if(Number.isFinite(p.lat)&&Number.isFinite(p.lon)){let a=document.createElement('a');a.href='https://www.openstreetmap.org/?mlat='+p.lat+'&mlon='+p.lon+'#map=18/'+p.lat+'/'+p.lon;a.rel='noopener noreferrer';a.target='_blank';a.textContent='Auf Karte ansehen ↗';actions.append(a)}card.append(actions);let help=document.createElement('p');help.className='small-note';help.textContent='Die professionelle KI-Hörführung ist noch nicht angeschlossen. Die Texte sind zunächst öffentliche Quellenauszüge oder kurze Demo-Beschreibungen.';card.append(help);revealStory();return paragraph}
-async function showPlace(p){state.selected=p;banner(null);renderPoi();let paragraph=storyStructure(p);if(state.map&&Number.isFinite(p.lat)&&Number.isFinite(p.lon)){state.map.panTo([p.lat,p.lon])}
+function storyStructure(p){const card=$('#story');card.replaceChildren();let title=document.createElement('h3');title.textContent=p.name;const origin=document.createElement('div');origin.className='origin';origin.textContent=p.origin==='Wikipedia'?'Quelle: Wikipedia':p.origin==='OpenStreetMap'?'Standortdaten: OpenStreetMap':'Quelle: '+(p.origin||'Öffentlicher Eintrag');const paragraph=document.createElement('p');paragraph.textContent=p.blurb||'Zu diesem Ort liegen geografische Informationen vor. Eine fundierte historische Erzählung benötigt weitere Quellen.';const figure=document.createElement('figure');figure.className='poi-photo';figure.setAttribute('aria-label','Bild zu '+p.name);const wait=document.createElement('div');wait.className='photo-placeholder';wait.textContent='Passendes Foto wird gesucht …';figure.append(wait);card.append(title,figure,origin,paragraph);const actions=document.createElement('div');actions.className='story-actions';if(p.source){let a=document.createElement('a');a.href=p.source;a.rel='noopener noreferrer';a.target='_blank';a.textContent='Quelle öffnen ↗';actions.append(a)}if(Number.isFinite(p.lat)&&Number.isFinite(p.lon)){let a=document.createElement('a');a.href='https://www.openstreetmap.org/?mlat='+p.lat+'&mlon='+p.lon+'#map=18/'+p.lat+'/'+p.lon;a.rel='noopener noreferrer';a.target='_blank';a.textContent='Auf Karte ansehen ↗';actions.append(a)}card.append(actions);let help=document.createElement('p');help.className='small-note';help.textContent='Die professionelle KI-Hörführung ist noch nicht angeschlossen. Die Texte sind zunächst öffentliche Quellenauszüge oder kurze Demo-Beschreibungen.';card.append(help);revealStory();return paragraph}
+async function showPlace(p){state.selected=p;banner(null);renderPoi();let paragraph=storyStructure(p);displayPlacePhoto(p);if(state.map&&Number.isFinite(p.lat)&&Number.isFinite(p.lon)){state.map.panTo([p.lat,p.lon])}
  if(p.origin==='Wikipedia'&&p.pageid&&!p.blurb){paragraph.className='loading-line';paragraph.textContent='Lade geschichtliche Hintergrundinformationen von Wikipedia …';try{const u=new URL('https://de.wikipedia.org/w/api.php');u.search=new URLSearchParams({action:'query',prop:'extracts',exintro:'1',explaintext:'1',pageids:String(p.pageid),format:'json',origin:'*'});const response=await fetchTimed(u.toString(),12000);if(!response.ok)throw Error('Wiki '+response.status);const data=await response.json();let page=data.query?.pages?.[p.pageid];if(state.selected!==p)return;p.blurb=(page?.extract||'').trim().slice(0,1800)||'Für diesen Eintrag ist kein kurzer Beschreibungstext verfügbar. Öffne die Quelle, um mehr zu erfahren.';paragraph.className='';paragraph.textContent=p.blurb}catch{if(state.selected===p){paragraph.className='';paragraph.textContent='Der Wikipedia-Text ist momentan nicht abrufbar. Über „Quelle öffnen“ kannst du den Artikel direkt lesen.'}}}}
 function fetchTimed(url,ms=14000,opts={}){let ac=new AbortController();let timer=setTimeout(()=>ac.abort(),ms);return fetch(url,{...opts,signal:ac.signal}).finally(()=>clearTimeout(timer))}
 function norm(s){return(s||'').toLocaleLowerCase('de').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^\p{L}\p{N}]/gu,'').trim()}
 function nearWiki(lat,lon,radius){const u=new URL('https://de.wikipedia.org/w/api.php');u.search=new URLSearchParams({action:'query',list:'geosearch',gscoord:lat.toFixed(6)+'|'+lon.toFixed(6),gsradius:String(Math.min(10000,radius)),gslimit:'50',format:'json',origin:'*'});return fetchTimed(u.toString()).then(r=>{if(!r.ok)throw Error('Wikipedia '+r.status);return r.json()}).then(data=>(data.query?.geosearch||[]).map(x=>({id:'wiki-'+x.pageid,pageid:x.pageid,name:x.title,lat:x.lat,lon:x.lon,distance:Math.round(x.dist),kind:'Historischer oder kultureller Ort',origin:'Wikipedia',source:'https://de.wikipedia.org/?curid='+x.pageid}))) }
 function nearOsm(lat,lon,radius){const query=`[out:json][timeout:17];(nwr(around:${radius},${lat.toFixed(6)},${lon.toFixed(6)})[historic][name];nwr(around:${radius},${lat.toFixed(6)},${lon.toFixed(6)})[tourism=attraction][name];nwr(around:${radius},${lat.toFixed(6)},${lon.toFixed(6)})[heritage][name];nwr(around:${radius},${lat.toFixed(6)},${lon.toFixed(6)})[tourism=museum][name];);out center 100;`;
- const body=new URLSearchParams({data:query});return fetchTimed('https://overpass.private.coffee/api/interpreter',18000,{method:'POST',body}).then(r=>{if(!r.ok)throw Error('Overpass '+r.status);return r.json()}).then(data=>(data.elements||[]).map(x=>{const latP=x.lat??x.center?.lat,lonP=x.lon??x.center?.lon;const tags=x.tags||{},name=tags['name:de']||tags.name;return{id:'osm-'+x.type+'-'+x.id,name,lat:latP,lon:lonP,distance:Math.round(meters(lat,lon,latP,lonP)),kind:tags.historic?'Historisches Denkmal':tags.tourism==='museum'?'Museum':'Sehenswürdigkeit',origin:'OpenStreetMap',source:'https://www.openstreetmap.org/'+x.type+'/'+x.id,blurb:tags.description||tags['description:de']||''}}).filter(x=>x.name&&Number.isFinite(x.lat)&&Number.isFinite(x.lon)&&x.distance<=radius+70))}
+ const body=new URLSearchParams({data:query});return fetchTimed('https://overpass.private.coffee/api/interpreter',18000,{method:'POST',body}).then(r=>{if(!r.ok)throw Error('Overpass '+r.status);return r.json()}).then(data=>(data.elements||[]).map(x=>{const latP=x.lat??x.center?.lat,lonP=x.lon??x.center?.lon;const tags=x.tags||{},name=tags['name:de']||tags.name;return{id:'osm-'+x.type+'-'+x.id,name,lat:latP,lon:lonP,distance:Math.round(meters(lat,lon,latP,lonP)),kind:tags.historic?'Historisches Denkmal':tags.tourism==='museum'?'Museum':'Sehenswürdigkeit',origin:'OpenStreetMap',wikipedia:tags.wikipedia||'',wikidata:tags.wikidata||'',commonsFile:tags.wikimedia_commons||'',source:'https://www.openstreetmap.org/'+x.type+'/'+x.id,blurb:tags.description||tags['description:de']||''}}).filter(x=>x.name&&Number.isFinite(x.lat)&&Number.isFinite(x.lon)&&x.distance<=radius+70))}
 function mergePlaces(wiki,osm){let all=[...wiki];let seen=new Set(wiki.map(p=>norm(p.name)));for(const p of osm){let key=norm(p.name);if(seen.has(key))continue;let nearest=wiki.find(w=>meters(w.lat,w.lon,p.lat,p.lon)<35&&(norm(w.name).includes(key)||key.includes(norm(w.name))));if(nearest)continue;all.push(p);seen.add(key)}return all.sort((a,b)=>a.distance-b.distance).slice(0,55)}
 function discoveryLogic(){if(state.mode==='manual'||state.demo||!state.position)return;const close=state.places.find(p=>p.distance<=(Math.max(80,Math.min(140,state.position.accuracy+60)))&&!state.shownIds.has(p.id));if(!close)return;state.shownIds.add(close.id);if(state.mode==='auto'){showPlace(close);note('Neuen Ort entdeckt: '+close.name+'. Automatische Audioführung folgt in einem späteren Schritt.')}else{banner(close);note('Neuer Ort in der Nähe: '+close.name)}}
 async function searchAround(force=false){const pos=state.position;if(!pos||state.demo)return;const radius=Number($('#radius').value)||600;const prev=state.lastSearch;if(!force&&prev&&meters(pos.lat,pos.lon,prev.lat,prev.lon)<Math.min(100,radius*.25)&&Date.now()-prev.at<120000)return;
